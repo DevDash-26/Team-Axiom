@@ -36,7 +36,7 @@ Full traceability is in [REQUIREMENTS.md](REQUIREMENTS.md). Summary:
 | BR10, BR13, BR16, BR20, BR28 | FAQ, calendar, schedule, jobs, lectures | Done | info + post types |
 | BR11–BR12 | Content maintenance, access levels | Partial | permission map + staff UI |
 | BR14, BR22, BR25–BR26, BR30–BR31 | Onboarding, directory, dining, printing, IT, library | Partial | seeded info pages (no CMS) |
-| BR15 | Emergency communication | Partial | banner + emergency posts |
+| BR15 | Emergency communication | Done | banner, in-app + optional SMTP, browser toast |
 | BR18–BR19, BR32 | Volunteering, alumni, highlights | Done | post types + `/opportunities` |
 | BR23–BR24, BR27, BR29 | Financial aid, sports booking, textbooks, wellbeing | Done | info + booking + listings |
 | BR33 | AI assistant | Partial | markdown → pgvector → grounded LLM; staff insights |
@@ -82,7 +82,7 @@ flowchart TD
 
 - One App Shell: student, staff, and admin navigation from the same role map.
 - Mobile-first, plain labels, loading / empty / error / success states.
-- Emergency and schedule-change posts are stronger on the feed and in the site banner.
+- Emergency and schedule-change posts are stronger on the feed and in the site banner. Publishing an emergency writes in-app alerts and emails matching users (or logs a count if SMTP is unset).
 - Lost & found contact shows first names only — no emails or phone numbers in the UI.
 - Staff interest lists show name and programme, not private contact details.
 
@@ -285,13 +285,13 @@ API http://localhost:8000 · app http://localhost:3000. Demo accounts are in the
 | Qdrant / extra vector DB | pgvector on the same Postgres |
 | Info-page CMS | Seed is the maintenance path for a 6-hour demo |
 | Native apps, dark mode, analytics | Responsive web was enough |
-| University SIS / email / SMS | Not available; no phones in listings |
+| University SIS / SMS | No SIS; no phone numbers stored. Emergencies email via optional SMTP |
 
 **Known limitations**
 
 - Hosted Supabase is a single-network dependency.
 - Info pages are read-only in the UI (FAQ create exists for admins).
-- Emergency banner is feed-driven, not a separate push channel.
+- Emergency alerts are in-app + optional email + browser toast. No SMS or mobile push.
 - Assistant quality depends on markdown coverage and the embedding/chat key.
 
 **Next (after the hackathon)**

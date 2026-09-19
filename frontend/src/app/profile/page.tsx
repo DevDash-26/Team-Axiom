@@ -175,10 +175,12 @@ export default function ProfilePage() {
               </Button>
             </div>
           </form>
-          <aside className="rounded-xl border border-border bg-card p-4">
+          <aside id="activity" className="rounded-xl border border-border bg-card p-4">
             <h2 className="font-semibold">Recent activity</h2>
             {notes.length === 0 ? (
-              <p className="mt-3 text-sm text-muted-foreground">Booking and request updates will appear here.</p>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Booking updates and emergency alerts will appear here.
+              </p>
             ) : (
               <ul className="mt-3 space-y-3">
                 {notes.map((row) => (

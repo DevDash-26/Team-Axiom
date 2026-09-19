@@ -34,6 +34,7 @@ from app.models.post import Post
 from app.models.user import User
 from app.schemas.post import InterestListResponse, InterestPersonRead, PostCreate, PostUpdate, SearchHit
 from app.security import user_has_permission
+from app.services import notify as notify_service
 
 
 def _now() -> datetime:
@@ -216,11 +217,15 @@ def create_post(db: Session, user: User, payload: PostCreate) -> Post:
     )
     db.add(post)
     db.flush()
+    recipients: list[User] = []
+    if payload.status == PostStatus.PUBLISHED and payload.type == PostType.EMERGENCY:
+        recipients = notify_service.dispatch_emergency(db, post)
     if payload.status == PostStatus.PUBLISHED:
         _audit(db, user, AUDIT_PUBLISH, post)
     db.commit()
     db.refresh(post)
     _ = post.author
+    notify_service.deliver_emergency_emails(post, recipients)
     return post
 
 
@@ -247,6 +252,7 @@ def update_post(db: Session, user: User, post_id: UUID, payload: PostUpdate) -> 
     _validate_window(next_starts, next_expires)
 
     previous_status = post.status
+    previous_type = post.type
     for key, value in data.items():
         if key in {"type", "status"} and hasattr(value, "value"):
             value = value.value
@@ -258,6 +264,14 @@ def update_post(db: Session, user: User, post_id: UUID, payload: PostUpdate) -> 
     post.pinned = _pin_for_type(next_type, post.pinned)
 
     db.flush()
+    became_live_emergency = (
+        post.status == PostStatus.PUBLISHED.value
+        and post.type == PostType.EMERGENCY.value
+        and (previous_status != PostStatus.PUBLISHED.value or previous_type != PostType.EMERGENCY.value)
+    )
+    recipients: list[User] = []
+    if became_live_emergency:
+        recipients = notify_service.dispatch_emergency(db, post)
     if post.status == PostStatus.ARCHIVED.value and previous_status != PostStatus.ARCHIVED.value:
         _audit(db, user, AUDIT_ARCHIVE, post)
     elif post.status == PostStatus.PUBLISHED.value and previous_status != PostStatus.PUBLISHED.value:
@@ -267,6 +281,7 @@ def update_post(db: Session, user: User, post_id: UUID, payload: PostUpdate) -> 
     db.commit()
     db.refresh(post)
     _ = post.author
+    notify_service.deliver_emergency_emails(post, recipients)
     return post
 
 

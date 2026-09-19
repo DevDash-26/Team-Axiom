@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { AILauncher } from "@/components/layout/AILauncher";
 import { StudentTopNav } from "@/components/layout/StudentTopNav";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
@@ -8,6 +9,8 @@ import { MobileNavigation } from "@/components/layout/MobileNavigation";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { EmergencyBanner } from "@/components/layout/EmergencyBanner";
 import { fetchEmergencyBanner } from "@/lib/api";
+import { EMERGENCY_POLL_MS, EMERGENCY_TOAST_MS } from "@/lib/constants";
+import { showEmergencyBrowserAlert } from "@/lib/emergency-alert";
 import { cn } from "@/lib/utils";
 import type { PostRead, UserPublic } from "@/types";
 
@@ -21,18 +24,46 @@ type AppShellProps = {
 export function AppShell({ variant, user, onSignedOut, children }: AppShellProps) {
   const isWorkspace = variant === "staff" || variant === "admin";
   const [emergencyPost, setEmergencyPost] = useState<PostRead | null>(null);
+  const primedEmergencyId = useRef<string | null>(null);
+  const emergencyReady = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
-    void fetchEmergencyBanner()
-      .then((post) => {
-        if (!cancelled) setEmergencyPost(post);
-      })
-      .catch(() => {
-        if (!cancelled) setEmergencyPost(null);
-      });
+
+    function applyBanner(post: PostRead | null) {
+      setEmergencyPost(post);
+      const nextId = post?.id ?? null;
+      const isNewEmergency =
+        emergencyReady.current &&
+        post?.type === "EMERGENCY" &&
+        nextId !== null &&
+        nextId !== primedEmergencyId.current;
+      if (isNewEmergency && post) {
+        toast.error(post.title, {
+          description: post.body.trim().slice(0, 140),
+          duration: EMERGENCY_TOAST_MS,
+        });
+        showEmergencyBrowserAlert(post.title, post.body);
+      }
+      emergencyReady.current = true;
+      primedEmergencyId.current = nextId;
+    }
+
+    function loadBanner() {
+      void fetchEmergencyBanner()
+        .then((post) => {
+          if (!cancelled) applyBanner(post);
+        })
+        .catch(() => {
+          if (!cancelled) applyBanner(null);
+        });
+    }
+
+    loadBanner();
+    const timer = window.setInterval(loadBanner, EMERGENCY_POLL_MS);
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
     };
   }, []);
 

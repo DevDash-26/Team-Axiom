@@ -216,7 +216,7 @@
       "label": "is_greeting()",
       "file_type": "code",
       "source_file": "backend/app/assistant/guard.py",
-      "source_location": "L54",
+      "source_location": "L58",
       "_origin": "ast",
       "id": "backend_app_assistant_guard_is_greeting",
       "community": 13,
@@ -227,7 +227,7 @@
       "label": "is_out_of_scope()",
       "file_type": "code",
       "source_file": "backend/app/assistant/guard.py",
-      "source_location": "L58",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "backend_app_assistant_guard_is_out_of_scope",
       "community": 13,
@@ -392,7 +392,7 @@
       "label": "index_from_chunks_for_tests()",
       "file_type": "code",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L264",
+      "source_location": "L256",
       "_origin": "ast",
       "id": "backend_app_assistant_knowledge_store_index_from_chunks_for_tests",
       "community": 28,
@@ -458,9 +458,9 @@
       "label": "Test helper: insert chunks without embeddings.",
       "file_type": "rationale",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L265",
+      "source_location": "L257",
       "_origin": "ast",
-      "id": "backend_app_assistant_knowledge_store_rationale_265",
+      "id": "backend_app_assistant_knowledge_store_rationale_257",
       "community": 28,
       "community_name": "schemas/user.py",
       "norm_label": "test helper: insert chunks without embeddings."
@@ -876,7 +876,7 @@
       "label": "retrieve()",
       "file_type": "code",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L203",
+      "source_location": "L204",
       "_origin": "ast",
       "id": "backend_app_assistant_retrieval_retrieve",
       "community": 47,
@@ -898,9 +898,9 @@
       "label": "Prefer markdown chunk vectors, then fill with live SQL campus rows.",
       "file_type": "rationale",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L204",
+      "source_location": "L205",
       "_origin": "ast",
-      "id": "backend_app_assistant_retrieval_rationale_204",
+      "id": "backend_app_assistant_retrieval_rationale_205",
       "community": 47,
       "community_name": "main.py",
       "norm_label": "prefer markdown chunk vectors, then fill with live sql campus rows."
@@ -6519,7 +6519,7 @@
       "label": "_add_user()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L59",
+      "source_location": "L63",
       "_origin": "ast",
       "id": "backend_tests_conftest_add_user",
       "community": 50,
@@ -6530,7 +6530,7 @@
       "label": "computing_student()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L77",
+      "source_location": "L81",
       "_origin": "ast",
       "id": "backend_tests_conftest_computing_student",
       "community": 50,
@@ -6541,7 +6541,7 @@
       "label": "business_student()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L90",
+      "source_location": "L94",
       "_origin": "ast",
       "id": "backend_tests_conftest_business_student",
       "community": 50,
@@ -6552,7 +6552,7 @@
       "label": "academic_user()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L103",
+      "source_location": "L107",
       "_origin": "ast",
       "id": "backend_tests_conftest_academic_user",
       "community": 50,
@@ -6563,7 +6563,7 @@
       "label": "finance_user()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L114",
+      "source_location": "L118",
       "_origin": "ast",
       "id": "backend_tests_conftest_finance_user",
       "community": 50,
@@ -6574,7 +6574,7 @@
       "label": "society_rep_user()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L124",
+      "source_location": "L128",
       "_origin": "ast",
       "id": "backend_tests_conftest_society_rep_user",
       "community": 50,
@@ -6585,7 +6585,7 @@
       "label": "admin_user()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L137",
+      "source_location": "L141",
       "_origin": "ast",
       "id": "backend_tests_conftest_admin_user",
       "community": 50,
@@ -6596,7 +6596,7 @@
       "label": "_override_db()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L146",
+      "source_location": "L150",
       "_origin": "ast",
       "id": "backend_tests_conftest_override_db",
       "community": 50,
@@ -6607,7 +6607,7 @@
       "label": "bind_user()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L153",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "backend_tests_conftest_bind_user",
       "community": 50,
@@ -6618,7 +6618,7 @@
       "label": "client()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L164",
+      "source_location": "L168",
       "_origin": "ast",
       "id": "backend_tests_conftest_client",
       "community": 50,
@@ -6640,7 +6640,7 @@
       "label": "computing_client()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L173",
+      "source_location": "L177",
       "_origin": "ast",
       "id": "backend_tests_conftest_computing_client",
       "community": 50,
@@ -6651,7 +6651,7 @@
       "label": "business_client()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L179",
+      "source_location": "L183",
       "_origin": "ast",
       "id": "backend_tests_conftest_business_client",
       "community": 50,
@@ -6662,7 +6662,7 @@
       "label": "academic_client()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L185",
+      "source_location": "L189",
       "_origin": "ast",
       "id": "backend_tests_conftest_academic_client",
       "community": 50,
@@ -6673,7 +6673,7 @@
       "label": "finance_client()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L191",
+      "source_location": "L195",
       "_origin": "ast",
       "id": "backend_tests_conftest_finance_client",
       "community": 50,
@@ -6684,7 +6684,7 @@
       "label": "society_rep_client()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L197",
+      "source_location": "L201",
       "_origin": "ast",
       "id": "backend_tests_conftest_society_rep_client",
       "community": 50,
@@ -6695,7 +6695,7 @@
       "label": "admin_client()",
       "file_type": "code",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L203",
+      "source_location": "L207",
       "_origin": "ast",
       "id": "backend_tests_conftest_admin_client",
       "community": 50,
@@ -6739,9 +6739,9 @@
       "label": "Switch the authenticated user on the shared TestClient.",
       "file_type": "rationale",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L154",
+      "source_location": "L158",
       "_origin": "ast",
-      "id": "backend_tests_conftest_rationale_154",
+      "id": "backend_tests_conftest_rationale_158",
       "community": 50,
       "community_name": "Display.tsx",
       "norm_label": "switch the authenticated user on the shared testclient."
@@ -6849,7 +6849,7 @@
       "label": "test_admin_insights_requires_admin()",
       "file_type": "code",
       "source_file": "backend/tests/test_assistant.py",
-      "source_location": "L146",
+      "source_location": "L149",
       "_origin": "ast",
       "id": "backend_tests_test_assistant_test_admin_insights_requires_admin",
       "community": 47,
@@ -8447,8 +8447,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "frontend_package_dependencies_cmdk",
-      "community": 99,
-      "community_name": "cmdk",
+      "community": 62,
+      "community_name": "dependencies",
       "norm_label": "cmdk"
     },
     {
@@ -8458,8 +8458,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "cmdk",
-      "community": 99,
-      "community_name": "cmdk",
+      "community": 62,
+      "community_name": "dependencies",
       "norm_label": "cmdk"
     },
     {
@@ -8711,8 +8711,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "frontend_package_dependencies_zod",
-      "community": 62,
-      "community_name": "dependencies",
+      "community": 94,
+      "community_name": "1. Product and UI Concept",
       "norm_label": "zod"
     },
     {
@@ -8722,8 +8722,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "zod",
-      "community": 62,
-      "community_name": "dependencies",
+      "community": 94,
+      "community_name": "1. Product and UI Concept",
       "norm_label": "zod"
     },
     {
@@ -9041,8 +9041,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "frontend_src_app_admin_staff_page_adminstaffpage",
-      "community": 44,
-      "community_name": "content/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "adminstaffpage()"
     },
     {
@@ -9129,8 +9129,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_assistant_page",
-      "community": 54,
-      "community_name": "useSessionUser",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "app/assistant/page.tsx"
     },
     {
@@ -9140,8 +9140,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "frontend_src_app_assistant_page_assistantpage",
-      "community": 54,
-      "community_name": "useSessionUser",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "assistantpage()"
     },
     {
@@ -9151,8 +9151,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_bookings_mine_page",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "mine/page.tsx"
     },
     {
@@ -9162,8 +9162,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "frontend_src_app_bookings_mine_page_mybookingspage",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "mybookingspage()"
     },
     {
@@ -9239,8 +9239,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_error",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "error.tsx"
     },
     {
@@ -9250,8 +9250,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "frontend_src_app_error_errorpageprops",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "errorpageprops"
     },
     {
@@ -9261,8 +9261,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "frontend_src_app_error_errorpage",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "errorpage()"
     },
     {
@@ -9503,8 +9503,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_lost_found_id_page",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "lost-found/[id]/page.tsx"
     },
     {
@@ -9525,8 +9525,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_lost_found_page",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "app/lost-found/page.tsx"
     },
     {
@@ -9536,8 +9536,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "frontend_src_app_lost_found_page_lostfoundpage",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "lostfoundpage()"
     },
     {
@@ -9734,8 +9734,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "frontend_src_app_requests_new_page_newrequestpage",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "newrequestpage()"
     },
     {
@@ -9745,8 +9745,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_requests_page",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "app/requests/page.tsx"
     },
     {
@@ -9756,8 +9756,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "frontend_src_app_requests_page_requestspage",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "requestspage()"
     },
     {
@@ -9767,8 +9767,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_search_page",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "search/page.tsx"
     },
     {
@@ -9778,8 +9778,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "frontend_src_app_search_page_searchpage",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "searchpage()"
     },
     {
@@ -9789,8 +9789,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_search_search_results",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "search-results.tsx"
     },
     {
@@ -9800,8 +9800,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "frontend_src_app_search_search_results_searchresults",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "searchresults()"
     },
     {
@@ -9888,8 +9888,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "frontend_src_app_staff_bookings_page_staffbookingspage",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "staffbookingspage()"
     },
     {
@@ -9954,8 +9954,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "frontend_src_app_staff_content_page_audiencelabel",
-      "community": 44,
-      "community_name": "content/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "audiencelabel()"
     },
     {
@@ -9965,8 +9965,8 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "frontend_src_app_staff_content_page_staffcontentpage",
-      "community": 44,
-      "community_name": "content/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "staffcontentpage()"
     },
     {
@@ -9987,8 +9987,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "frontend_src_app_staff_dashboard_page_staffdashboardpage",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "staffdashboardpage()"
     },
     {
@@ -10064,8 +10064,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "frontend_src_app_staff_requests_page_staffrequestspage",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "staffrequestspage()"
     },
     {
@@ -10086,8 +10086,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "frontend_src_app_staff_societies_slug_interest_page_staffsocietyinterestpage",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "staffsocietyinterestpage()"
     },
     {
@@ -10185,8 +10185,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_student_events_id_page",
-      "community": 97,
-      "community_name": "student/events/[id]/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "student/events/[id]/page.tsx"
     },
     {
@@ -10196,8 +10196,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "frontend_src_app_student_events_id_page_studenteventredirectprops",
-      "community": 97,
-      "community_name": "student/events/[id]/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "studenteventredirectprops"
     },
     {
@@ -10207,8 +10207,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "frontend_src_app_student_events_id_page_studenteventredirect",
-      "community": 97,
-      "community_name": "student/events/[id]/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "studenteventredirect()"
     },
     {
@@ -10416,8 +10416,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_app_textbooks_page",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbooks/page.tsx"
     },
     {
@@ -10427,8 +10427,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "frontend_src_app_textbooks_page_textbookspage",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbookspage()"
     },
     {
@@ -10482,8 +10482,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_feedlist",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "feedlist.tsx"
     },
     {
@@ -10493,8 +10493,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "frontend_src_components_feedlist_feedlistprops",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "feedlistprops"
     },
     {
@@ -10515,8 +10515,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_postcard",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "postcard.tsx"
     },
     {
@@ -10526,8 +10526,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "frontend_src_components_postcard_postcardprops",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "postcardprops"
     },
     {
@@ -10537,8 +10537,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "frontend_src_components_postcard_audiencelabel",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "audiencelabel()"
     },
     {
@@ -10548,8 +10548,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "frontend_src_components_postcard_postcard",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "postcard()"
     },
     {
@@ -10713,8 +10713,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "frontend_src_components_events_eventcard_eventcard",
-      "community": 42,
-      "community_name": "AppShell",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "eventcard()"
     },
     {
@@ -10757,8 +10757,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_feedback_emptystate",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "emptystate.tsx"
     },
     {
@@ -10768,8 +10768,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "frontend_src_components_feedback_emptystate_emptystateprops",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "emptystateprops"
     },
     {
@@ -10779,8 +10779,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "frontend_src_components_feedback_emptystate_emptystate",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "emptystate()"
     },
     {
@@ -10790,8 +10790,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "frontend_src_components_feedback_emptystate_errorstateprops",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "errorstateprops"
     },
     {
@@ -10801,8 +10801,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "frontend_src_components_feedback_emptystate_errorstate",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "errorstate()"
     },
     {
@@ -10944,8 +10944,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "frontend_src_components_feedback_statusbadge_toneforstatus",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "toneforstatus()"
     },
     {
@@ -10988,8 +10988,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_home_aicommandbar",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 53,
+      "community_name": "constants.ts",
       "norm_label": "aicommandbar.tsx"
     },
     {
@@ -10999,8 +10999,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "frontend_src_components_home_aicommandbar_aicommandbar",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 53,
+      "community_name": "constants.ts",
       "norm_label": "aicommandbar()"
     },
     {
@@ -11043,8 +11043,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_home_quickactions",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "quickactions.tsx"
     },
     {
@@ -11054,8 +11054,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "frontend_src_components_home_quickactions_actions",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "actions"
     },
     {
@@ -11065,8 +11065,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "frontend_src_components_home_quickactions_quickactions",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "quickactions()"
     },
     {
@@ -11098,8 +11098,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "frontend_src_components_home_upcomingpanel_upcomingpanel",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "upcomingpanel()"
     },
     {
@@ -11142,8 +11142,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_layout_ailauncher",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "ailauncher.tsx"
     },
     {
@@ -11153,8 +11153,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "frontend_src_components_layout_ailauncher_ailauncher",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "ailauncher()"
     },
     {
@@ -11164,8 +11164,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_layout_appfooter",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "appfooter.tsx"
     },
     {
@@ -11175,8 +11175,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "frontend_src_components_layout_appfooter_appfooter",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "appfooter()"
     },
     {
@@ -11208,8 +11208,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_layout_appshell",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "appshell.tsx"
     },
     {
@@ -11219,8 +11219,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "frontend_src_components_layout_appshell_appshellprops",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "appshellprops"
     },
     {
@@ -11230,8 +11230,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "frontend_src_components_layout_appshell_appshell",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "appshell()"
     },
     {
@@ -11318,8 +11318,8 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "frontend_src_components_layout_dashboardsidebar_dashboardsidebar",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "dashboardsidebar()"
     },
     {
@@ -11329,8 +11329,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_layout_emergencybanner",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "emergencybanner.tsx"
     },
     {
@@ -11340,8 +11340,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "frontend_src_components_layout_emergencybanner_emergencybannerprops",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "emergencybannerprops"
     },
     {
@@ -11351,8 +11351,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "frontend_src_components_layout_emergencybanner_emergencybanner",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "emergencybanner()"
     },
     {
@@ -11571,8 +11571,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_listings_lostitemcard",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "lostitemcard.tsx"
     },
     {
@@ -11582,8 +11582,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "frontend_src_components_listings_lostitemcard_lostitemcardprops",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "lostitemcardprops"
     },
     {
@@ -11593,8 +11593,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "frontend_src_components_listings_lostitemcard_lostitemcard",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "lostitemcard()"
     },
     {
@@ -11604,8 +11604,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_listings_textbookcard",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbookcard.tsx"
     },
     {
@@ -11615,8 +11615,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "frontend_src_components_listings_textbookcard_textbookcardprops",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbookcardprops"
     },
     {
@@ -11626,8 +11626,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "frontend_src_components_listings_textbookcard_textbookcard",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbookcard()"
     },
     {
@@ -11637,8 +11637,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_listings_textbookofferdialog",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbookofferdialog.tsx"
     },
     {
@@ -11648,8 +11648,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "frontend_src_components_listings_textbookofferdialog_offerschema",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "offerschema"
     },
     {
@@ -11659,8 +11659,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "frontend_src_components_listings_textbookofferdialog_textbookofferdialogprops",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbookofferdialogprops"
     },
     {
@@ -11670,8 +11670,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "frontend_src_components_listings_textbookofferdialog_textbookofferdialog",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "textbookofferdialog()"
     },
     {
@@ -11681,8 +11681,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_posts_posteditor",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "posteditor.tsx"
     },
     {
@@ -11692,8 +11692,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "frontend_src_components_posts_posteditor_postschema",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "postschema"
     },
     {
@@ -11703,8 +11703,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "frontend_src_components_posts_posteditor_fielderrors",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "fielderrors"
     },
     {
@@ -11714,8 +11714,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "frontend_src_components_posts_posteditor_posteditorprops",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "posteditorprops"
     },
     {
@@ -11780,8 +11780,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_societies_societycard",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "societycard.tsx"
     },
     {
@@ -11791,8 +11791,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "frontend_src_components_societies_societycard_societycardprops",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "societycardprops"
     },
     {
@@ -11802,8 +11802,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "frontend_src_components_societies_societycard_societycard",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "societycard()"
     },
     {
@@ -12110,8 +12110,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_ui_button",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "button.tsx"
     },
     {
@@ -12132,8 +12132,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "frontend_src_components_ui_button_button",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "button()"
     },
     {
@@ -12660,8 +12660,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_ui_input",
-      "community": 42,
-      "community_name": "AppShell",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "input.tsx"
     },
     {
@@ -12671,8 +12671,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "frontend_src_components_ui_input_input",
-      "community": 42,
-      "community_name": "AppShell",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "input()"
     },
     {
@@ -13287,8 +13287,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_components_ui_skeleton",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "skeleton.tsx"
     },
     {
@@ -13298,8 +13298,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "frontend_src_components_ui_skeleton_skeleton",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "skeleton()"
     },
     {
@@ -13595,8 +13595,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "frontend_src_hooks_use_session_user",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "use-session-user.ts"
     },
     {
@@ -13650,8 +13650,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "frontend_src_lib_api_apierror",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "apierror"
     },
     {
@@ -13661,8 +13661,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "frontend_src_lib_api_apierror_constructor",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": ".constructor()"
     },
     {
@@ -13826,8 +13826,8 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "frontend_src_lib_api_assistantfeedback",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "assistantfeedback()"
     },
     {
@@ -13859,8 +13859,8 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchposts",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "fetchposts()"
     },
     {
@@ -13870,8 +13870,8 @@
       "source_location": "L201",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchmyposts",
-      "community": 44,
-      "community_name": "content/page.tsx",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "fetchmyposts()"
     },
     {
@@ -13892,8 +13892,8 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchemergencybanner",
-      "community": 65,
-      "community_name": "edit/page.tsx",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "fetchemergencybanner()"
     },
     {
@@ -13903,8 +13903,8 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchsearch",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "fetchsearch()"
     },
     {
@@ -13958,8 +13958,8 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchrequests",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "fetchrequests()"
     },
     {
@@ -13991,8 +13991,8 @@
       "source_location": "L272",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchlistings",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "fetchlistings()"
     },
     {
@@ -14013,8 +14013,8 @@
       "source_location": "L286",
       "_origin": "ast",
       "id": "frontend_src_lib_api_createlisting",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "createlisting()"
     },
     {
@@ -14035,8 +14035,8 @@
       "source_location": "L294",
       "_origin": "ast",
       "id": "frontend_src_lib_api_contactlisting",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "contactlisting()"
     },
     {
@@ -14101,8 +14101,8 @@
       "source_location": "L323",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchbookings",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "fetchbookings()"
     },
     {
@@ -14123,8 +14123,8 @@
       "source_location": "L341",
       "_origin": "ast",
       "id": "frontend_src_lib_api_updatebooking",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "updatebooking()"
     },
     {
@@ -14145,8 +14145,8 @@
       "source_location": "L352",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchsociety",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "fetchsociety()"
     },
     {
@@ -14167,8 +14167,8 @@
       "source_location": "L360",
       "_origin": "ast",
       "id": "frontend_src_lib_api_fetchsocietyinterests",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "fetchsocietyinterests()"
     },
     {
@@ -14332,8 +14332,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_faculties",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "faculties"
     },
     {
@@ -14354,8 +14354,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_years",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "years"
     },
     {
@@ -14431,8 +14431,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_staff_workspace_roles",
-      "community": 44,
-      "community_name": "content/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "staff_workspace_roles"
     },
     {
@@ -14442,8 +14442,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_post_type_labels",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 54,
+      "community_name": "useSessionUser",
       "norm_label": "post_type_labels"
     },
     {
@@ -14596,8 +14596,8 @@
       "source_location": "L208",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_staffcontenteditpath",
-      "community": 44,
-      "community_name": "content/page.tsx",
+      "community": 42,
+      "community_name": "AppShell",
       "norm_label": "staffcontenteditpath()"
     },
     {
@@ -14640,8 +14640,8 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_eventpath",
-      "community": 97,
-      "community_name": "student/events/[id]/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "eventpath()"
     },
     {
@@ -14651,8 +14651,8 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_societypath",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "societypath()"
     },
     {
@@ -14662,8 +14662,8 @@
       "source_location": "L234",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_listingpath",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "listingpath()"
     },
     {
@@ -14728,8 +14728,8 @@
       "source_location": "L269",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_listing_kind",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "listing_kind"
     },
     {
@@ -14772,8 +14772,8 @@
       "source_location": "L293",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_listing_categories",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 53,
+      "community_name": "constants.ts",
       "norm_label": "listing_categories"
     },
     {
@@ -14805,8 +14805,8 @@
       "source_location": "L317",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_request_type_labels",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "request_type_labels"
     },
     {
@@ -14816,8 +14816,8 @@
       "source_location": "L323",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_request_type_filters",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "request_type_filters"
     },
     {
@@ -14827,8 +14827,8 @@
       "source_location": "L330",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_request_status_filters",
-      "community": 53,
-      "community_name": "constants.ts",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "request_status_filters"
     },
     {
@@ -14926,8 +14926,8 @@
       "source_location": "L395",
       "_origin": "ast",
       "id": "frontend_src_lib_constants_ai_suggested_prompts",
-      "community": 54,
-      "community_name": "useSessionUser",
+      "community": 53,
+      "community_name": "constants.ts",
       "norm_label": "ai_suggested_prompts"
     },
     {
@@ -15025,8 +15025,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "frontend_src_lib_datetime_formatdatetime",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 44,
+      "community_name": "content/page.tsx",
       "norm_label": "formatdatetime()"
     },
     {
@@ -15630,8 +15630,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "frontend_src_lib_nav_rolelabel",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 46,
+      "community_name": "staff/dashboard/page.tsx",
       "norm_label": "rolelabel()"
     },
     {
@@ -16015,8 +16015,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "frontend_src_types_index_posttypename",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "posttypename"
     },
     {
@@ -16026,8 +16026,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "frontend_src_types_index_poststatusname",
-      "community": 2,
-      "community_name": "new/page.tsx",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "poststatusname"
     },
     {
@@ -16037,8 +16037,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "frontend_src_types_index_postread",
-      "community": 46,
-      "community_name": "staff/dashboard/page.tsx",
+      "community": 65,
+      "community_name": "edit/page.tsx",
       "norm_label": "postread"
     },
     {
@@ -16103,8 +16103,8 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "frontend_src_types_index_requesttypename",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "requesttypename"
     },
     {
@@ -16191,8 +16191,8 @@
       "source_location": "L141",
       "_origin": "ast",
       "id": "frontend_src_types_index_listingread",
-      "community": 45,
-      "community_name": "ROUTES",
+      "community": 36,
+      "community_name": "app/__init__.py",
       "norm_label": "listingread"
     },
     {
@@ -16301,8 +16301,8 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "frontend_src_types_index_bookingread",
-      "community": 52,
-      "community_name": "AppShell.tsx",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "bookingread"
     },
     {
@@ -16356,8 +16356,8 @@
       "source_location": "L268",
       "_origin": "ast",
       "id": "frontend_src_types_index_notificationread",
-      "community": 36,
-      "community_name": "app/__init__.py",
+      "community": 2,
+      "community_name": "new/page.tsx",
       "norm_label": "notificationread"
     },
     {
@@ -17280,8 +17280,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "cursor_unihive_ui_ux_plan_1_product_and_ui_concept",
-      "community": 94,
-      "community_name": "1. Product and UI Concept",
+      "community": 21,
+      "community_name": "UniHive_UI_UX_Plan.md",
       "norm_label": "1. product and ui concept"
     },
     {
@@ -17291,8 +17291,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "cursor_unihive_ui_ux_plan_1_1_product_vision",
-      "community": 94,
-      "community_name": "1. Product and UI Concept",
+      "community": 21,
+      "community_name": "UniHive_UI_UX_Plan.md",
       "norm_label": "1.1 product vision"
     },
     {
@@ -17302,8 +17302,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "cursor_unihive_ui_ux_plan_1_2_core_experience_by_role",
-      "community": 94,
-      "community_name": "1. Product and UI Concept",
+      "community": 21,
+      "community_name": "UniHive_UI_UX_Plan.md",
       "norm_label": "1.2 core experience by role"
     },
     {
@@ -17313,8 +17313,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "cursor_unihive_ui_ux_plan_1_3_core_ux_principles",
-      "community": 94,
-      "community_name": "1. Product and UI Concept",
+      "community": 21,
+      "community_name": "UniHive_UI_UX_Plan.md",
       "norm_label": "1.3 core ux principles"
     },
     {
@@ -17324,8 +17324,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "cursor_unihive_ui_ux_plan_1_4_primary_student_landing_experience",
-      "community": 94,
-      "community_name": "1. Product and UI Concept",
+      "community": 21,
+      "community_name": "UniHive_UI_UX_Plan.md",
       "norm_label": "1.4 primary student landing experience"
     },
     {
@@ -21537,7 +21537,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L264",
+      "source_location": "L256",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_index_from_chunks_for_tests",
@@ -21856,7 +21856,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L195",
+      "source_location": "L189",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_search_chunks",
@@ -21867,7 +21867,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/guard.py",
-      "source_location": "L54",
+      "source_location": "L58",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_guard",
@@ -21878,7 +21878,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/guard.py",
-      "source_location": "L58",
+      "source_location": "L62",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_guard",
@@ -21937,7 +21937,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/guard.py",
-      "source_location": "L63",
+      "source_location": "L67",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_guard_is_out_of_scope",
@@ -21961,7 +21961,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/guard.py",
-      "source_location": "L62",
+      "source_location": "L66",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_guard_is_out_of_scope",
@@ -22146,7 +22146,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L264",
+      "source_location": "L256",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store",
@@ -22261,7 +22261,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L209",
+      "source_location": "L203",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_search_chunks",
@@ -22273,7 +22273,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L217",
+      "source_location": "L211",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_search_chunks",
@@ -22285,7 +22285,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L288",
+      "source_location": "L280",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_index_from_chunks_for_tests",
@@ -22356,7 +22356,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L264",
+      "source_location": "L256",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_index_from_chunks_for_tests",
@@ -22392,7 +22392,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L266",
+      "source_location": "L258",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_index_from_chunks_for_tests",
@@ -22419,18 +22419,6 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_knowledge_store_rationale_62",
-      "target": "backend_app_assistant_knowledge_store_ensure_chunk_table",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L190",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "backend_app_assistant_knowledge_store_search_chunks",
       "target": "backend_app_assistant_knowledge_store_ensure_chunk_table",
       "confidence_score": 1.0
     },
@@ -22486,7 +22474,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L209",
+      "source_location": "L211",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_retrieve",
@@ -22496,10 +22484,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/knowledge_store.py",
-      "source_location": "L265",
+      "source_location": "L257",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "backend_app_assistant_knowledge_store_rationale_265",
+      "source": "backend_app_assistant_knowledge_store_rationale_257",
       "target": "backend_app_assistant_knowledge_store_index_from_chunks_for_tests",
       "confidence_score": 1.0
     },
@@ -22998,7 +22986,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L208",
+      "source_location": "L209",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_retrieve",
@@ -23417,7 +23405,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L203",
+      "source_location": "L204",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval",
@@ -23651,7 +23639,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L203",
+      "source_location": "L204",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_retrieve",
@@ -23753,11 +23741,23 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L225",
+      "source_location": "L208",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_retrieve",
       "target": "backend_app_assistant_retrieval_tokens",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app/assistant/retrieval.py",
+      "source_location": "L212",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "backend_app_assistant_retrieval_retrieve",
+      "target": "backend_app_assistant_retrieval_score_text",
       "confidence_score": 1.0
     },
     {
@@ -23801,7 +23801,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L227",
+      "source_location": "L229",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_retrieve",
@@ -23837,7 +23837,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L179",
+      "source_location": "L180",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_sql_keyword_hits",
@@ -23849,7 +23849,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L203",
+      "source_location": "L204",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_retrieve",
@@ -23860,10 +23860,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L204",
+      "source_location": "L205",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "backend_app_assistant_retrieval_rationale_204",
+      "source": "backend_app_assistant_retrieval_rationale_205",
       "target": "backend_app_assistant_retrieval_retrieve",
       "confidence_score": 1.0
     },
@@ -23872,7 +23872,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/app/assistant/retrieval.py",
-      "source_location": "L203",
+      "source_location": "L204",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_app_assistant_retrieval_retrieve",
@@ -29244,7 +29244,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_db_session",
@@ -34924,7 +34924,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L185",
+      "source_location": "L189",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_academic_client",
@@ -34936,7 +34936,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L103",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_academic_user",
@@ -34948,7 +34948,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L59",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_add_user",
@@ -34960,7 +34960,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L203",
+      "source_location": "L207",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_admin_client",
@@ -34972,7 +34972,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L137",
+      "source_location": "L141",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_admin_user",
@@ -34984,7 +34984,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L153",
+      "source_location": "L157",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_bind_user",
@@ -34996,7 +34996,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L179",
+      "source_location": "L183",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_business_client",
@@ -35008,7 +35008,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L90",
+      "source_location": "L94",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_business_student",
@@ -35020,7 +35020,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L173",
+      "source_location": "L177",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_computing_client",
@@ -35032,7 +35032,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L77",
+      "source_location": "L81",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_computing_student",
@@ -35044,7 +35044,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L191",
+      "source_location": "L195",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_finance_client",
@@ -35056,7 +35056,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L114",
+      "source_location": "L118",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_finance_user",
@@ -35068,7 +35068,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L197",
+      "source_location": "L201",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_society_rep_client",
@@ -35080,7 +35080,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L124",
+      "source_location": "L128",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_society_rep_user",
@@ -42407,7 +42407,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L156",
+      "source_location": "L160",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_bind_user",
@@ -42455,7 +42455,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L157",
+      "source_location": "L161",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_bind_user",
@@ -45978,7 +45978,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L185",
+      "source_location": "L189",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -45989,7 +45989,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L103",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46000,7 +46000,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L59",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46011,7 +46011,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L203",
+      "source_location": "L207",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46022,7 +46022,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L137",
+      "source_location": "L141",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46033,7 +46033,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L153",
+      "source_location": "L157",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46044,7 +46044,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L179",
+      "source_location": "L183",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46055,7 +46055,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L90",
+      "source_location": "L94",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46066,7 +46066,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L164",
+      "source_location": "L168",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46077,7 +46077,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L173",
+      "source_location": "L177",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46088,7 +46088,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L77",
+      "source_location": "L81",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46121,7 +46121,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L191",
+      "source_location": "L195",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46132,7 +46132,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L114",
+      "source_location": "L118",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46154,7 +46154,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L146",
+      "source_location": "L150",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46165,7 +46165,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L197",
+      "source_location": "L201",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46176,7 +46176,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L124",
+      "source_location": "L128",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest",
@@ -46293,7 +46293,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L184",
+      "source_location": "L188",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46305,7 +46305,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L102",
+      "source_location": "L106",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46317,7 +46317,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L202",
+      "source_location": "L206",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46329,7 +46329,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L136",
+      "source_location": "L140",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46341,7 +46341,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L178",
+      "source_location": "L182",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46353,7 +46353,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L89",
+      "source_location": "L93",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46365,7 +46365,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L163",
+      "source_location": "L167",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46377,7 +46377,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L172",
+      "source_location": "L176",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46389,7 +46389,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L76",
+      "source_location": "L80",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46425,7 +46425,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L190",
+      "source_location": "L194",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46437,7 +46437,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L113",
+      "source_location": "L117",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46449,7 +46449,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L196",
+      "source_location": "L200",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46461,7 +46461,7 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L123",
+      "source_location": "L127",
       "weight": 1.0,
       "context": "decorator",
       "_origin": "ast",
@@ -46497,7 +46497,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L103",
+      "source_location": "L107",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_academic_user",
@@ -46509,7 +46509,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L59",
+      "source_location": "L63",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_add_user",
@@ -46521,7 +46521,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L137",
+      "source_location": "L141",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_admin_user",
@@ -46533,7 +46533,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L90",
+      "source_location": "L94",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_business_student",
@@ -46545,7 +46545,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L164",
+      "source_location": "L168",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_client",
@@ -46557,7 +46557,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L77",
+      "source_location": "L81",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_computing_student",
@@ -46569,7 +46569,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L114",
+      "source_location": "L118",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_finance_user",
@@ -46581,7 +46581,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L146",
+      "source_location": "L150",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_override_db",
@@ -46593,7 +46593,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L124",
+      "source_location": "L128",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_society_rep_user",
@@ -46605,7 +46605,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L104",
+      "source_location": "L108",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_academic_user",
@@ -46617,7 +46617,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L138",
+      "source_location": "L142",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_admin_user",
@@ -46629,7 +46629,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L91",
+      "source_location": "L95",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_business_student",
@@ -46641,7 +46641,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L78",
+      "source_location": "L82",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_computing_student",
@@ -46653,7 +46653,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L115",
+      "source_location": "L119",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_finance_user",
@@ -46665,7 +46665,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L125",
+      "source_location": "L129",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_society_rep_user",
@@ -46677,7 +46677,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L165",
+      "source_location": "L169",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_client",
@@ -46689,7 +46689,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L186",
+      "source_location": "L190",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_academic_client",
@@ -46701,7 +46701,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L204",
+      "source_location": "L208",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_admin_client",
@@ -46713,7 +46713,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L180",
+      "source_location": "L184",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_business_client",
@@ -46725,7 +46725,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L166",
+      "source_location": "L170",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_client",
@@ -46737,7 +46737,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L174",
+      "source_location": "L178",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_computing_client",
@@ -46749,7 +46749,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L192",
+      "source_location": "L196",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_finance_client",
@@ -46760,10 +46760,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L154",
+      "source_location": "L158",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "backend_tests_conftest_rationale_154",
+      "source": "backend_tests_conftest_rationale_158",
       "target": "backend_tests_conftest_bind_user",
       "confidence_score": 1.0
     },
@@ -46772,7 +46772,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L198",
+      "source_location": "L202",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_society_rep_client",
@@ -46796,7 +46796,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_assistant.py",
-      "source_location": "L151",
+      "source_location": "L154",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_test_assistant_test_admin_insights_requires_admin",
@@ -47060,7 +47060,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L164",
+      "source_location": "L168",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_client",
@@ -47072,7 +47072,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L185",
+      "source_location": "L189",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_academic_client",
@@ -47084,7 +47084,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L203",
+      "source_location": "L207",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_admin_client",
@@ -47096,7 +47096,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L179",
+      "source_location": "L183",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_business_client",
@@ -47108,7 +47108,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L173",
+      "source_location": "L177",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_computing_client",
@@ -47120,7 +47120,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L191",
+      "source_location": "L195",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_finance_client",
@@ -47132,7 +47132,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/conftest.py",
-      "source_location": "L197",
+      "source_location": "L201",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_conftest_society_rep_client",
@@ -47143,7 +47143,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_assistant.py",
-      "source_location": "L146",
+      "source_location": "L149",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_test_assistant",
@@ -47244,7 +47244,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "backend/tests/test_assistant.py",
-      "source_location": "L146",
+      "source_location": "L149",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backend_tests_test_assistant_test_admin_insights_requires_admin",

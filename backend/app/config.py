@@ -5,6 +5,8 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine.url import URL, make_url
 
+from app.constants import SMTP_PORT_DEFAULT
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -25,6 +27,13 @@ class Settings(BaseSettings):
     llm_model: str = ""
     llm_base_url: str = ""
     embedding_model: str = "text-embedding-3-small"
+
+    smtp_host: str = ""
+    smtp_port: int = SMTP_PORT_DEFAULT
+    smtp_user: str = ""
+    smtp_password: str = ""
+    smtp_from: str = ""
+    smtp_use_tls: bool = True
 
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

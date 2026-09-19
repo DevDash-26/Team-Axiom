@@ -64,6 +64,7 @@ Password for all: `CampusHub!2026`
 - [ ] Audience targeting (two students)
 - [ ] UniHive AI: ask “library hours” or “lost my ID” — answer cites markdown/FAQ chunks (pgvector or keyword fallback)
 - [ ] Tests passing (`make test` in a terminal, needs `DATABASE_URL`)
+- [ ] Emergency: admin publishes `EMERGENCY` → student banner + Profile activity (email logs if SMTP unset)
 - [ ] Lost & found contact shows first names only (no email)
 - [ ] Academic cannot handle a facility issue (403)
 - [ ] Calendar / job / guest lecture created from staff PostEditor

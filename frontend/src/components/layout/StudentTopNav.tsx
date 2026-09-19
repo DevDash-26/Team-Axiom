@@ -106,8 +106,10 @@ export function StudentTopNav({ user, onSignedOut }: StudentTopNavProps) {
             />
           </div>
         </form>
-        <Button type="button" variant="ghost" size="icon" className="size-11" aria-label="Notifications">
-          <Bell className="size-4" />
+        <Button asChild variant="ghost" size="icon" className="size-11">
+          <Link href={user ? `${ROUTES.profile}#activity` : ROUTES.login} aria-label="Notifications">
+            <Bell className="size-4" />
+          </Link>
         </Button>
         {user ? (
           <DropdownMenu>
