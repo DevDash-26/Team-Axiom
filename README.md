@@ -153,7 +153,7 @@ Needs `DATABASE_URL`. Auth is overridden except for the invalid-JWT case. The LL
 | Piece | Where |
 |-------|--------|
 | **Frontend** | Vercel (or any Node host). Root Directory `frontend`. `NEXT_PUBLIC_API_URL` + public Supabase keys. |
-| **API** | Render from **repo root** (Root Directory empty). Build: `pip install -r requirements.txt`. Start: `bash start.sh`. Python 3.11.11. Health: `/health`. |
+| **API** | Render from **repo root** (Root Directory empty). Build: `pip install -r requirements.txt`. Start: **`bash start.sh`**. If Settings still show `uvicorn app.main:app`, add env **`PYTHONPATH=backend`** (root `app/` shim also loads `backend/app`). Python 3.11.11. Health: `/health`. |
 | **Database + Auth** | Supabase. Enable pgvector. |
 
 Then set `CORS_ORIGINS` to the Vercel origin and redeploy the API.
