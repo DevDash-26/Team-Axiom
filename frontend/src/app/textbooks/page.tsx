@@ -1,34 +1,49 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TextbookCard } from "@/components/listings/TextbookCard";
 import { TextbookOfferDialog } from "@/components/listings/TextbookOfferDialog";
-import { EmptyState } from "@/components/feedback/EmptyState";
+import { EmptyState, ErrorState } from "@/components/feedback/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { LISTING_KIND, ROUTES } from "@/lib/constants";
-import { TEXTBOOKS, type ListingFixture } from "@/lib/fixtures/services";
-import { listingsWithSession, rememberListing } from "@/lib/session-records";
+import { ApiError, contactListing, fetchListings } from "@/lib/api";
+import type { ListingRead } from "@/types";
 
 export default function TextbooksPage() {
   const { user, setUser } = useSessionUser();
-  const [items, setItems] = useState<ListingFixture[]>(TEXTBOOKS);
+  const [items, setItems] = useState<ListingRead[]>([]);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [interested, setInterested] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const feed = await fetchListings({ type: LISTING_KIND.TEXTBOOK, status: "ACTIVE" });
+      setItems(feed.items);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : "Could not load textbooks.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    setItems(listingsWithSession(TEXTBOOKS).filter((item) => item.type === LISTING_KIND.TEXTBOOK));
-  }, []);
+    void load();
+  }, [load]);
 
   const visible = useMemo(() => {
     return items.filter((item) => {
-      const haystack = `${item.title} ${item.body} ${item.category}`.toLowerCase();
+      const haystack = `${item.title} ${item.body} ${item.category ?? ""}`.toLowerCase();
       return !query || haystack.includes(query.toLowerCase());
     });
   }, [items, query]);
@@ -56,7 +71,14 @@ export default function TextbooksPage() {
           onChange={(event) => setQuery(event.target.value)}
         />
       </div>
-      {visible.length === 0 ? (
+      {loading ? (
+        <div className="space-y-3" aria-busy="true">
+          <Skeleton className="h-28 rounded-xl" />
+          <Skeleton className="h-28 rounded-xl" />
+        </div>
+      ) : error ? (
+        <ErrorState message={error} onRetry={() => void load()} />
+      ) : visible.length === 0 ? (
         <EmptyState title="No textbooks listed" description="List a book so classmates can mark interest." />
       ) : (
         <ul className="space-y-3">
@@ -64,13 +86,28 @@ export default function TextbooksPage() {
             <li key={item.id}>
               <TextbookCard
                 item={item}
-                interested={Boolean(interested[item.id])}
+                interested={item.viewer_interested}
                 onToggleInterest={() => {
-                  setInterested((current) => {
-                    const next = !current[item.id];
-                    toast.success(next ? "Interest recorded." : "Interest removed.");
-                    return { ...current, [item.id]: next };
-                  });
+                  void contactListing(item.id)
+                    .then(() => {
+                      setItems((current) =>
+                        current.map((row) =>
+                          row.id === item.id
+                            ? { ...row, viewer_interested: true, interest_count: row.interest_count + 1 }
+                            : row,
+                        ),
+                      );
+                      toast.success("Interest recorded.");
+                    })
+                    .catch((cause) => {
+                      if (cause instanceof ApiError && cause.status === 409) {
+                        setItems((current) =>
+                          current.map((row) => (row.id === item.id ? { ...row, viewer_interested: true } : row)),
+                        );
+                        return;
+                      }
+                      toast.error(cause instanceof ApiError ? cause.message : "Could not record interest.");
+                    });
                 }}
               />
             </li>
@@ -88,7 +125,6 @@ export default function TextbooksPage() {
         open={open}
         onOpenChange={setOpen}
         onCreated={(item) => {
-          rememberListing(item);
           setItems((current) => [item, ...current]);
         }}
       />

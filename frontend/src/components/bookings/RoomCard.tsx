@@ -1,11 +1,13 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { StatusBadge } from "@/components/feedback/StatusBadge";
-import type { RoomFixture } from "@/lib/fixtures/campus";
+import type { ResourceRead } from "@/types";
 
 type RoomCardProps = {
-  room: RoomFixture;
-  onRequest: (room: RoomFixture) => void;
+  room: ResourceRead;
+  onRequest: (room: ResourceRead) => void;
 };
 
 export function RoomCard({ room, onRequest }: RoomCardProps) {
@@ -15,15 +17,15 @@ export function RoomCard({ room, onRequest }: RoomCardProps) {
         <div>
           <h3 className="font-semibold">{room.name}</h3>
           <p className="text-sm text-muted-foreground">
-            {room.floor} · {room.capacity} seats
+            {room.floor ?? room.location} · {room.capacity} seats · {room.kind === "SPORTS" ? "Sports" : "Classroom"}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <StatusBadge
-            label={room.conflict ? "Time clash" : room.available ? "Available" : "Unavailable"}
-            tone={room.conflict ? "danger" : room.available ? "success" : "warning"}
+            label={room.available ? "Available" : "Time clash"}
+            tone={room.available ? "success" : "danger"}
           />
-          <Button type="button" disabled={!room.available && !room.conflict} onClick={() => onRequest(room)}>
+          <Button type="button" disabled={!room.available} onClick={() => onRequest(room)}>
             Request booking
           </Button>
         </div>

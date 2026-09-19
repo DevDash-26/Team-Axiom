@@ -17,8 +17,6 @@ import { ApiError, fetchSearch } from "@/lib/api";
 import { PAGE_SIZE, ROUTES, SEARCH_QUERY_MIN, SEARCH_TYPE_FILTERS } from "@/lib/constants";
 import type { SearchHit } from "@/types";
 
-const POST_SEARCH_TYPES = new Set(["ANNOUNCEMENT", "EVENT"]);
-
 function SearchResults() {
   const searchParams = useSearchParams();
   const initial = searchParams.get("q") ?? "";
@@ -35,13 +33,6 @@ function SearchResults() {
   const load = useCallback(async () => {
     const needle = submitted.trim();
     if (needle.length < SEARCH_QUERY_MIN) {
-      setItems([]);
-      setTotal(0);
-      setError(null);
-      setLoading(false);
-      return;
-    }
-    if (type !== "all" && !POST_SEARCH_TYPES.has(type)) {
       setItems([]);
       setTotal(0);
       setError(null);
@@ -122,7 +113,7 @@ function SearchResults() {
       ) : tooShort ? (
         <EmptyState title="Type a bit more" description="Enter at least two characters to search." />
       ) : submitted.trim().length === 0 ? (
-        <EmptyState title="Search campus posts" description="Enter a keyword to search announcements and events." />
+        <EmptyState title="Search campus posts" description="Enter a keyword to search announcements, events, societies, rooms, and FAQs." />
       ) : items.length === 0 ? (
         <EmptyState title="No results" description="Try another keyword or remove a type filter." />
       ) : (

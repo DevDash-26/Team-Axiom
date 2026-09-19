@@ -186,12 +186,6 @@ def search_chunks(
     top_k: int = ASSISTANT_TOP_K,
 ) -> list[ChunkHit]:
     """Nearest markdown chunks via pgvector, else keyword match on chunk text."""
-    try:
-        ensure_chunk_table(db)
-    except Exception as exc:  # noqa: BLE001
-        logger.warning("knowledge_chunks unavailable: %s", exc)
-        return []
-
     query_vector = embed_query(question)
     if query_vector and len(query_vector) == EMBEDDING_DIMENSIONS:
         try:
@@ -221,7 +215,6 @@ def search_chunks(
                     for row in rows
                 ]
         except Exception as exc:  # noqa: BLE001
-            db.rollback()
             logger.warning("Vector chunk search failed, using keyword fallback: %s", exc)
 
     # Keyword fallback over the same markdown chunks (no embedding required).
@@ -244,7 +237,6 @@ def search_chunks(
             params,
         ).mappings().all()
     except Exception as exc:  # noqa: BLE001
-        db.rollback()
         logger.warning("Keyword chunk search failed: %s", exc)
         return []
 

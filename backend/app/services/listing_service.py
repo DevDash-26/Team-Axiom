@@ -43,9 +43,9 @@ def _can_manage(user: User, listing: Listing) -> bool:
     return listing.owner_id == user.id or _can_moderate(user)
 
 
-def _assert_lost_found(listing_type: ListingType) -> None:
-    if listing_type not in LOST_FOUND_TYPES:
-        raise AppError(422, "VALIDATION_ERROR", "Only lost and found listings are available")
+def _assert_listing_type(listing_type: ListingType) -> None:
+    if listing_type not in {*LOST_FOUND_TYPES, ListingType.TEXTBOOK}:
+        raise AppError(422, "VALIDATION_ERROR", "Unknown listing type")
 
 
 def _with_owner(query: Select[tuple[Listing]]) -> Select[tuple[Listing]]:
@@ -106,7 +106,7 @@ def to_read(listing: Listing, interest_count: int = 0, viewer_interested: bool =
 
 
 def create_listing(db: Session, user: User, payload: ListingCreate) -> Listing:
-    _assert_lost_found(payload.type)
+    _assert_listing_type(payload.type)
     row = Listing(
         type=payload.type.value,
         title=payload.title,
@@ -133,10 +133,12 @@ def list_listings(
     status: ListingStatus | None = None,
     q: str | None = None,
 ) -> tuple[list[Listing], int]:
-    query = select(Listing).where(Listing.type.in_([item.value for item in LOST_FOUND_TYPES]))
+    query = select(Listing)
     if listing_type is not None:
-        _assert_lost_found(listing_type)
+        _assert_listing_type(listing_type)
         query = query.where(Listing.type == listing_type.value)
+    else:
+        query = query.where(Listing.type.in_([item.value for item in LOST_FOUND_TYPES]))
     if status is not None:
         query = query.where(Listing.status == status.value)
     else:
@@ -159,7 +161,7 @@ def get_listing(db: Session, listing_id: UUID, user: User | None) -> Listing:
     row = db.scalars(_with_owner(select(Listing).where(Listing.id == listing_id))).first()
     if row is None:
         raise AppError(404, "NOT_FOUND", "Listing not found")
-    if row.type not in {item.value for item in LOST_FOUND_TYPES}:
+    if row.type not in {item.value for item in LOST_FOUND_TYPES} and row.type != ListingType.TEXTBOOK.value:
         raise AppError(404, "NOT_FOUND", "Listing not found")
     if row.status == ListingStatus.REMOVED.value and (user is None or not _can_manage(user, row)):
         raise AppError(404, "NOT_FOUND", "Listing not found")

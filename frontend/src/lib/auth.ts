@@ -1,7 +1,7 @@
 /** Session helpers around supabase-js. */
 
 import { getSupabase, isAuthConfigured } from "@/lib/supabase";
-import { apiGet } from "@/lib/api";
+import { apiGet, apiPatch } from "@/lib/api";
 import type { UserPublic } from "@/types";
 
 export { getAccessToken } from "@/lib/supabase";
@@ -18,6 +18,14 @@ export async function signOut(): Promise<void> {
     return;
   }
   await getSupabase().auth.signOut();
+}
+
+export function updateMe(body: {
+  faculty?: string | null;
+  year?: number | null;
+  programme?: string | null;
+}): Promise<UserPublic> {
+  return apiPatch<UserPublic>("/api/auth/me", body);
 }
 
 export async function fetchMe(): Promise<UserPublic> {

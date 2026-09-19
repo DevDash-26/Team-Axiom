@@ -161,7 +161,7 @@ export type ListingListResponse = {
 };
 
 export type ListingCreatePayload = {
-  type: "LOST" | "FOUND";
+  type: "LOST" | "FOUND" | "TEXTBOOK";
   title: string;
   body: string;
   category?: string | null;
@@ -202,4 +202,75 @@ export type StaffContactRead = {
   department: string;
   email: string;
   office_hours: string | null;
+};
+
+export type ResourceRead = {
+  id: string;
+  name: string;
+  kind: string;
+  location: string;
+  floor: string | null;
+  capacity: number;
+  available: boolean;
+};
+
+export type ResourceListResponse = {
+  items: ResourceRead[];
+  total: number;
+};
+
+export type BookingRead = {
+  id: string;
+  resource_id: string;
+  resource_name: string;
+  user_id: string;
+  student_name: string;
+  programme: string | null;
+  starts_at: string;
+  ends_at: string;
+  purpose: string;
+  group_size: number;
+  status: string;
+  staff_note: string | null;
+  created_at: string;
+};
+
+export type BookingListResponse = {
+  items: BookingRead[];
+  page: number;
+  page_size: number;
+  total: number;
+};
+
+export type SocietyRead = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  faculty: string | null;
+  interest_count: number;
+  viewer_interested: boolean;
+};
+
+export type InterestPersonRead = {
+  id: string;
+  created_at: string;
+  full_name: string;
+  programme: string | null;
+};
+
+export type InterestListResponse = {
+  items: InterestPersonRead[];
+  total: number;
+  viewer_interested: boolean;
+};
+
+export type NotificationRead = {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  link_path: string | null;
+  read: boolean;
+  created_at: string;
 };

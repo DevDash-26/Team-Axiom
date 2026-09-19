@@ -12,25 +12,18 @@ import { Input } from "@/components/ui/input";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { usePublishedPosts } from "@/hooks/use-published-posts";
 import { OPPORTUNITY_FILTERS, OPPORTUNITY_TYPES, POST_TYPE_LABELS } from "@/lib/constants";
-import { FIXTURE_POSTS } from "@/lib/fixtures/campus";
 import { formatDate } from "@/lib/datetime";
 import type { PostRead } from "@/types";
-
-function opportunityPool(posts: PostRead[]): PostRead[] {
-  const allowed: readonly string[] = OPPORTUNITY_TYPES;
-  const fromApi = posts.filter((post) => allowed.includes(post.type));
-  if (fromApi.length > 0) {
-    return fromApi;
-  }
-  return FIXTURE_POSTS.filter((post) => allowed.includes(post.type));
-}
 
 export default function OpportunitiesPage() {
   const { user, setUser } = useSessionUser();
   const feed = usePublishedPosts();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
-  const items = useMemo(() => opportunityPool(feed.posts), [feed.posts]);
+  const items = useMemo(() => {
+    const allowed: readonly string[] = OPPORTUNITY_TYPES;
+    return feed.posts.filter((post: PostRead) => allowed.includes(post.type));
+  }, [feed.posts]);
 
   const visible = useMemo(() => {
     return items.filter((post) => {

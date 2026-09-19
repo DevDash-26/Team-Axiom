@@ -13,10 +13,12 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSessionUser } from "@/hooks/use-session-user";
-import { signOut } from "@/lib/auth";
+import { signOut, updateMe } from "@/lib/auth";
+import { ApiError, fetchNotifications } from "@/lib/api";
 import { FACULTIES, ROUTES, STUDY_YEARS } from "@/lib/constants";
+import { formatDateTime } from "@/lib/datetime";
 import { roleLabel } from "@/lib/nav";
-import { PROFILE_ACTIVITY } from "@/lib/fixtures/services";
+import type { NotificationRead } from "@/types";
 
 const profileSchema = z.object({
   programme: z.string().trim().min(2, "Enter your programme").max(80),
@@ -42,6 +44,8 @@ export default function ProfilePage() {
   const [notifyEmail, setNotifyEmail] = useState(true);
   const [notifyFeed, setNotifyFeed] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
+  const [notes, setNotes] = useState<NotificationRead[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -52,7 +56,17 @@ export default function ProfilePage() {
     setYear(user.year ? String(user.year) : "1");
   }, [user]);
 
-  function handleSave(event: React.FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    if (!user) {
+      setNotes([]);
+      return;
+    }
+    void fetchNotifications()
+      .then((feed) => setNotes(feed.items.slice(0, 8)))
+      .catch(() => setNotes([]));
+  }, [user]);
+
+  async function handleSave(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const parsed = profileSchema.safeParse({ programme, faculty, year });
     if (!parsed.success) {
@@ -64,7 +78,20 @@ export default function ProfilePage() {
       return;
     }
     setErrors({});
-    toast.success("Profile saved on this screen. Feed targeting still uses the server profile.");
+    setSaving(true);
+    try {
+      const next = await updateMe({
+        programme: parsed.data.programme,
+        faculty: parsed.data.faculty,
+        year: Number(parsed.data.year),
+      });
+      setUser(next);
+      toast.success("Profile saved. Your For You feed will use these details.");
+    } catch (cause) {
+      toast.error(cause instanceof ApiError ? cause.message : "Could not save profile.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleSignOut() {
@@ -91,7 +118,7 @@ export default function ProfilePage() {
         />
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <form className="space-y-4 rounded-xl border border-border bg-card p-5" onSubmit={handleSave}>
+          <form className="space-y-4 rounded-xl border border-border bg-card p-5" onSubmit={(event) => void handleSave(event)}>
             <div className="flex items-center gap-3">
               <span className="inline-flex size-14 items-center justify-center rounded-full bg-secondary text-lg font-bold text-primary">
                 {initials(user.full_name)}
@@ -140,8 +167,8 @@ export default function ProfilePage() {
               </label>
             </fieldset>
             <div className="flex flex-wrap gap-2">
-              <Button type="submit" className="h-11">
-                Save changes
+              <Button type="submit" className="h-11" disabled={saving}>
+                {saving ? "Saving…" : "Save changes"}
               </Button>
               <Button type="button" variant="outline" onClick={() => void handleSignOut()}>
                 Sign out
@@ -150,14 +177,18 @@ export default function ProfilePage() {
           </form>
           <aside className="rounded-xl border border-border bg-card p-4">
             <h2 className="font-semibold">Recent activity</h2>
-            <ul className="mt-3 space-y-3">
-              {PROFILE_ACTIVITY.map((row) => (
-                <li key={row.id}>
-                  <p className="text-sm">{row.label}</p>
-                  <p className="text-xs text-muted-foreground">{row.when}</p>
-                </li>
-              ))}
-            </ul>
+            {notes.length === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">Booking and request updates will appear here.</p>
+            ) : (
+              <ul className="mt-3 space-y-3">
+                {notes.map((row) => (
+                  <li key={row.id}>
+                    <p className="text-sm">{row.title}</p>
+                    <p className="text-xs text-muted-foreground">{formatDateTime(row.created_at)}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
           </aside>
         </div>
       )}

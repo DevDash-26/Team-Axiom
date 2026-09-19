@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
 import { RoleGate } from "@/components/layout/RoleGate";
@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { FilterChips } from "@/components/ui-blocks/FilterChips";
 import { FormField } from "@/components/feedback/FormField";
 import { StatusBadge, toneForStatus } from "@/components/feedback/StatusBadge";
-import { EmptyState } from "@/components/feedback/EmptyState";
+import { EmptyState, ErrorState } from "@/components/feedback/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -31,58 +31,78 @@ import { useSessionUser } from "@/hooks/use-session-user";
 import { BOOKING_STATUS_FILTERS } from "@/lib/constants";
 import { rowActivateProps } from "@/lib/a11y";
 import { canApproveBookings } from "@/lib/permissions";
-import { STAFF_BOOKINGS, type StaffBookingFixture } from "@/lib/fixtures/staff";
+import { ApiError, fetchBookings, updateBooking } from "@/lib/api";
+import { formatDateTime } from "@/lib/datetime";
+import type { BookingRead } from "@/types";
 
 export default function StaffBookingsPage() {
   const { user, setUser } = useSessionUser();
-  const [rows, setRows] = useState(STAFF_BOOKINGS);
+  const [rows, setRows] = useState<BookingRead[]>([]);
   const [status, setStatus] = useState("PENDING");
-  const [selected, setSelected] = useState<StaffBookingFixture | null>(null);
+  const [selected, setSelected] = useState<BookingRead | null>(null);
   const [reason, setReason] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const canApprove = user ? canApproveBookings(user.role) : false;
 
-  const visible = useMemo(
-    () => rows.filter((row) => status === "all" || row.status === status),
-    [rows, status],
-  );
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const feed = await fetchBookings({ status: status === "all" ? undefined : status });
+      setRows(feed.items);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : "Could not load bookings.");
+    } finally {
+      setLoading(false);
+    }
+  }, [status]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   function closeDrawer() {
     setSelected(null);
     setReason("");
   }
 
-  function applyStatus(next: StaffBookingFixture["status"]) {
+  async function applyStatus(next: "APPROVED" | "REJECTED") {
     if (!selected) return;
     if (next === "REJECTED" && !reason.trim()) {
       toast.error("Add a rejection reason.");
       return;
     }
-    setRows((current) =>
-      current.map((row) =>
-        row.id === selected.id ? { ...row, status: next, note: next === "REJECTED" ? reason.trim() : row.note } : row,
-      ),
-    );
-    toast.success(next === "APPROVED" ? "Room request approved." : "Room request rejected.");
-    closeDrawer();
+    try {
+      await updateBooking(selected.id, { status: next, staff_note: reason.trim() || undefined });
+      toast.success(next === "APPROVED" ? "Room request approved." : "Room request rejected.");
+      closeDrawer();
+      await load();
+    } catch (cause) {
+      toast.error(cause instanceof ApiError ? cause.message : "Could not update this request.");
+    }
   }
 
   return (
     <AppShell variant="staff" user={user} onSignedOut={() => setUser(null)}>
       <PageHeader
         title="Room Requests"
-        description="Students request rooms here. Only administrators approve — academic staff can review the queue."
+        description="Students request classrooms and sports courts here. Only administrators approve."
       />
       <div className="mb-4">
         <FilterChips label="Booking status" chips={BOOKING_STATUS_FILTERS} active={status} onChange={setStatus} />
       </div>
-      {visible.length === 0 ? (
+      {loading ? (
+        <EmptyState title="Loading…" description="Fetching room requests." />
+      ) : error ? (
+        <ErrorState message={error} onRetry={() => void load()} />
+      ) : rows.length === 0 ? (
         <EmptyState title="No room requests in this view" description="Try another status chip." />
       ) : (
         <div className="overflow-x-auto rounded-xl border border-border bg-card">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Request</TableHead>
                 <TableHead>Student</TableHead>
                 <TableHead>Room</TableHead>
                 <TableHead>Slot</TableHead>
@@ -90,12 +110,13 @@ export default function StaffBookingsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {visible.map((row) => (
+              {rows.map((row) => (
                 <TableRow key={row.id} className="cursor-pointer" {...rowActivateProps(() => setSelected(row))}>
-                  <TableCell className="font-medium">{row.id}</TableCell>
-                  <TableCell>{row.student}</TableCell>
-                  <TableCell>{row.room}</TableCell>
-                  <TableCell>{row.slot}</TableCell>
+                  <TableCell className="font-medium">{row.student_name}</TableCell>
+                  <TableCell>{row.resource_name}</TableCell>
+                  <TableCell>
+                    {formatDateTime(row.starts_at)} – {formatDateTime(row.ends_at)}
+                  </TableCell>
                   <TableCell>
                     <StatusBadge label={row.status} tone={toneForStatus(row.status)} />
                   </TableCell>
@@ -111,28 +132,28 @@ export default function StaffBookingsPage() {
           {selected ? (
             <>
               <SheetHeader>
-                <SheetTitle>{selected.id}</SheetTitle>
+                <SheetTitle>{selected.resource_name}</SheetTitle>
                 <SheetDescription>
-                  {selected.student} · {selected.programme}
+                  {selected.student_name} · {selected.programme ?? "Student"}
                 </SheetDescription>
               </SheetHeader>
               <dl className="space-y-3 px-4 text-sm">
                 <div>
-                  <dt className="text-muted-foreground">Room / slot</dt>
+                  <dt className="text-muted-foreground">Slot</dt>
                   <dd>
-                    {selected.room} · {selected.slot}
+                    {formatDateTime(selected.starts_at)} – {formatDateTime(selected.ends_at)}
                   </dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">Purpose</dt>
                   <dd>
-                    {selected.purpose} · group of {selected.groupSize}
+                    {selected.purpose} · group of {selected.group_size}
                   </dd>
                 </div>
-                {selected.note ? (
+                {selected.staff_note ? (
                   <div>
                     <dt className="text-muted-foreground">Note</dt>
-                    <dd>{selected.note}</dd>
+                    <dd>{selected.staff_note}</dd>
                   </div>
                 ) : null}
               </dl>
@@ -150,10 +171,10 @@ export default function StaffBookingsPage() {
                       <Textarea id="reject-reason" value={reason} rows={3} onChange={(event) => setReason(event.target.value)} />
                     </FormField>
                     <div className="flex flex-wrap gap-2">
-                      <Button type="button" onClick={() => applyStatus("APPROVED")}>
+                      <Button type="button" onClick={() => void applyStatus("APPROVED")}>
                         Approve
                       </Button>
-                      <Button type="button" variant="destructive" onClick={() => applyStatus("REJECTED")}>
+                      <Button type="button" variant="destructive" onClick={() => void applyStatus("REJECTED")}>
                         Reject
                       </Button>
                     </div>

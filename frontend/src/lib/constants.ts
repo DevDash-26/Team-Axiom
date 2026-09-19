@@ -56,9 +56,14 @@ export const STAFF_POST_TYPES = [
   { id: "ANNOUNCEMENT", label: "Announcement", roles: ANNOUNCEMENT_ROLES },
   { id: "CALENDAR_ENTRY", label: "Calendar", roles: ANNOUNCEMENT_ROLES },
   { id: "GUEST_LECTURE", label: "Guest lecture", roles: ANNOUNCEMENT_ROLES },
+  { id: "EVENT", label: "Event", roles: [ROLES.ACADEMIC, ROLES.SOCIETY_REP, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
+  { id: "SOCIETY_UPDATE", label: "Society update", roles: [ROLES.SOCIETY_REP, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
+  { id: "HIGHLIGHT", label: "Highlight", roles: [ROLES.SOCIETY_REP, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
   { id: "EMERGENCY", label: "Emergency", roles: EMERGENCY_ROLES },
   { id: "SCHEDULE_CHANGE", label: "Schedule change", roles: EMERGENCY_ROLES },
   { id: "JOB", label: "Job", roles: EMERGENCY_ROLES },
+  { id: "VOLUNTEERING", label: "Volunteering", roles: EMERGENCY_ROLES },
+  { id: "ALUMNI", label: "Alumni", roles: EMERGENCY_ROLES },
 ] as const;
 
 export const STAFF_WORKSPACE_ROLES: readonly RoleName[] = [

@@ -152,9 +152,9 @@ PERMISSION_ROLES: dict[Permission, frozenset[Role]] = {
     Permission.POSTS_CREATE_ANNOUNCEMENT: frozenset({Role.ACADEMIC, Role.ADMIN, Role.SUPER_ADMIN}),
     Permission.POSTS_CREATE_CALENDAR: frozenset({Role.ACADEMIC, Role.ADMIN, Role.SUPER_ADMIN}),
     Permission.POSTS_CREATE_GUEST_LECTURE: frozenset({Role.ACADEMIC, Role.ADMIN, Role.SUPER_ADMIN}),
-    Permission.POSTS_CREATE_EVENT: frozenset({Role.ACADEMIC, Role.SOCIETY_REP, Role.ADMIN}),
-    Permission.POSTS_CREATE_SOCIETY_UPDATE: frozenset({Role.SOCIETY_REP, Role.ADMIN}),
-    Permission.POSTS_CREATE_HIGHLIGHT: frozenset({Role.SOCIETY_REP, Role.ADMIN}),
+    Permission.POSTS_CREATE_EVENT: frozenset({Role.ACADEMIC, Role.SOCIETY_REP, Role.ADMIN, Role.SUPER_ADMIN}),
+    Permission.POSTS_CREATE_SOCIETY_UPDATE: frozenset({Role.SOCIETY_REP, Role.ADMIN, Role.SUPER_ADMIN}),
+    Permission.POSTS_CREATE_HIGHLIGHT: frozenset({Role.SOCIETY_REP, Role.ADMIN, Role.SUPER_ADMIN}),
     Permission.POSTS_CREATE_EMERGENCY: _ADMINS,
     Permission.POSTS_CREATE_SCHEDULE_CHANGE: _ADMINS,
     Permission.POSTS_CREATE_JOB: _ADMINS,
@@ -216,6 +216,12 @@ AUDIT_EDIT = "post.edit"
 AUDIT_ARCHIVE = "post.archive"
 SEED_MARKER = "seed"
 DEMO_PASSWORD = "CampusHub!2026"
+
+BOOKING_MIN_MINUTES = 30
+BOOKING_MAX_MINUTES = 240
+BOOKING_MAX_ADVANCE_DAYS = 14
+BOOKING_OPEN_HOUR = 8
+BOOKING_CLOSE_HOUR = 20
 
 # Assistant (BR33)
 ASSISTANT_TOP_K = 5
