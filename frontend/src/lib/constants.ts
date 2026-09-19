@@ -195,7 +195,10 @@ export function canCreateEmergency(role: string): boolean {
 }
 
 export function staffPostTypesForRole(role: string) {
-  return STAFF_POST_TYPES.filter((item) => item.roles.includes(role as RoleName));
+  const name = role as RoleName;
+  return STAFF_POST_TYPES.filter((item) =>
+    (item.roles as readonly RoleName[]).includes(name),
+  );
 }
 
 export function canHandleRequest(role: string, type: string): boolean {
