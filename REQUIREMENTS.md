@@ -59,7 +59,7 @@
 | BR30 | IT support info | 2 | E2 | 4 | Partial | | `/info/it` | | Read-only seeded page. |
 | BR31 | Library resources and hours | 2 | E2 | 4 | Partial | | `/info/library` | | Read-only seeded page. |
 | BR32 | Student life highlights | 1 | E1 | 4 | Partial | | `/opportunities` HIGHLIGHT | | Cut from Wave 3 editor/seed. Fixture only. |
-| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, `POST /api/assistant/chat`, `/staff/assistant` | `test_assistant*.py` | Pipeline + multilingual policy; LLM optional with search fallback. |
+| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, `POST /api/assistant/chat`, `GET /api/admin/assistant/insights`, `backend/knowledge/*.md` + pgvector chunks | `test_assistant*.py` | Markdown chunks → pgvector (or keyword) → grounded LLM / search fallback → sources + actions. |
 
 ## B. Non-functional
 
@@ -78,14 +78,14 @@
 
 | ID | Idea | Status |
 |----|------|--------|
-| INN-01 | UniHive AI with sources + deep-link actions (BR33) | Partial (pipeline + fallback; wire full demo Q&A) |
+| INN-01 | UniHive AI with sources + deep-link actions (BR33) | Partial (markdown/pgvector RAG + sources/actions; admin insights API) |
 
 ## D. Deliberately left out
 
 | What | Why |
 |------|-----|
 | Full 33 BR as separate apps | Engine reuse + depth over breadth |
-| Vector DB | FTS5 / SQL retrieval when assistant ships |
+| Vector DB / Qdrant | Deliberate: Supabase **pgvector** on the same Postgres (markdown chunks). No external vector cluster. |
 | Native mobile apps | Responsive web |
 | Dark mode / advanced analytics | P2 in UI/UX plan |
 | BR18 volunteering, BR19 alumni, BR32 highlights | 1-mark post types. Depth on calendar/jobs/lectures/schedule-change instead of extra editor options. |

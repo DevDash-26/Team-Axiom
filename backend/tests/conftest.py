@@ -27,19 +27,27 @@ async def _noop_lifespan(_app) -> AsyncIterator[None]:
 
 @pytest.fixture(scope="session", autouse=True)
 def _create_schema() -> None:
+    """Warm the engine when Postgres is up. Do not skip the whole suite if it is down."""
     if not get_settings().database_url:
-        pytest.skip("DATABASE_URL is not set")
+        return
     try:
         with get_engine().connect() as connection:
             connection.execute(text("SELECT 1"))
-    except Exception as exc:  # noqa: BLE001 — skip cleanly when pooler/auth is down
-        pytest.skip(f"Database unavailable for tests: {exc}")
+    except Exception:
+        return
     app.router.lifespan_context = _noop_lifespan
 
 
 @pytest.fixture
-def db_session(_create_schema: None) -> Generator[Session, None, None]:
-    connection = get_engine().connect()
+def db_session() -> Generator[Session, None, None]:
+    if not get_settings().database_url:
+        pytest.skip("DATABASE_URL is not set")
+    try:
+        connection = get_engine().connect()
+        connection.execute(text("SELECT 1"))
+    except Exception as exc:  # noqa: BLE001 — skip cleanly when pooler/auth is down
+        pytest.skip(f"Database unavailable for tests: {exc}")
+
     transaction = connection.begin()
     session = Session(bind=connection, join_transaction_mode="create_savepoint")
     yield session

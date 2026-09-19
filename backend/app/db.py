@@ -25,6 +25,7 @@ RLS_TABLES = (
     "assistant_queries",
     "audit_logs",
     "notifications",
+    "knowledge_chunks",
 )
 
 
@@ -99,6 +100,7 @@ def init_db() -> None:
     with engine.begin() as connection:
         _apply_schema_patches(connection)
         _setup_search(connection)
+        _setup_pgvector(connection)
         _enable_rls(connection)
 
 
@@ -129,6 +131,43 @@ def _setup_search(connection) -> None:
             """
         )
     )
+
+
+def _setup_pgvector(connection) -> None:
+    """Enable Supabase pgvector and the markdown chunk table used by UniHive AI."""
+    try:
+        connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+    except Exception:
+        # Role may lack CREATE privilege; knowledge_store will retry/log later.
+        return
+    connection.execute(
+        text(
+            """
+            CREATE TABLE IF NOT EXISTS knowledge_chunks (
+                id UUID PRIMARY KEY,
+                source_path VARCHAR(255) NOT NULL,
+                title VARCHAR(255) NOT NULL,
+                chunk_index INTEGER NOT NULL,
+                content TEXT NOT NULL,
+                url VARCHAR(255),
+                content_hash VARCHAR(64) NOT NULL,
+                created_at TIMESTAMPTZ DEFAULT now(),
+                UNIQUE (source_path, chunk_index)
+            )
+            """
+        )
+    )
+    try:
+        connection.execute(
+            text(
+                """
+                ALTER TABLE knowledge_chunks
+                ADD COLUMN IF NOT EXISTS embedding vector(1536)
+                """
+            )
+        )
+    except Exception:
+        return
 
 
 def _enable_rls(connection) -> None:

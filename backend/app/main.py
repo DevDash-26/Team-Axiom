@@ -45,6 +45,7 @@ def create_app() -> FastAPI:
     application.include_router(posts.router)
     application.include_router(info.router)
     application.include_router(assistant.router)
+    application.include_router(assistant.admin_router)
     application.include_router(search.router)
     application.include_router(requests.router)
     application.include_router(listings.router)

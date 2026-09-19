@@ -496,6 +496,11 @@ def _replace_seed_info(db, admin: User) -> None:
                 question="Who do I contact if a lab PC will not log in?",
                 answer="Report a facility issue in UniHive, or go to the IT helpdesk on Level 2.",
             ),
+            Faq(
+                category=InfoCategory.ONBOARDING.value,
+                question="I lost my student ID card. What should I do?",
+                answer="Report it on UniHive Lost and Found, then visit Student Services on Level 1 with another photo ID to request a replacement. Temporary access lasts three working days.",
+            ),
         ]
     )
     db.add_all(
@@ -521,64 +526,6 @@ def _replace_seed_info(db, admin: User) -> None:
                 email="it@ucl.demo",
                 office_hours="Weekdays 09:00–16:00, Level 2",
             ),
-        ]
-    )
-
-
-SEED_FAQS: tuple[dict[str, str], ...] = (
-    {
-        "question": "How do I reset my UCL Wi‑Fi password?",
-        "answer": "Visit the IT helpdesk on Level 2 or use the self-service portal linked from Campus Services. Bring your student ID.",
-        "category": InfoCategory.IT.value,
-    },
-    {
-        "question": "What are the library opening hours during term?",
-        "answer": "Monday to Friday 08:00–20:00, Saturday 09:00–14:00. Sunday closed except exam weeks.",
-        "category": InfoCategory.LIBRARY.value,
-    },
-    {
-        "question": "Where can I get wellbeing support?",
-        "answer": "Book a confidential session with Student Wellbeing via the services desk, or email wellbeing@ucl.lk. Walk-ins are available weekdays 10:00–15:00.",
-        "category": InfoCategory.WELLBEING.value,
-    },
-    {
-        "question": "Which canteen accepts student meal cards?",
-        "answer": "The main cafeteria and Block B café accept meal cards. The rooftop kiosk is cash or card only.",
-        "category": InfoCategory.DINING.value,
-    },
-    {
-        "question": "How much does campus printing cost?",
-        "answer": "Black-and-white A4 is Rs. 8 per page; colour A4 is Rs. 40. Top up your print balance at the library desk.",
-        "category": InfoCategory.PRINTING.value,
-    },
-    {
-        "question": "How do I apply for financial aid?",
-        "answer": "Submit the finance aid form with income documents before the published deadline. Finance Office reviews applications within ten working days.",
-        "category": InfoCategory.FINANCIAL_AID.value,
-    },
-    {
-        "question": "How do I book the indoor courts?",
-        "answer": "Use UniHive room booking, choose a sports facility resource, and wait for admin approval. Same-day bookings close at 12:00.",
-        "category": InfoCategory.SPORTS.value,
-    },
-    {
-        "question": "What should new students complete in week one?",
-        "answer": "Activate your campus account, update your UniHive profile (faculty, year, programme), and join at least one society interest list.",
-        "category": InfoCategory.ONBOARDING.value,
-    },
-)
-
-
-def _replace_seed_faqs(db) -> None:
-    seed_questions = {item["question"] for item in SEED_FAQS}
-    existing = db.scalars(select(Faq).where(Faq.question.in_(seed_questions))).all()
-    for faq in existing:
-        db.delete(faq)
-    db.flush()
-    db.add_all(
-        [
-            Faq(question=item["question"], answer=item["answer"], category=item["category"])
-            for item in SEED_FAQS
         ]
     )
 
@@ -611,7 +558,17 @@ def seed() -> None:
         _replace_seed_requests(db, student, academic, admin)
         _replace_seed_listings(db, student, admin)
         _replace_seed_info(db, admin)
-        _replace_seed_faqs(db)
+        try:
+            from app.assistant.knowledge_store import index_markdown_knowledge
+
+            stats = index_markdown_knowledge(db)
+            logger.info(
+                "Knowledge index: %s chunks (%s embedded via pgvector)",
+                stats["chunks"],
+                stats["embedded"],
+            )
+        except Exception:
+            logger.exception("Knowledge markdown indexing skipped (assistant will use SQL fallback)")
         db.commit()
         logger.info("Seed complete. Demo password is documented in README.md.")
     except Exception:

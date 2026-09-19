@@ -43,8 +43,12 @@ Exact frontend patch versions are in `frontend/package-lock.json` after `npm ins
 |---------------|---------|--------------|-------------------------|------|
 | Supabase Auth | Email/password login, JWT issue | Publishable key (browser); service role (seed) | None — demo needs network | https://supabase.com/docs/guides/auth |
 | Supabase Postgres | Application database | `DATABASE_URL` | None — demo needs network | https://supabase.com/docs/guides/database |
+| OpenAI-compatible Chat Completions (`LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL`) | Optional UniHive AI answer synthesis | API key in `.env` | Search-only fallback with `fallback=true` | Provider chosen via env (e.g. OpenAI) |
+| OpenAI-compatible Embeddings (`EMBEDDING_MODEL`) | Embed markdown chunks for pgvector RAG | Same API key | Keyword match on chunks + SQL FAQ/info fallback | e.g. `text-embedding-3-small` |
+| Supabase Postgres **pgvector** extension | Store/search chunk embeddings in-database (no Qdrant) | Database role that can `CREATE EXTENSION` (or enable in Dashboard → Database → Extensions) | Chunk keyword ILIKE + live SQL retrieval | https://supabase.com/docs/guides/database/extensions/pgvector |
 
 Campus data is **not** read through the Supabase Data API / PostgREST. FastAPI + SQLAlchemy are the only data path.
+UniHive AI prefers markdown chunk retrieval via **pgvector**; if embeddings or the extension are missing, it falls back to SQL keyword search over FAQs, info pages, staff, and posts.
 
 ## 3. Datasets, fonts, icons, images, and other assets
 
@@ -76,6 +80,7 @@ No real student data. Seed names are invented.
 - Drafting tests and documentation that the team reviewed
 - Debugging assistance
 - UniHive AI multilingual helpers (English / Sinhala / Singlish detection and reply policy) were written for this repo’s assistant pipeline; logic reviewed by the team
+- Campus assistant RAG pattern (retrieve → ground → cite → fallback) was designed against UniHive `assistant.mdc` requirements; Axiom AI was referenced only for high-level behaviour, not copied (no Qdrant/LangChain)
 
 **How the team stayed in control:**
 - Requirements, data model, architecture, and priorities were decided by the team.

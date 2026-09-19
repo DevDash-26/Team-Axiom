@@ -51,3 +51,17 @@ class AssistantChatResponse(BaseModel):
 class AssistantFeedbackRequest(BaseModel):
     query_id: uuid.UUID
     rating: Literal[-1, 1]
+
+
+class InsightQuestion(BaseModel):
+    question: str
+    intent: str | None = None
+    answered: bool = False
+    fallback: bool = False
+    feedback: int | None = None
+    created_at: str | None = None
+
+
+class AssistantInsightsResponse(BaseModel):
+    unanswered: list[InsightQuestion]
+    top_questions: list[InsightQuestion]

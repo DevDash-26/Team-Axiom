@@ -9,14 +9,21 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.assistant import service as assistant_service
-from app.assistant.schemas import AssistantChatRequest, AssistantChatResponse, AssistantFeedbackRequest
+from app.assistant.schemas import (
+    AssistantChatRequest,
+    AssistantChatResponse,
+    AssistantFeedbackRequest,
+    AssistantInsightsResponse,
+)
+from app.constants import Permission
 from app.db import get_db
 from app.errors import AppError
 from app.models.platform import AssistantQuery
 from app.models.user import User
-from app.security import get_current_user
+from app.security import get_current_user, require_permission
 
 router = APIRouter(prefix="/api/assistant", tags=["assistant"])
+admin_router = APIRouter(prefix="/api/admin/assistant", tags=["assistant-admin"])
 
 
 @router.post("/chat", response_model=AssistantChatResponse)
@@ -46,3 +53,11 @@ def feedback(
     row.feedback = payload.rating
     db.commit()
     return {"status": "ok"}
+
+
+@admin_router.get("/insights", response_model=AssistantInsightsResponse)
+def assistant_insights(
+    db: Annotated[Session, Depends(get_db)],
+    _user: Annotated[User, Depends(require_permission(Permission.ASSISTANT_INSIGHTS))],
+) -> AssistantInsightsResponse:
+    return assistant_service.insights(db)

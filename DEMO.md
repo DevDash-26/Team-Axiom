@@ -62,6 +62,7 @@ Password for all: `CampusHub!2026`
 - [ ] Validation error shown gracefully (empty title on New announcement)
 - [ ] Role-based access (student vs admin)
 - [ ] Audience targeting (two students)
+- [ ] UniHive AI: ask “library hours” or “lost my ID” — answer cites markdown/FAQ chunks (pgvector or keyword fallback)
 - [ ] Tests passing (`make test` in a terminal, needs `DATABASE_URL`)
 - [ ] Lost & found contact shows first names only (no email)
 - [ ] Academic cannot handle a facility issue (403)
@@ -85,7 +86,7 @@ Password for all: `CampusHub!2026`
 
 **How is authorisation enforced?** `PERMISSION_ROLES` in `constants.py` plus `require_permission`. The UI hides buttons; the API is the authority.
 
-**How did you test it?** `make test` — targeting, student 403, empty title 422, invalid JWT 401.
+**How does the AI assistant find answers?** Campus markdown in `backend/knowledge/` is split into chunks and stored in Postgres with Supabase **pgvector**. The question is embedded, nearest chunks are retrieved, then the LLM answers only from that context. If embeddings/pgvector are unavailable, keyword search over the same chunks (and live FAQs) is used.
 
 ## 7. Slide outline (build in the 45-minute window after 3:30 PM)
 

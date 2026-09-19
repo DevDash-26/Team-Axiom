@@ -388,10 +388,10 @@ export const TITLE_MAX = 200;
 export const BODY_MAX = 10_000;
 
 export const AI_SUGGESTED_PROMPTS = [
-  "What events are happening this week?",
-  "Find an available classroom this afternoon.",
-  "When is the next academic deadline?",
-  "How do I contact IT support?",
+  "What are the library opening hours?",
+  "How do I reset my Wi-Fi password?",
+  "I lost my ID card, what do I do?",
+  "How do I book a classroom?",
   "Library eka open wenna puluwanda?",
   "පුස්තකාලය කීයට විවෘතද?",
 ] as const;
