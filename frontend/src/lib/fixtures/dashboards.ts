@@ -17,7 +17,7 @@ export type ActivityRow = {
 export const STAFF_PREVIEW = {
   stats: [
     { id: "rooms", label: "Pending room requests", value: 4, href: "/staff/bookings" },
-    { id: "lost", label: "Open lost-item reports", value: 7, href: "/lost-found" },
+    { id: "lost", label: "Open lost-item reports", value: 7, href: "/staff/lost-found" },
     { id: "drafts", label: "Draft announcements", value: 2, href: "/staff/content" },
     { id: "events", label: "Upcoming events", value: 3, href: "/events" },
   ],

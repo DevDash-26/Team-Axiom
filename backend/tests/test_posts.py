@@ -250,6 +250,76 @@ def test_academic_can_create_announcement(academic_client: TestClient) -> None:
     assert body["author"]["role"] == "ACADEMIC"
 
 
+def test_academic_can_create_calendar_and_guest_lecture(academic_client: TestClient) -> None:
+    calendar = academic_client.post(
+        "/api/posts",
+        json={
+            "type": "CALENDAR_ENTRY",
+            "title": "Add/drop deadline",
+            "body": "Closes Friday at 16:00.",
+            "event_at": "2026-09-26T10:30:00Z",
+        },
+    )
+    assert calendar.status_code == 201
+    lecture = academic_client.post(
+        "/api/posts",
+        json={
+            "type": "GUEST_LECTURE",
+            "title": "Responsible AI",
+            "body": "Open to Computing students.",
+            "event_at": "2026-09-24T09:00:00Z",
+            "location": "Hall A",
+        },
+    )
+    assert lecture.status_code == 201
+    assert lecture.json()["location"] == "Hall A"
+
+
+def test_student_cannot_create_calendar(computing_client: TestClient) -> None:
+    response = computing_client.post(
+        "/api/posts",
+        json={
+            "type": "CALENDAR_ENTRY",
+            "title": "Fake deadline",
+            "body": "Students cannot publish calendar entries.",
+            "event_at": "2026-09-26T10:30:00Z",
+        },
+    )
+    assert response.status_code == 403
+
+
+def test_admin_can_create_job_and_schedule_change(admin_client: TestClient) -> None:
+    job = admin_client.post(
+        "/api/posts",
+        json={
+            "type": "JOB",
+            "title": "Campus intern",
+            "body": "Finance office internship.",
+            "deadline_at": "2026-10-10T10:00:00Z",
+            "apply_url": "https://unihive.ucl.lk/opportunities",
+        },
+    )
+    assert job.status_code == 201
+    change = admin_client.post(
+        "/api/posts",
+        json={
+            "type": "SCHEDULE_CHANGE",
+            "title": "Lab B closed Friday",
+            "body": "Use Lab A until noon.",
+        },
+    )
+    assert change.status_code == 201
+
+
+def test_calendar_missing_event_at_is_422(academic_client: TestClient) -> None:
+    response = academic_client.post(
+        "/api/posts",
+        json={"type": "CALENDAR_ENTRY", "title": "Missing date", "body": "Needs an event date."},
+    )
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "VALIDATION_ERROR"
+
+
 def test_author_can_edit_and_archive(
     admin_user: User,
     computing_student: User,

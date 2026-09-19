@@ -3,10 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { StatusBadge, toneForStatus } from "@/components/feedback/StatusBadge";
 import { listingPath } from "@/lib/constants";
 import { formatDate } from "@/lib/datetime";
-import type { ListingFixture } from "@/lib/fixtures/services";
+import type { ListingRead } from "@/types";
 
 type LostItemCardProps = {
-  item: ListingFixture;
+  item: ListingRead;
 };
 
 export function LostItemCard({ item }: LostItemCardProps) {

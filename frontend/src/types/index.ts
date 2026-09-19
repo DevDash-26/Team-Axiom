@@ -73,6 +73,10 @@ export type PostWritePayload = {
   programme?: string | null;
   starts_at?: string | null;
   expires_at?: string | null;
+  location?: string | null;
+  event_at?: string | null;
+  deadline_at?: string | null;
+  apply_url?: string | null;
 };
 
 export type PostCreatePayload = PostWritePayload & {
@@ -95,4 +99,107 @@ export type SearchResponse = {
   page_size: number;
   total: number;
   query: string;
+};
+
+export type RequestTypeName = "ACADEMIC_SUPPORT" | "FACILITY_ISSUE" | "FEEDBACK";
+export type RequestStatusName = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+
+export type RequestRead = {
+  id: string;
+  type: RequestTypeName | string;
+  title: string;
+  body: string;
+  status: RequestStatusName | string;
+  response: string | null;
+  created_at: string;
+  updated_at?: string | null;
+  requester: AuthorPublic;
+  handler: AuthorPublic | null;
+};
+
+export type RequestListResponse = {
+  items: RequestRead[];
+  page: number;
+  page_size: number;
+  total: number;
+};
+
+export type RequestCreatePayload = {
+  type: RequestTypeName;
+  title: string;
+  body: string;
+};
+
+export type RequestUpdatePayload = {
+  status: RequestStatusName;
+  response?: string | null;
+};
+
+export type ListingTypeName = "LOST" | "FOUND" | "TEXTBOOK";
+export type ListingStatusName = "ACTIVE" | "RESOLVED" | "REMOVED";
+
+export type ListingRead = {
+  id: string;
+  type: ListingTypeName | string;
+  title: string;
+  body: string;
+  category: string | null;
+  location: string | null;
+  occurred_at: string | null;
+  status: ListingStatusName | string;
+  created_at: string;
+  owner: AuthorPublic;
+  interest_count: number;
+  viewer_interested: boolean;
+};
+
+export type ListingListResponse = {
+  items: ListingRead[];
+  page: number;
+  page_size: number;
+  total: number;
+};
+
+export type ListingCreatePayload = {
+  type: "LOST" | "FOUND";
+  title: string;
+  body: string;
+  category?: string | null;
+  location?: string | null;
+  occurred_at?: string | null;
+};
+
+export type ListingInterestRead = {
+  id: string;
+  created_at: string;
+  user: AuthorPublic;
+};
+
+export type ListingInterestListResponse = {
+  items: ListingInterestRead[];
+  total: number;
+};
+
+export type InfoPageRead = {
+  id: string;
+  category: string;
+  title: string;
+  body: string;
+  updated_at?: string | null;
+};
+
+export type FaqRead = {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
+};
+
+export type StaffContactRead = {
+  id: string;
+  name: string;
+  role_title: string;
+  department: string;
+  email: string;
+  office_hours: string | null;
 };

@@ -1,57 +1,56 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { LostItemCard } from "@/components/listings/LostItemCard";
 import { ListingReportDialog } from "@/components/listings/ListingReportDialog";
 import { FilterChips } from "@/components/ui-blocks/FilterChips";
-import { EmptyState } from "@/components/feedback/EmptyState";
+import { EmptyState, ErrorState } from "@/components/feedback/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSessionUser } from "@/hooks/use-session-user";
-import {
-  LISTING_KIND,
-  LISTING_KIND_FILTERS,
-  LISTING_STATUS_FILTERS,
-  ROUTES,
-} from "@/lib/constants";
-import { LOST_FOUND_ITEMS, type ListingFixture } from "@/lib/fixtures/services";
-import { listingsWithSession, rememberListing } from "@/lib/session-records";
+import { ApiError, fetchListings } from "@/lib/api";
+import { LISTING_KIND, LISTING_KIND_FILTERS, LISTING_STATUS_FILTERS, ROUTES } from "@/lib/constants";
+import type { ListingRead } from "@/types";
 
 export default function LostFoundPage() {
   const { user, setUser } = useSessionUser();
-  const [items, setItems] = useState<ListingFixture[]>(LOST_FOUND_ITEMS);
+  const [items, setItems] = useState<ListingRead[]>([]);
   const [query, setQuery] = useState("");
   const [kind, setKind] = useState("all");
-  const [status, setStatus] = useState("all");
+  const [status, setStatus] = useState("ACTIVE");
   const [reportKind, setReportKind] = useState<typeof LISTING_KIND.LOST | typeof LISTING_KIND.FOUND | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const feed = await fetchListings({
+        type: kind === "all" ? undefined : kind,
+        status: status === "all" ? undefined : status,
+      });
+      setItems(feed.items);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : "Could not load listings.");
+    } finally {
+      setLoading(false);
+    }
+  }, [kind, status]);
+
+  const visible = items.filter((item) => {
+    if (!query.trim()) return true;
+    const haystack = `${item.title} ${item.body} ${item.location ?? ""}`.toLowerCase();
+    return haystack.includes(query.trim().toLowerCase());
+  });
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- session extras after mount
-    setItems(
-      listingsWithSession(LOST_FOUND_ITEMS).filter(
-        (item) => item.type === LISTING_KIND.LOST || item.type === LISTING_KIND.FOUND,
-      ),
-    );
-  }, []);
-
-  const visible = useMemo(() => {
-    return items.filter((item) => {
-      const haystack = `${item.title} ${item.body} ${item.location ?? ""}`.toLowerCase();
-      if (query && !haystack.includes(query.toLowerCase())) {
-        return false;
-      }
-      if (kind !== "all" && item.type !== kind) {
-        return false;
-      }
-      if (status !== "all" && item.status !== status) {
-        return false;
-      }
-      return true;
-    });
-  }, [items, kind, query, status]);
+    void load();
+  }, [load]);
 
   return (
     <AppShell variant="student" user={user} onSignedOut={() => setUser(null)}>
@@ -83,7 +82,11 @@ export default function LostFoundPage() {
         <FilterChips label="Report type" chips={LISTING_KIND_FILTERS} active={kind} onChange={setKind} />
         <FilterChips label="Status" chips={LISTING_STATUS_FILTERS} active={status} onChange={setStatus} />
       </div>
-      {visible.length === 0 ? (
+      {loading ? (
+        <Skeleton className="h-40 rounded-xl" />
+      ) : error ? (
+        <ErrorState message={error} onRetry={() => void load()} />
+      ) : visible.length === 0 ? (
         <EmptyState title="No items match" description="Try another search, or report the item yourself." />
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
@@ -110,7 +113,6 @@ export default function LostFoundPage() {
           }
         }}
         onCreated={(item) => {
-          rememberListing(item);
           setItems((current) => [item, ...current]);
         }}
       />

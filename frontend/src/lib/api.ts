@@ -3,11 +3,23 @@
 import { getAccessToken } from "@/lib/supabase";
 import { PAGE_SIZE } from "@/lib/constants";
 import type {
+  FaqRead,
+  InfoPageRead,
+  ListingCreatePayload,
+  ListingInterestListResponse,
+  ListingInterestRead,
+  ListingListResponse,
+  ListingRead,
   PostCreatePayload,
   PostListResponse,
   PostRead,
   PostWritePayload,
+  RequestCreatePayload,
+  RequestListResponse,
+  RequestRead,
+  RequestUpdatePayload,
   SearchResponse,
+  StaffContactRead,
 } from "@/types";
 
 export class ApiError extends Error {
@@ -174,7 +186,18 @@ export function fetchPost(id: string): Promise<PostRead> {
 }
 
 export function fetchEmergencyBanner(): Promise<PostRead | null> {
-  return fetchPosts({ type: "EMERGENCY", page: 1, page_size: 1 }).then((feed) => feed.items[0] ?? null);
+  return Promise.all([
+    fetchPosts({ type: "EMERGENCY", page: 1, page_size: 1 }),
+    fetchPosts({ type: "SCHEDULE_CHANGE", page: 1, page_size: 1 }),
+  ]).then(([emergency, schedule]) => {
+    const candidates = [...emergency.items, ...schedule.items];
+    if (candidates.length === 0) {
+      return null;
+    }
+    return candidates.sort(
+      (left, right) => Date.parse(right.created_at) - Date.parse(left.created_at),
+    )[0];
+  });
 }
 
 export function fetchSearch(params: {
@@ -200,4 +223,63 @@ export function archivePost(id: string): Promise<PostRead> {
 
 export function publishPost(id: string): Promise<PostRead> {
   return updatePost(id, { status: "PUBLISHED" });
+}
+
+export function fetchRequests(params?: {
+  page?: number;
+  page_size?: number;
+  type?: string;
+  status?: string;
+}): Promise<RequestListResponse> {
+  return apiGet<RequestListResponse>(`/api/requests${toQuery({ page_size: PAGE_SIZE, ...params })}`);
+}
+
+export function createRequest(body: RequestCreatePayload): Promise<RequestRead> {
+  return apiPost<RequestRead>("/api/requests", body);
+}
+
+export function updateRequest(id: string, body: RequestUpdatePayload): Promise<RequestRead> {
+  return apiPatch<RequestRead>(`/api/requests/${id}`, body);
+}
+
+export function fetchListings(params?: {
+  page?: number;
+  page_size?: number;
+  type?: string;
+  status?: string;
+  q?: string;
+}): Promise<ListingListResponse> {
+  return apiGet<ListingListResponse>(`/api/listings${toQuery({ page_size: PAGE_SIZE, ...params })}`);
+}
+
+export function fetchListing(id: string): Promise<ListingRead> {
+  return apiGet<ListingRead>(`/api/listings/${id}`);
+}
+
+export function createListing(body: ListingCreatePayload): Promise<ListingRead> {
+  return apiPost<ListingRead>("/api/listings", body);
+}
+
+export function updateListing(id: string, body: { status: "RESOLVED" | "REMOVED" }): Promise<ListingRead> {
+  return apiPatch<ListingRead>(`/api/listings/${id}`, body);
+}
+
+export function contactListing(id: string): Promise<ListingInterestRead> {
+  return request<ListingInterestRead>(`/api/listings/${id}/interest`, { method: "POST" });
+}
+
+export function fetchListingInterests(id: string): Promise<ListingInterestListResponse> {
+  return apiGet<ListingInterestListResponse>(`/api/listings/${id}/interests`);
+}
+
+export function fetchInfoPages(category?: string): Promise<{ items: InfoPageRead[] }> {
+  return apiGet<{ items: InfoPageRead[] }>(`/api/info/pages${toQuery({ category })}`);
+}
+
+export function fetchFaqs(category?: string): Promise<{ items: FaqRead[] }> {
+  return apiGet<{ items: FaqRead[] }>(`/api/info/faqs${toQuery({ category })}`);
+}
+
+export function fetchStaffContacts(): Promise<{ items: StaffContactRead[] }> {
+  return apiGet<{ items: StaffContactRead[] }>("/api/info/contacts");
 }

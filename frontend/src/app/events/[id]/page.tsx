@@ -10,7 +10,7 @@ import { StatusBadge } from "@/components/feedback/StatusBadge";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { usePublishedPosts } from "@/hooks/use-published-posts";
-import { ROUTES } from "@/lib/constants";
+import { ROUTES, isStaffWorkspace, staffEventInterestPath } from "@/lib/constants";
 import { EVENT_CATEGORY, EVENT_INTEREST, FIXTURE_POSTS } from "@/lib/fixtures/campus";
 import { formatDateTime } from "@/lib/datetime";
 
@@ -56,6 +56,11 @@ export default function EventDetailPage() {
               <p className="text-sm text-muted-foreground">
                 {(EVENT_INTEREST[post.id] ?? 0) + (interested ? 1 : 0)} students interested
               </p>
+              {user && isStaffWorkspace(user.role) ? (
+                <Button asChild variant="outline">
+                  <Link href={staffEventInterestPath(post.id)}>View interest list</Link>
+                </Button>
+              ) : null}
             </div>
             <section>
               <h2 className="text-lg font-semibold">About</h2>

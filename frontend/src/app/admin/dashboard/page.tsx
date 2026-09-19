@@ -35,10 +35,10 @@ export default function AdminDashboardPage() {
           <Link href={ROUTES.adminUsers}>Add User</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href={ROUTES.adminUsers}>Add Staff</Link>
+          <Link href={ROUTES.adminStaff}>Add Staff</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href={ROUTES.newPost}>Create Announcement</Link>
+          <Link href={ROUTES.staffContentNew}>Create Announcement</Link>
         </Button>
         <Button asChild variant="outline">
           <Link href={ROUTES.adminRoles}>Manage Roles</Link>

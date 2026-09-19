@@ -53,6 +53,9 @@ Password for all: `CampusHub!2026`
 | 3 | Sign out, sign in as Kasun | Same app, different audience | Business year 1 briefing; no Computing lab post | BR2 / BR12 | 0:40 |
 | 4 | Stay as Kasun, try New announcement or POST as student | Students cannot publish | No button, or 403 from API | BR12 | 0:20 |
 | 5 | Sign in as admin, publish a short announcement | Staff update the official channel | Post appears on the feed | BR11 | 0:30 |
+| 6 | As Nimali, submit academic support, then as academic Start it | One request engine, role-based handling | Status OPEN → IN_PROGRESS with staff note | BR9 | 0:40 |
+| 7 | Report a lost item, contact as the other student | In-app contact, no phone numbers | Interest list shows first name only | BR7 | 0:30 |
+| 8 | Open Calendar, Opportunities, FAQ/Wellbeing | Extra post types and info are seeded | Dates, job, counselling hours visible | BR13 / BR20 / BR10 / BR29 | 0:20 |
 
 ## 4. Show depth (pick 2-3 to highlight in the demo)
 
@@ -60,6 +63,9 @@ Password for all: `CampusHub!2026`
 - [ ] Role-based access (student vs admin)
 - [ ] Audience targeting (two students)
 - [ ] Tests passing (`make test` in a terminal, needs `DATABASE_URL`)
+- [ ] Lost & found contact shows first names only (no email)
+- [ ] Academic cannot handle a facility issue (403)
+- [ ] Calendar / job / guest lecture created from staff PostEditor
 
 ## 5. If something breaks
 

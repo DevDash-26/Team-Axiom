@@ -52,6 +52,15 @@ export const ANNOUNCEMENT_ROLES: readonly RoleName[] = [
   ROLES.SUPER_ADMIN,
 ];
 
+export const STAFF_POST_TYPES = [
+  { id: "ANNOUNCEMENT", label: "Announcement", roles: ANNOUNCEMENT_ROLES },
+  { id: "CALENDAR_ENTRY", label: "Calendar", roles: ANNOUNCEMENT_ROLES },
+  { id: "GUEST_LECTURE", label: "Guest lecture", roles: ANNOUNCEMENT_ROLES },
+  { id: "EMERGENCY", label: "Emergency", roles: EMERGENCY_ROLES },
+  { id: "SCHEDULE_CHANGE", label: "Schedule change", roles: EMERGENCY_ROLES },
+  { id: "JOB", label: "Job", roles: EMERGENCY_ROLES },
+] as const;
+
 export const STAFF_WORKSPACE_ROLES: readonly RoleName[] = [
   ROLES.ACADEMIC,
   ROLES.SOCIETY_REP,
@@ -75,6 +84,7 @@ export const POST_TYPE_LABELS: Record<string, string> = {
 };
 
 export const FAQ_CATEGORY_LABELS: Record<string, string> = {
+  FAQ: "General FAQ",
   IT: "IT",
   LIBRARY: "Library",
   WELLBEING: "Wellbeing",
@@ -142,6 +152,10 @@ export const ROUTES = {
   staffContentNew: "/staff/content/new",
   staffBookings: "/staff/bookings",
   staffRequests: "/staff/requests",
+  staffLostFound: "/staff/lost-found",
+  staffAssistant: "/staff/assistant",
+  staffEvents: "/staff/events",
+  staffSocieties: "/staff/societies",
   adminDashboard: "/admin/dashboard",
   adminUsers: "/admin/users",
   adminStaff: "/admin/staff",
@@ -173,12 +187,29 @@ export function canCreateEmergency(role: string): boolean {
   return EMERGENCY_ROLES.includes(role as RoleName);
 }
 
+export function staffPostTypesForRole(role: string) {
+  return STAFF_POST_TYPES.filter((item) => item.roles.includes(role as RoleName));
+}
+
+export function canHandleRequest(role: string, type: string): boolean {
+  if (isAdmin(role)) return true;
+  return role === ROLES.ACADEMIC && type === REQUEST_TYPE.ACADEMIC_SUPPORT;
+}
+
 export function canManageContent(role: string): boolean {
-  return canCreateAnnouncement(role) || canCreateEmergency(role);
+  return staffPostTypesForRole(role).length > 0;
 }
 
 export function staffContentEditPath(id: string): string {
   return `${ROUTES.staffContent}/${id}/edit`;
+}
+
+export function staffEventInterestPath(id: string): string {
+  return `${ROUTES.staffEvents}/${id}/interest`;
+}
+
+export function staffSocietyInterestPath(slug: string): string {
+  return `${ROUTES.staffSocieties}/${slug}/interest`;
 }
 
 export function dashboardPathForRole(role: string): string {
@@ -328,6 +359,29 @@ export const STUDY_YEARS = [
   { id: "2", label: "Year 2" },
   { id: "3", label: "Year 3" },
   { id: "4", label: "Year 4" },
+] as const;
+
+export const BOOKING_STATUS_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "PENDING", label: "Pending" },
+  { id: "APPROVED", label: "Approved" },
+  { id: "REJECTED", label: "Rejected" },
+] as const;
+
+export const USER_STATUS_FILTERS = [
+  { id: "all", label: "All statuses" },
+  { id: "Active", label: "Active" },
+  { id: "Disabled", label: "Disabled" },
+] as const;
+
+export const USER_ROLE_FILTERS = [
+  { id: "all", label: "All roles" },
+  { id: "STUDENT", label: "Student" },
+  { id: "ACADEMIC", label: "Academic" },
+  { id: "SOCIETY_REP", label: "Society rep" },
+  { id: "FINANCE", label: "Finance" },
+  { id: "ADMIN", label: "Admin" },
+  { id: "SUPER_ADMIN", label: "Super admin" },
 ] as const;
 
 export const TITLE_MAX = 200;

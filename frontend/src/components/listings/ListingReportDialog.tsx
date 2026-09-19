@@ -16,15 +16,15 @@ import { FormField } from "@/components/feedback/FormField";
 import { NativeSelect } from "@/components/feedback/NativeSelect";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ApiError, createListing } from "@/lib/api";
 import {
   BODY_MAX,
   LISTING_CATEGORIES,
   LISTING_HANDOVER_HINT,
   LISTING_KIND,
-  LISTING_STATUS,
   TITLE_MAX,
 } from "@/lib/constants";
-import type { ListingFixture } from "@/lib/fixtures/services";
+import type { ListingRead } from "@/types";
 
 const reportSchema = z.object({
   type: z.enum([LISTING_KIND.LOST, LISTING_KIND.FOUND]),
@@ -40,7 +40,7 @@ type ListingReportDialogProps = {
   kind: typeof LISTING_KIND.LOST | typeof LISTING_KIND.FOUND;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreated: (item: ListingFixture) => void;
+  onCreated: (item: ListingRead) => void;
 };
 
 export function ListingReportDialog({ kind, open, onOpenChange, onCreated }: ListingReportDialogProps) {
@@ -51,6 +51,7 @@ export function ListingReportDialog({ kind, open, onOpenChange, onCreated }: Lis
   const [occurredOn, setOccurredOn] = useState("2026-09-19");
   const [handover, setHandover] = useState("Student Services desk, Level 1");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   function resetForm() {
     setTitle("");
@@ -62,7 +63,7 @@ export function ListingReportDialog({ kind, open, onOpenChange, onCreated }: Lis
     setErrors({});
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const parsed = reportSchema.safeParse({
       type: kind,
@@ -76,27 +77,30 @@ export function ListingReportDialog({ kind, open, onOpenChange, onCreated }: Lis
     if (!parsed.success) {
       const next: Record<string, string> = {};
       for (const issue of parsed.error.issues) {
-        const key = String(issue.path[0]);
-        next[key] = issue.message;
+        next[String(issue.path[0])] = issue.message;
       }
       setErrors(next);
       return;
     }
-    const item: ListingFixture = {
-      id: `lf-${Date.now()}`,
-      type: parsed.data.type,
-      title: parsed.data.title,
-      body: parsed.data.body,
-      category: parsed.data.category,
-      location: parsed.data.location,
-      occurred_at: new Date(`${parsed.data.occurredOn}T08:00:00.000Z`).toISOString(),
-      status: LISTING_STATUS.ACTIVE,
-      handover: parsed.data.handover,
-    };
-    onCreated(item);
-    onOpenChange(false);
-    resetForm();
-    toast.success("Report submitted. Staff can match it without showing personal contacts.");
+    setSubmitting(true);
+    try {
+      const item = await createListing({
+        type: parsed.data.type,
+        title: parsed.data.title,
+        body: `${parsed.data.body} Handover: ${parsed.data.handover}.`,
+        category: parsed.data.category,
+        location: parsed.data.location,
+        occurred_at: new Date(`${parsed.data.occurredOn}T08:00:00.000Z`).toISOString(),
+      });
+      onCreated(item);
+      onOpenChange(false);
+      resetForm();
+      toast.success("Report submitted. Staff can match it without showing personal contacts.");
+    } catch (cause) {
+      toast.error(cause instanceof ApiError ? cause.message : "Could not submit this report.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -112,11 +116,9 @@ export function ListingReportDialog({ kind, open, onOpenChange, onCreated }: Lis
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{kind === LISTING_KIND.LOST ? "I lost something" : "I found something"}</DialogTitle>
-          <DialogDescription>
-            {LISTING_HANDOVER_HINT}
-          </DialogDescription>
+          <DialogDescription>{LISTING_HANDOVER_HINT}</DialogDescription>
         </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={(event) => void handleSubmit(event)}>
           <FormField id="listing-title" label="Item name" error={errors.title}>
             <Input
               id="listing-title"
@@ -173,8 +175,8 @@ export function ListingReportDialog({ kind, open, onOpenChange, onCreated }: Lis
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" className="h-11">
-              Submit report
+            <Button type="submit" className="h-11" disabled={submitting}>
+              {submitting ? "Submitting…" : "Submit report"}
             </Button>
           </DialogFooter>
         </form>

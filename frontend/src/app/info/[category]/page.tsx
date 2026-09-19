@@ -1,16 +1,18 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { EmptyState } from "@/components/feedback/EmptyState";
+import { EmptyState, ErrorState } from "@/components/feedback/EmptyState";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSessionUser } from "@/hooks/use-session-user";
+import { ApiError, fetchFaqs, fetchInfoPages, fetchStaffContacts } from "@/lib/api";
 import { INFO_CATEGORIES, ROUTES } from "@/lib/constants";
 import { formatDate } from "@/lib/datetime";
-import { FAQS, INFO_PAGES, STAFF_CONTACTS } from "@/lib/fixtures/services";
+import type { FaqRead, InfoPageRead, StaffContactRead } from "@/types";
 
 export default function InfoCategoryPage() {
   const params = useParams<{ category: string }>();
@@ -19,20 +21,57 @@ export default function InfoCategoryPage() {
     () => INFO_CATEGORIES.find((item) => item.id.toLowerCase() === params.category.toLowerCase()) ?? null,
     [params.category],
   );
-  const page = INFO_PAGES.find((item) => item.category === category?.id) ?? null;
-  const faqs = FAQS.filter((item) => item.category === category?.id);
-  const contacts = category?.id === "DIRECTORY" ? STAFF_CONTACTS : [];
+  const [page, setPage] = useState<InfoPageRead | null>(null);
+  const [faqs, setFaqs] = useState<FaqRead[]>([]);
+  const [contacts, setContacts] = useState<StaffContactRead[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    if (!category) {
+      setLoading(false);
+      setPage(null);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const [pages, faqFeed, contactFeed] = await Promise.all([
+        fetchInfoPages(category.id),
+        fetchFaqs(category.id),
+        category.id === "DIRECTORY" ? fetchStaffContacts() : Promise.resolve({ items: [] as StaffContactRead[] }),
+      ]);
+      setPage(pages.items[0] ?? null);
+      setFaqs(faqFeed.items);
+      setContacts(contactFeed.items);
+    } catch (cause) {
+      setError(cause instanceof ApiError ? cause.message : "Could not load this topic.");
+    } finally {
+      setLoading(false);
+    }
+  }, [category]);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   return (
     <AppShell variant="student" user={user} onSignedOut={() => setUser(null)}>
       <Button asChild variant="ghost" className="mb-4 px-0">
         <Link href={ROUTES.info}>Back to Campus Information</Link>
       </Button>
-      {!category || !page ? (
+      {loading ? (
+        <Skeleton className="h-48 rounded-xl" />
+      ) : error ? (
+        <ErrorState message={error} onRetry={() => void load()} />
+      ) : !category || !page ? (
         <EmptyState title="Topic not found" description="Return to the information hub and pick a category." />
       ) : (
         <>
-          <PageHeader title={page.title} description={`Updated ${formatDate(page.updated_at)}`} />
+          <PageHeader
+            title={page.title}
+            description={page.updated_at ? `Updated ${formatDate(page.updated_at)}` : undefined}
+          />
           <article className="mb-8 rounded-xl border border-border bg-card p-6">
             <p className="text-sm text-[#404040]">{page.body}</p>
           </article>

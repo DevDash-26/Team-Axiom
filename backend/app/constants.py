@@ -78,6 +78,7 @@ class ResourceKind(str, Enum):
 class InterestTarget(str, Enum):
     EVENT = "EVENT"
     SOCIETY = "SOCIETY"
+    LISTING = "LISTING"
 
 
 class MembershipStatus(str, Enum):
@@ -193,6 +194,13 @@ ACADEMIC_OWN_FACULTY_TYPES: frozenset[PostType] = frozenset(
 SOCIETY_OWN_TYPES: frozenset[PostType] = frozenset(
     {PostType.EVENT, PostType.SOCIETY_UPDATE, PostType.HIGHLIGHT}
 )
+
+LOST_FOUND_TYPES: frozenset[ListingType] = frozenset({ListingType.LOST, ListingType.FOUND})
+
+REQUEST_TRANSITIONS: dict[RequestStatus, frozenset[RequestStatus]] = {
+    RequestStatus.OPEN: frozenset({RequestStatus.IN_PROGRESS}),
+    RequestStatus.IN_PROGRESS: frozenset({RequestStatus.RESOLVED, RequestStatus.CLOSED}),
+}
 
 PAGE_SIZE_DEFAULT = 20
 PAGE_SIZE_MAX = 50

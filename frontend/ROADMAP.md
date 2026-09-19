@@ -164,14 +164,15 @@ Status: **Designed** (this track) · **Placeholder** (route exists, sparse UI) �
 
 ### Phase 4 — Staff / admin (full)
 
-| Screen | Route | BR |
-|---|---|---|
-| My content table + type forms | `/staff/content`, `/staff/content/new` | BR11, BR2 |
-| Booking approvals | `/staff/bookings` | BR8 |
-| Request queue | `/staff/requests` | BR9, BR17, BR21 |
-| Event interest / society sign-up lists | `/staff/events/[id]/interest` | BR4, BR6 |
-| Assistant insights | `/staff/assistant` | BR33 |
-| Users / staff / roles matrix | `/admin/users`, `/admin/roles` | BR12 |
+| Screen | Route | BR | UI notes |
+|---|---|---|---|
+| My content table + type forms | `/staff/content`, `/staff/content/new`, `/staff/content/[id]/edit` | BR11, BR2 | **Already in pulled code** (`PostEditor`, archive/publish). Left as-is. |
+| Booking approvals | `/staff/bookings` | BR8 | Drawer. Approve hidden unless ADMIN / SUPER_ADMIN. |
+| Request queue | `/staff/requests` | BR9, BR17, BR21 | Academic vs facility actions by role. |
+| Event / society interest lists | `/staff/events/[id]/interest`, `/staff/societies/[slug]/interest` | BR4, BR6 | Names + programme only. |
+| Assistant insights | `/staff/assistant` | BR33 | ADMIN / SUPER_ADMIN. |
+| Staff lost & found | `/staff/lost-found` | BR7 | Moderate only for ADMIN. |
+| Users / staff / roles matrix | `/admin/users`, `/admin/staff`, `/admin/roles` | BR12 | Six-role read-only matrix. Mutate = SUPER_ADMIN visibility. |
 
 ### Phase 5 — Hardening
 
@@ -252,7 +253,7 @@ Listings, requests, info hub, opportunities, profile layout (faculty / year / pr
 
 ### Phase 4 — Staff / admin depth
 
-Content table, audience selector UI, drawers, role matrix (read-only), confirm-delete modal. Hide actions the role cannot use.
+Content table, audience selector UI, drawers, role matrix (read-only), confirm-delete modal. Hide actions the role cannot use. **Designed (this track).** Existing post editor from the pull was kept.
 
 ### Phase 5 — Hardening
 
@@ -357,3 +358,4 @@ Do not add another library without updating DISCLOSURES.md.
 | 2026-09-19 | 1 | Tokens, shadcn + Lucide + Magic UI, student/staff/admin shells, restyled home/login, 403, visual dashboards, nav placeholders |
 | 2026-09-19 | 2 | Renamed to UniHive. Events, updates, calendar, societies, booking chrome, search results, AI chat + launcher |
 | 2026-09-19 | 3 | Lost & found, textbooks, requests, info hub, opportunities, profile layouts (fixtures) |
+| 2026-09-19 | 4 | Staff bookings/requests/L&F/insights/interest lists; admin users/staff/6-role matrix. Pulled PostEditor left in place. |

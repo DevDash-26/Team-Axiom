@@ -115,11 +115,11 @@ export const STAFF_NAV: NavItem[] = [
     icon: ClipboardList,
     children: [
       { href: ROUTES.staffBookings, label: "Room Requests" },
-      { href: ROUTES.lostFound, label: "Lost & Found" },
+      { href: ROUTES.staffLostFound, label: "Lost & Found" },
       { href: ROUTES.staffRequests, label: "Student Requests" },
     ],
   },
-  { href: ROUTES.assistant, label: "AI Assistant", icon: MessageCircle },
+  { href: ROUTES.staffAssistant, label: "AI insights", icon: MessageCircle },
 ];
 
 export const ADMIN_NAV: NavItem[] = [
@@ -130,6 +130,7 @@ export const ADMIN_NAV: NavItem[] = [
     icon: Users,
     children: [
       { href: ROUTES.adminUsers, label: "Users" },
+      { href: ROUTES.adminStaff, label: "Staff" },
       { href: ROUTES.adminRoles, label: "Roles & Permissions" },
     ],
   },
@@ -150,10 +151,11 @@ export const ADMIN_NAV: NavItem[] = [
     icon: Building2,
     children: [
       { href: ROUTES.staffBookings, label: "Room Requests" },
-      { href: ROUTES.lostFound, label: "Lost & Found" },
+      { href: ROUTES.staffLostFound, label: "Lost & Found" },
       { href: ROUTES.staffRequests, label: "Support Requests" },
     ],
   },
+  { href: ROUTES.staffAssistant, label: "AI insights", icon: MessageCircle },
   { href: ROUTES.adminRoles, label: "System", icon: Shield },
 ];
 

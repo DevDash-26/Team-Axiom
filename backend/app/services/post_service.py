@@ -293,6 +293,12 @@ def _href(post: Post) -> str:
         return f"/events/{post.id}"
     if post.type == PostType.GUEST_LECTURE.value:
         return "/lectures"
+    if post.type == PostType.CALENDAR_ENTRY.value:
+        return "/calendar"
+    if post.type == PostType.JOB.value:
+        return "/opportunities"
+    if post.type in {PostType.SCHEDULE_CHANGE.value, PostType.EMERGENCY.value}:
+        return "/updates"
     return "/"
 
 
