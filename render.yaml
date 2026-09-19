@@ -5,13 +5,17 @@ services:
     runtime: python
     plan: free
     branch: main
-    # Leave root at repo root; start.sh cds into backend.
-    buildCommand: pip install -r backend/requirements.txt
+    # Root Directory must stay empty (repo root). Dashboard Start Command is often
+    # `uvicorn app.main:app` which would miss backend/app without PYTHONPATH + the
+    # root `app/` shim. Prefer start.sh; PYTHONPATH keeps the default uvicorn working.
+    buildCommand: pip install -r requirements.txt
     startCommand: bash start.sh
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.11"
+      - key: PYTHONPATH
+        value: backend
       - key: DATABASE_URL
         sync: false
       - key: SECRET_KEY
