@@ -32,7 +32,7 @@ function DrawerLinks({ items, pathname }: { items: NavItem[]; pathname: string }
             <Link
               href={item.href}
               className={cn(
-                "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
+                "flex min-h-11 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
                 active ? "bg-secondary text-primary" : "text-[#404040] hover:bg-muted",
               )}
             >
@@ -73,7 +73,7 @@ export function MobileNavigation({ variant }: MobileNavigationProps) {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex flex-col items-center gap-1 py-2 text-[11px] font-medium",
+                    "flex min-h-11 flex-col items-center justify-center gap-1 py-2 text-[11px] font-medium",
                     active ? "text-primary" : "text-muted-foreground",
                   )}
                 >
@@ -95,7 +95,7 @@ export function MobileNavigation({ variant }: MobileNavigationProps) {
       <BrandMark href={variant === "admin" ? ROUTES.adminDashboard : ROUTES.staffDashboard} />
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" aria-label="Open menu">
+          <Button variant="outline" size="icon" className="size-11" aria-label="Open menu">
             <Menu className="size-4" />
           </Button>
         </SheetTrigger>

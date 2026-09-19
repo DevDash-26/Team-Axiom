@@ -40,6 +40,7 @@ import {
   canHandleRequest,
 } from "@/lib/constants";
 import { formatDateTime } from "@/lib/datetime";
+import { rowActivateProps } from "@/lib/a11y";
 import type { RequestRead, RequestStatusName } from "@/types";
 
 const STATUS_OPTIONS = [
@@ -155,7 +156,11 @@ export default function StaffRequestsPage() {
             </TableHeader>
             <TableBody>
               {items.map((row) => (
-                <TableRow key={row.id} className="cursor-pointer" onClick={() => openRow(row)}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  {...rowActivateProps(() => openRow(row))}
+                >
                   <TableCell className="font-medium">{row.requester.full_name}</TableCell>
                   <TableCell>{REQUEST_TYPE_LABELS[row.type] ?? row.type}</TableCell>
                   <TableCell>{row.title}</TableCell>
