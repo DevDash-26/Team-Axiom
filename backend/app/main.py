@@ -2,6 +2,7 @@
 
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
+import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,10 +12,16 @@ from app.db import init_db
 from app.errors import register_exception_handlers
 from app.routers import auth, health, info, posts
 
+logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    init_db()
+    try:
+        init_db()
+    except Exception:
+        # Keep the process up so /health and OpenAPI still work; /ready reports DB status.
+        logger.exception("Database bootstrap failed; API is up but not ready")
     yield
 
 
