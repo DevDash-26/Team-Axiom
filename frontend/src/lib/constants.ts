@@ -33,6 +33,8 @@ export const YEARS = [1, 2, 3, 4] as const;
 export const ADMIN_ROLES: readonly RoleName[] = [ROLES.ADMIN, ROLES.SUPER_ADMIN];
 
 export const EMERGENCY_ROLES: readonly RoleName[] = [ROLES.ADMIN, ROLES.SUPER_ADMIN];
+export const EMERGENCY_POLL_MS = 15_000;
+export const EMERGENCY_TOAST_MS = 10_000;
 
 export const CONTENT_STATUSES = [
   { id: "all", label: "All" },

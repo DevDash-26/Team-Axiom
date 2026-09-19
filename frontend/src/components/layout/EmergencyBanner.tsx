@@ -13,9 +13,9 @@ type EmergencyBannerProps = {
 };
 
 export function EmergencyBanner({ post }: EmergencyBannerProps) {
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissedId, setDismissedId] = useState<string | null>(null);
 
-  if (!post || dismissed) {
+  if (!post || dismissedId === post.id) {
     return null;
   }
 
@@ -25,7 +25,7 @@ export function EmergencyBanner({ post }: EmergencyBannerProps) {
     <div
       className="border-b border-destructive/30 bg-[var(--danger-soft)]"
       role="status"
-      aria-live="polite"
+      aria-live={post.type === "EMERGENCY" ? "assertive" : "polite"}
     >
       <div className="mx-auto flex max-w-6xl items-start gap-3 px-4 py-3 sm:items-center">
         <Badge variant="destructive">{typeLabel}</Badge>
@@ -43,7 +43,7 @@ export function EmergencyBanner({ post }: EmergencyBannerProps) {
           variant="ghost"
           size="icon-sm"
           aria-label="Dismiss alert"
-          onClick={() => setDismissed(true)}
+          onClick={() => setDismissedId(post.id)}
         >
           <X className="size-4" />
         </Button>

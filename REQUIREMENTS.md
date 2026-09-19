@@ -7,7 +7,11 @@
 **Target users / roles:** STUDENT, ACADEMIC, SOCIETY_REP, FINANCE, ADMIN, SUPER_ADMIN (UI groups Staff / Admin)  
 **Stack:** Next.js + TypeScript + Tailwind | FastAPI + SQLAlchemy | Supabase Postgres + Auth | markdown chunks + pgvector RAG (SQL fallback)  
 **UI/UX source:** `.cursor/UniHive_UI_UX_Plan.md`  
-**Last updated:** 2026-09-19 (Waves A–C + UniHive AI markdown/pgvector RAG)
+**Last updated:** 2026-09-19 (full BR audit vs problem statement + codebase)
+
+**Coverage verdict:** 22 of 33 BRs are end-to-end (API + UI + seed). 11 are Partial. 0 are Not done. Official BR marks ~50/85 fully credited + ~24/35 of the Partial pool if judged generously → **Good–Excellent** on requirement coverage, if the demo stays on wired flows and we do not show fixture admin pages as live.
+
+`PRODUCT_BACKLOG.md` is stale (pre-Waves A–C). Trust this file.
 
 ---
 
@@ -28,20 +32,20 @@
 | ID | Requirement | Marks | Engine | Build order | Status | Owner | Where implemented | Tests | Notes |
 |----|-------------|-------|--------|-------------|--------|-------|-------------------|-------|-------|
 | BR1 | Unified access (single home, search, feed) | 5 | Platform | 1 | Done | | `frontend/src/app/page.tsx`, `/search` | `test_posts.py` | Home feed + `GET /api/search` (posts plus FAQ, society, room on page 1). |
-| BR2 | Targeted announcements by faculty/year/programme | 3 | E1 | 1 | Partial | | `PostEditor` audience fields, `post_service.apply_visibility` | `test_student_sees_only_targeted_posts` | API + feed. Staff form targets faculty/year/programme. |
+| BR2 | Targeted announcements by faculty/year/programme | 3 | E1 | 1 | Partial | | `PostEditor` audience fields, `post_service.apply_visibility` | `test_student_sees_only_targeted_posts` | Faculty + year targeting is seeded and tested. Programme field exists on the form/API but has no seed demo or test. No email/push. |
 | BR3 | Event visibility (university + student organiser) | 3 | E1 | 2 | Done | | `frontend/src/app/events`, seed EVENT posts | | Published EVENT + GUEST_LECTURE from posts API. Society vs university via `society_id`. |
-| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Done | | `POST/GET /api/posts/{id}/interest(s)`, EventCard, `/staff/events/[id]/interest` | `test_posts.py` | Students record interest. Staff see names + programmes only. |
+| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Done | | `POST/GET /api/posts/{id}/interest(s)`, EventCard, `/staff/events/[id]/interest` | `test_posts.py` | Persist works. Event cards start count at 0 until the student clicks (staff list is the organiser view). |
 | BR5 | Society visibility (society pages and updates) | 3 | E1 | 2 | Done | | `GET /api/societies`, `/societies` | `test_societies.py` | List/detail from API. Society updates/events filtered by `society_id`. |
 | BR6 | Society sign-up / interest | 2 | E5 | 2 | Done | | `POST /api/societies/{slug}/interest`, SocietyMembership | `test_societies.py` | Interest CTA + staff sign-up list. |
 | BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Done | | `/api/listings`, `/lost-found`, `/staff/lost-found` | `test_listings.py` | Create, list, resolve, in-app contact via Interest. Default list is LOST+FOUND only. |
 | BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Done | | `/api/resources`, `/api/bookings`, `/bookings`, `/staff/bookings` | `test_bookings.py` | Overlap 409, duration/hours/advance rules, staff approve/reject + in-app notification. |
 | BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Done | | `/api/requests`, `/requests`, `/staff/requests` | `test_requests.py` | OPEN → IN_PROGRESS → RESOLVED\|CLOSED. Academic handles academic support. |
 | BR10 | FAQ access | 2 | E2 | 3 | Done | | `GET/POST /api/info/faqs`, `/info`, `/student/services` | `test_info.py` | Paginated FAQ search (Singlish-aware), duplicate check on create, category pages. |
-| BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `POST /api/posts`, `PostEditor`, `/staff/content` | `test_admin_can_create_announcement` | Posts can be created/edited/archived. Info pages are seed-only. |
-| BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `PERMISSION_ROLES`, `/admin/roles`, RoleGate | `test_student_cannot_create_announcement` | Login + server permission map + hidden staff actions. Not every action has a UI. |
+| BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `POST /api/posts`, `PostEditor`, `/staff/content` | `test_admin_can_create_announcement` | Posts CRUD in staff UI. FAQ create exists as API only (finance can POST financial-aid FAQs). Info pages remain seed-only. |
+| BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `PERMISSION_ROLES`, `/admin/roles`, RoleGate | `test_student_cannot_create_announcement` | Server RBAC is real. `/admin/users` and `/admin/staff` are **fixtures** (no `USERS_MANAGE` API). No Next.js middleware; staff routes are not server-gated. |
 | BR13 | Academic calendar (exams, add/drop, milestones) | 3 | E1 | 3 | Done | | `CALENDAR_ENTRY` posts, `/calendar` | `test_academic_can_create_calendar_and_guest_lecture` | Same post table. `event_at` required. |
 | BR14 | Student onboarding info | 2 | E2 | 4 | Partial | | `/info/onboarding`, `GET /api/info/pages` | | Read-only seeded page. No CMS. |
-| BR15 | Emergency communication | 3 | E1 | 2 | Partial | | Emergency banner on AppShell | | Seed includes an emergency post. Banner wired from feed; also shows schedule changes. |
+| BR15 | Emergency communication | 3 | E1 | 2 | Done | | Banner, `EMERGENCY` posts, in-app + optional SMTP | `test_emergency_notify.py` | No SMS (no phone numbers). Browser toast while the tab is open. Email logs a count if SMTP is unset. |
 | BR16 | Schedule changes / closures | 1 | E1 | 3 | Done | | `SCHEDULE_CHANGE` posts, banner, `/updates` | `test_admin_can_create_job_and_schedule_change` | Admin-only publish. Same post table. |
 | BR17 | Feedback loop | 1 | E4 | 4 | Done | | `/requests` type FEEDBACK, staff queue | `test_admin_handles_facility_and_feedback` | Same request engine. Admin handles feedback. |
 | BR18 | Volunteering opportunities | 1 | E1 | 4 | Done | | `VOLUNTEERING` posts, PostEditor, `/opportunities`, seed | | Same post table. Seeded demo post. |
@@ -69,7 +73,7 @@
 | NFR2 | Performance and scalability (semester-start peaks) | 3 | Pagination, DB indexes, caching of feeds, lightweight pages, note on scaling path | Partial | `models/post.py`, list endpoint | Pagination and indexes. No feed cache. |
 | NFR3 | Reliability and availability | 1 | Health check, graceful error pages, AI fallback to search, documented deploy | Partial | `/health`, `/ready`, `not-found.tsx`, `error.tsx` | Frontend error boundary + 404. Hosted Supabase is a single-network dependency; demo needs a hotspot. |
 | NFR4 | Security and privacy | 2 | Managed Auth, server-side RBAC, only authorised publish, minimal personal data, audit log | Partial | `security.py`, RLS with no anon policies | No password hashes in our DB. Roles are in `users`, not JWT claims. |
-| NFR5 | Maintainability | 4 | Clear layers, constants, seed, tests, README | Partial | `backend/app` | Admin UI is only “New announcement”. |
+| NFR5 | Maintainability | 4 | Clear layers, constants, seed, tests, README | Partial | `backend/app` | Staff content UI covers post types. Info CMS and user-management API are still missing. Dead `session-records` + dashboard fixtures remain. |
 | NFR6 | Robustness (bad/incomplete input) | 3 | Server + client validation, sensible defaults | Partial | Pydantic + zod | 422 on empty title. |
 | NFR-08 | No secrets in repo | — | `.env.example` | Done | | |
 | NFR-09 | pytest one command | — | `make test` | Partial | | |
@@ -102,8 +106,19 @@
 | AssistantQuery (+ session_id, source_ids), AuditLog | Done |
 | **Notification** | **Added** |
 
-## F. Next build slices
+## F. Gaps that still matter for judging (ranked)
 
-1. Fresh-clone `make test` with `.env` and demo rehearsal  
-2. Enable pgvector in the Supabase project if embeddings are used; seed still indexes markdown with a keyword fallback  
-3. Info-page CMS only if judges ask — seed remains the maintenance path  
+Do **not** start new features unless a demo-critical hole appears. Official problem statement §7: not every category must be equal.
+
+| Rank | Gap | Why it matters | Suggested handling |
+|------|-----|----------------|--------------------|
+| 1 | `/admin/users` and `/admin/staff` are fixtures | UI plan P0; BR12 looks unfinished if demoed | Do not demo these pages. Point at `/admin/roles` + live 403s. |
+| 2 | Staff/admin dashboards use `STAFF_PREVIEW` / `ADMIN_PREVIEW` | Looks fake if opened | Demo staff **queues** (bookings, requests, content), not the count cards. |
+| 3 | Notification bell is a dead button | P0 in UI plan; booking notify API exists | Bell now opens **Profile → Recent activity**. Emergencies also write `Notification` rows. |
+| 4 | Event card interest count starts at 0 | BR4 looks empty until click | After “I’m Interested”, count updates from API; staff interest page is the organiser view. |
+| 5 | Programme targeting untested / unseeded | BR2 third axis | Fine for pitch: show faculty (Nimali) vs year (Kasun). |
+| 6 | No FAQ/info CMS UI | BR11 Partial | Seed + staff post editor is the maintenance story. |
+| 7 | `usePublishedPosts` falls back to `FIXTURE_POSTS` if API fails | Demo risk | Keep backend up; if feed looks “wrong”, check the API. |
+| 8 | No users API, no rate limit, GIN unused, no listing images | Depth / NFR | Leave. Pitch: engine reuse + tests, not extra infrastructure. |
+
+pgvector is enabled; seed indexed **11/11 embeddings**. Info-page CMS stays out unless judges ask.  
