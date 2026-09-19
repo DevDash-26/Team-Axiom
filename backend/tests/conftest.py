@@ -17,15 +17,18 @@ from app.main import app
 from app.models.user import User
 from app.security import get_current_user, get_optional_user
 
-@pytest.fixture(scope="session", autouse=True)
-def _create_schema() -> None:
+@pytest.fixture(scope="session")
+def _schema_ready() -> None:
     if not get_settings().database_url:
         pytest.skip("DATABASE_URL is not set")
-    init_db()
+    try:
+        init_db()
+    except Exception as exc:  # noqa: BLE001 — tests should skip when pooler/auth is down
+        pytest.skip(f"Database unavailable for tests: {exc}")
 
 
 @pytest.fixture
-def db_session() -> Generator[Session, None, None]:
+def db_session(_schema_ready: None) -> Generator[Session, None, None]:
     connection = get_engine().connect()
     transaction = connection.begin()
     session = Session(bind=connection)

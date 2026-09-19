@@ -89,3 +89,42 @@ export function listFaqs(params?: {
   const query = search.toString();
   return apiGet<FaqListResponse>(`/api/info/faqs${query ? `?${query}` : ""}`);
 }
+
+export type AssistantSource = {
+  type: string;
+  id: string;
+  title: string;
+  snippet: string;
+  url: string;
+};
+
+export type AssistantAction = {
+  label: string;
+  href: string;
+};
+
+export type AssistantChatResponse = {
+  answer: string;
+  sources: AssistantSource[];
+  actions: AssistantAction[];
+  intent: string;
+  language: string;
+  fallback: boolean;
+  escalated: boolean;
+  query_id: string | null;
+};
+
+export function assistantChat(body: {
+  question: string;
+  session_id?: string;
+  language_pref?: string;
+}): Promise<AssistantChatResponse> {
+  return apiPost<AssistantChatResponse>("/api/assistant/chat", body);
+}
+
+export function assistantFeedback(body: {
+  query_id: string;
+  rating: -1 | 1;
+}): Promise<{ status: string }> {
+  return apiPost<{ status: string }>("/api/assistant/feedback", body);
+}

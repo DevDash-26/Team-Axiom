@@ -59,7 +59,7 @@
 | BR30 | IT support info | 2 | E2 | 4 | Not done | | | | |
 | BR31 | Library resources and hours | 2 | E2 | 4 | Not done | | | | |
 | BR32 | Student life highlights | 1 | E1 | 4 | Not done | | | | |
-| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, AI launcher | | Chat chrome, sources, actions, fallback notice, thumbs. Demo replies only. |
+| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, `POST /api/assistant/chat`, multilingual EN/SI/Singlish | `test_assistant*.py` | Pipeline + language policy; LLM optional with search fallback. |
 
 ## B. Non-functional
 

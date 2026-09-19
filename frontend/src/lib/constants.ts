@@ -188,7 +188,15 @@ export const AI_SUGGESTED_PROMPTS = [
   "Find an available classroom this afternoon.",
   "When is the next academic deadline?",
   "How do I contact IT support?",
+  "Library eka open wenna puluwanda?",
+  "පුස්තකාලය කීයට විවෘතද?",
 ] as const;
+
+export const ASSISTANT_LANGUAGE_LABELS: Record<string, string> = {
+  en: "English",
+  si: "Sinhala",
+  si_latn: "Singlish",
+};
 
 export const ROLE_LABELS: Record<RoleName, string> = {
   STUDENT: "Student",
