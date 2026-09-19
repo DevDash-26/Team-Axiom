@@ -28,26 +28,26 @@
 | ID | Requirement | Marks | Engine | Build order | Status | Owner | Where implemented | Tests | Notes |
 |----|-------------|-------|--------|-------------|--------|-------|-------------------|-------|-------|
 | BR1 | Unified access (single home, search, feed) | 5 | Platform | 1 | Partial | | `frontend/src/app/page.tsx`, `/search` | `test_posts.py` | Home feed + search results UI. Search still uses fixtures (`GET /api/search` missing). |
-| BR2 | Targeted announcements by faculty/year/programme | 3 | E1 | 1 | Partial | | `post_service.apply_visibility` | `test_student_sees_only_targeted_posts` | API + feed. Staff targeting UI is still a simple form. |
+| BR2 | Targeted announcements by faculty/year/programme | 3 | E1 | 1 | Partial | | `PostEditor` audience fields, `post_service.apply_visibility` | `test_student_sees_only_targeted_posts` | Staff form targets faculty/year/programme. |
 | BR3 | Event visibility (university + student organiser) | 3 | E1 | 2 | Partial | | `frontend/src/app/events` | | Listing/detail UI. Uses posts API when available, otherwise fixtures. |
-| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Partial | | EventCard toggle | | UI count only. No interest API yet. |
+| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Partial | | EventCard toggle, `/staff/events/[id]/interest` | | Student toggle + staff list (fixtures). |
 | BR5 | Society visibility (society pages and updates) | 3 | E1 | 2 | Partial | | `frontend/src/app/societies` | | List/detail UI on fixtures. |
-| BR6 | Society sign-up / interest | 2 | E5 | 2 | Partial | | Society detail CTA | | Local toggle only. |
-| BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Partial | | `frontend/src/app/lost-found` | | List, report dialog, detail, resolve confirm. Fixture listings. |
-| BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Partial | | `frontend/src/app/bookings` | | Search, request modal, 409 layout, my bookings. Fixture rooms. |
-| BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Partial | | `frontend/src/app/requests` | | List + new request form. Fixture requests. |
+| BR6 | Society sign-up / interest | 2 | E5 | 2 | Partial | | Society detail CTA, `/staff/societies/[slug]/interest` | | Local toggle + staff list. |
+| BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Partial | | `/lost-found`, `/staff/lost-found` | | Student report + staff moderate (ADMIN). |
+| BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Partial | | `/bookings`, `/staff/bookings` | | Student request UI + staff approve drawer. Fixture bookings. |
+| BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Partial | | `/requests`, `/staff/requests` | | Student form + staff queue. |
 | BR10 | FAQ access | 2 | E2 | 3 | Partial | | `frontend/src/app/info` | | FAQ category in Campus Information. |
-| BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `POST /api/posts`, `/posts/new`, `/staff/content` | `test_admin_can_create_announcement` | Create + staff list. No edit/archive yet. |
-| BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `PERMISSION_ROLES`, login redirect | `test_student_cannot_create_announcement` | Login + server permission map. Not every action has a UI. |
+| BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `PostEditor`, `/staff/content`, edit/archive | | Create, edit, draft, archive. |
+| BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `/admin/roles`, RoleGate | | Six-role matrix + hidden actions. |
 | BR13 | Academic calendar (exams, add/drop, milestones) | 3 | E1 | 3 | Partial | | `frontend/src/app/calendar` | | Calendar list UI. |
 | BR14 | Student onboarding info | 2 | E2 | 4 | Partial | | `/info/onboarding` | | Info hub page. |
 | BR15 | Emergency communication | 3 | E1 | 2 | Partial | | Emergency banner on AppShell | | Seed includes an emergency post. Banner wired from feed. |
 | BR16 | Schedule changes / closures | 1 | E1 | 3 | Not done | | | | |
-| BR17 | Feedback loop | 1 | E4 | 4 | Partial | | `/requests` type FEEDBACK | | Student form + list. Staff handling is Phase 4. |
+| BR17 | Feedback loop | 1 | E4 | 4 | Partial | | `/requests`, `/staff/requests` | | Student form + staff note. |
 | BR18 | Volunteering opportunities | 1 | E1 | 4 | Partial | | `/opportunities` | | VOLUNTEERING chip + fixtures. |
 | BR19 | Alumni engagement | 1 | E1 | 4 | Partial | | `/opportunities` | | ALUMNI chip + fixtures. |
 | BR20 | Job and internship visibility | 3 | E1 | 3 | Partial | | `/opportunities` | | JOB chip; uses posts API when present. |
-| BR21 | Facility issue reporting | 2 | E4 | 3 | Partial | | `/requests/new` | | FACILITY_ISSUE form. |
+| BR21 | Facility issue reporting | 2 | E4 | 3 | Partial | | `/requests/new`, `/staff/requests` | | Student form + admin/staff queue. |
 | BR22 | Staff directory | 2 | E2 | 4 | Partial | | `/info/directory` | | Official office contacts only. |
 | BR23 | Financial support info | 3 | E2 | 3 | Partial | | `/info/financial_aid` | | Info page + FAQ. |
 | BR24 | Sports and recreation (info + booking) | 2 | E2 + E3 | 4 | Partial | | `/info/sports` | | Info only. Court booking not a separate flow. |
@@ -59,7 +59,7 @@
 | BR30 | IT support info | 2 | E2 | 4 | Partial | | `/info/it` | | Helpdesk hours. |
 | BR31 | Library resources and hours | 2 | E2 | 4 | Partial | | `/info/library` | | Hours and silent floor. |
 | BR32 | Student life highlights | 1 | E1 | 4 | Partial | | `/opportunities` HIGHLIGHT | | Fixture highlight post. |
-| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, AI launcher | | Chat chrome, sources, actions, fallback notice, thumbs. Demo replies only. |
+| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, `/staff/assistant` | | Chat chrome + unanswered-question insights. |
 
 ## B. Non-functional
 

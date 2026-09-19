@@ -1,14 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
+import { RoleGate } from "@/components/layout/RoleGate";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { RequestStatusTracker } from "@/components/requests/RequestStatusTracker";
+import { FilterChips } from "@/components/ui-blocks/FilterChips";
 import { FormField } from "@/components/feedback/FormField";
 import { StatusBadge, toneForStatus } from "@/components/feedback/StatusBadge";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { NativeSelect } from "@/components/feedback/NativeSelect";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useSessionUser } from "@/hooks/use-session-user";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
@@ -17,146 +29,148 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useSessionUser } from "@/hooks/use-session-user";
+import {
+  REQUEST_STATUS,
+  REQUEST_STATUS_FILTERS,
+  REQUEST_TYPE,
+  REQUEST_TYPE_FILTERS,
+  REQUEST_TYPE_LABELS,
+} from "@/lib/constants";
+import { formatDateTime } from "@/lib/datetime";
+import { canHandleAcademicRequests, canHandleFacilityRequests } from "@/lib/permissions";
+import { STAFF_SUPPORT_QUEUE, type StaffSupportFixture } from "@/lib/fixtures/staff";
 
-type RequestRow = {
-  id: string;
-  student: string;
-  programme: string;
-  room: string;
-  slot: string;
-  purpose: string;
-  groupSize: number;
-  status: "PENDING" | "APPROVED" | "REJECTED";
-};
-
-const INITIAL: RequestRow[] = [
-  {
-    id: "RQ-104",
-    student: "Nimali Perera",
-    programme: "Software Engineering · Y2",
-    room: "Room 302",
-    slot: "Tomorrow 14:00–16:00",
-    purpose: "Group study",
-    groupSize: 4,
-    status: "PENDING",
-  },
-  {
-    id: "RQ-101",
-    student: "Kasun Fernando",
-    programme: "Business Management · Y1",
-    room: "Lab B",
-    slot: "Fri 10:00–12:00",
-    purpose: "Presentation practice",
-    groupSize: 6,
-    status: "PENDING",
-  },
+const STATUS_OPTIONS = [
+  { id: REQUEST_STATUS.OPEN, label: "Open" },
+  { id: REQUEST_STATUS.IN_PROGRESS, label: "In progress" },
+  { id: REQUEST_STATUS.RESOLVED, label: "Resolved" },
 ];
 
 export default function StaffRequestsPage() {
   const { user, setUser } = useSessionUser();
-  const [rows, setRows] = useState(INITIAL);
-  const [selected, setSelected] = useState<RequestRow | null>(null);
-  const [reason, setReason] = useState("");
+  const [rows, setRows] = useState(STAFF_SUPPORT_QUEUE);
+  const [type, setType] = useState("all");
+  const [status, setStatus] = useState("all");
+  const [selected, setSelected] = useState<StaffSupportFixture | null>(null);
+  const [note, setNote] = useState("");
+  const [nextStatus, setNextStatus] = useState<string>(REQUEST_STATUS.IN_PROGRESS);
 
-  function updateStatus(id: string, status: RequestRow["status"]) {
-    setRows((prev) => prev.map((row) => (row.id === id ? { ...row, status } : row)));
+  const visible = useMemo(() => {
+    return rows.filter((row) => {
+      if (type !== "all" && row.type !== type) return false;
+      if (status !== "all" && row.status !== status) return false;
+      return true;
+    });
+  }, [rows, status, type]);
+
+  function canHandle(row: StaffSupportFixture): boolean {
+    if (!user) return false;
+    if (row.type === REQUEST_TYPE.ACADEMIC_SUPPORT) {
+      return canHandleAcademicRequests(user.role);
+    }
+    return canHandleFacilityRequests(user.role);
+  }
+
+  function save() {
+    if (!selected) return;
+    setRows((current) =>
+      current.map((row) =>
+        row.id === selected.id
+          ? { ...row, status: nextStatus as StaffSupportFixture["status"], response: note.trim() || row.response }
+          : row,
+      ),
+    );
+    toast.success("Request updated. The student list will show this status.");
     setSelected(null);
-    setReason("");
-    toast.success(status === "APPROVED" ? "Room request approved." : "Room request rejected.");
   }
 
   return (
     <AppShell variant="staff" user={user} onSignedOut={() => setUser(null)}>
-      <PageHeader title="Student Requests" description="Approve or reject classroom booking requests." />
-      <div className="mb-4 flex flex-wrap gap-2">
-        {(["PENDING", "APPROVED", "REJECTED"] as const).map((status) => (
-          <StatusBadge
-            key={status}
-            label={`${status}: ${rows.filter((row) => row.status === status).length}`}
-            tone={toneForStatus(status)}
-          />
-        ))}
+      <PageHeader
+        title="Student Requests"
+        description="Academic support, facility issues, and feedback. Room bookings are under Room Requests."
+      />
+      <div className="mb-4 space-y-3">
+        <FilterChips label="Request type" chips={REQUEST_TYPE_FILTERS} active={type} onChange={setType} />
+        <FilterChips label="Request status" chips={REQUEST_STATUS_FILTERS} active={status} onChange={setStatus} />
       </div>
-      <div className="overflow-hidden rounded-xl border border-border bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Request</TableHead>
-              <TableHead>Student</TableHead>
-              <TableHead>Room</TableHead>
-              <TableHead>Slot</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelected(row)}>
-                <TableCell className="font-medium">{row.id}</TableCell>
-                <TableCell>{row.student}</TableCell>
-                <TableCell>{row.room}</TableCell>
-                <TableCell>{row.slot}</TableCell>
-                <TableCell>
-                  <StatusBadge label={row.status} tone={toneForStatus(row.status)} />
-                </TableCell>
+      {visible.length === 0 ? (
+        <EmptyState title="No requests in this view" description="Clear a filter to see the queue." />
+      ) : (
+        <div className="overflow-x-auto rounded-xl border border-border bg-card">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Request</TableHead>
+                <TableHead>Student</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Submitted</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {selected ? (
-        <div className="fixed inset-y-0 right-0 z-40 w-full max-w-md border-l border-border bg-card p-5 shadow-xl">
-          <h3 className="text-lg font-semibold">{selected.id}</h3>
-          <dl className="mt-4 space-y-2 text-sm">
-            <div>
-              <dt className="text-muted-foreground">Student</dt>
-              <dd>{selected.student}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Programme</dt>
-              <dd>{selected.programme}</dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Room / slot</dt>
-              <dd>
-                {selected.room} · {selected.slot}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-muted-foreground">Purpose</dt>
-              <dd>
-                {selected.purpose} · group of {selected.groupSize}
-              </dd>
-            </div>
-          </dl>
-          {selected.status === "PENDING" ? (
-            <div className="mt-6 space-y-3">
-              <FormField id="reject-reason" label="Rejection reason (required to reject)">
-                <Textarea id="reject-reason" value={reason} onChange={(event) => setReason(event.target.value)} />
-              </FormField>
-              <div className="flex flex-wrap gap-2">
-                <Button onClick={() => updateStatus(selected.id, "APPROVED")}>Approve</Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => {
-                    if (!reason.trim()) return;
-                    updateStatus(selected.id, "REJECTED");
-                  }}
-                >
-                  Reject
-                </Button>
-                <Button variant="outline" onClick={() => setSelected(null)}>
-                  Close
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <Button className="mt-6" variant="outline" onClick={() => setSelected(null)}>
-              Close
-            </Button>
-          )}
+            </TableHeader>
+            <TableBody>
+              {visible.map((row) => (
+                <TableRow key={row.id} className="cursor-pointer" onClick={() => {
+                  setSelected(row);
+                  setNote(row.response ?? "");
+                  setNextStatus(row.status === REQUEST_STATUS.CLOSED ? REQUEST_STATUS.RESOLVED : row.status);
+                }}>
+                  <TableCell className="font-medium">
+                    <p>{row.id}</p>
+                    <p className="text-xs text-muted-foreground">{row.title}</p>
+                  </TableCell>
+                  <TableCell>{row.student}</TableCell>
+                  <TableCell>{REQUEST_TYPE_LABELS[row.type]}</TableCell>
+                  <TableCell>{formatDateTime(row.created_at)}</TableCell>
+                  <TableCell>
+                    <StatusBadge label={row.status.replaceAll("_", " ")} tone={toneForStatus(row.status)} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      ) : null}
+      )}
+
+      <Sheet open={selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
+        <SheetContent className="sm:max-w-md">
+          {selected ? (
+            <>
+              <SheetHeader>
+                <SheetTitle>{selected.title}</SheetTitle>
+                <SheetDescription>
+                  {selected.id} · {selected.student} · {selected.programme}
+                </SheetDescription>
+              </SheetHeader>
+              <div className="space-y-3 px-4">
+                <p className="text-sm text-[#404040]">{selected.body}</p>
+                <RequestStatusTracker status={selected.status} />
+              </div>
+              <SheetFooter>
+                <RoleGate
+                  allow={canHandle(selected)}
+                  fallback={
+                    <p className="text-sm text-muted-foreground">
+                      Your role cannot update this request type. Academic staff handle academic support; administrators handle facility and feedback.
+                    </p>
+                  }
+                >
+                  <FormField id="req-status" label="Status">
+                    <NativeSelect id="req-status" value={nextStatus} options={STATUS_OPTIONS} onChange={setNextStatus} />
+                  </FormField>
+                  <FormField id="req-note" label="Staff note">
+                    <Textarea id="req-note" value={note} rows={3} onChange={(event) => setNote(event.target.value)} />
+                  </FormField>
+                  <Button type="button" onClick={save}>
+                    Save update
+                  </Button>
+                </RoleGate>
+              </SheetFooter>
+            </>
+          ) : null}
+        </SheetContent>
+      </Sheet>
     </AppShell>
   );
 }

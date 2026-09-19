@@ -131,6 +131,10 @@ export const ROUTES = {
   staffContentNew: "/staff/content/new",
   staffBookings: "/staff/bookings",
   staffRequests: "/staff/requests",
+  staffLostFound: "/staff/lost-found",
+  staffAssistant: "/staff/assistant",
+  staffEvents: "/staff/events",
+  staffSocieties: "/staff/societies",
   adminDashboard: "/admin/dashboard",
   adminUsers: "/admin/users",
   adminStaff: "/admin/staff",
@@ -168,6 +172,14 @@ export function canManageContent(role: string): boolean {
 
 export function staffContentEditPath(id: string): string {
   return `${ROUTES.staffContent}/${id}/edit`;
+}
+
+export function staffEventInterestPath(id: string): string {
+  return `${ROUTES.staffEvents}/${id}/interest`;
+}
+
+export function staffSocietyInterestPath(slug: string): string {
+  return `${ROUTES.staffSocieties}/${slug}/interest`;
 }
 
 export function dashboardPathForRole(role: string): string {
@@ -317,6 +329,29 @@ export const STUDY_YEARS = [
   { id: "2", label: "Year 2" },
   { id: "3", label: "Year 3" },
   { id: "4", label: "Year 4" },
+] as const;
+
+export const BOOKING_STATUS_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "PENDING", label: "Pending" },
+  { id: "APPROVED", label: "Approved" },
+  { id: "REJECTED", label: "Rejected" },
+] as const;
+
+export const USER_STATUS_FILTERS = [
+  { id: "all", label: "All statuses" },
+  { id: "Active", label: "Active" },
+  { id: "Disabled", label: "Disabled" },
+] as const;
+
+export const USER_ROLE_FILTERS = [
+  { id: "all", label: "All roles" },
+  { id: "STUDENT", label: "Student" },
+  { id: "ACADEMIC", label: "Academic" },
+  { id: "SOCIETY_REP", label: "Society rep" },
+  { id: "FINANCE", label: "Finance" },
+  { id: "ADMIN", label: "Admin" },
+  { id: "SUPER_ADMIN", label: "Super admin" },
 ] as const;
 
 export const TITLE_MAX = 200;
