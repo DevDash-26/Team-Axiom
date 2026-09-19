@@ -52,6 +52,15 @@ export const ANNOUNCEMENT_ROLES: readonly RoleName[] = [
   ROLES.SUPER_ADMIN,
 ];
 
+export const STAFF_POST_TYPES = [
+  { id: "ANNOUNCEMENT", label: "Announcement", roles: ANNOUNCEMENT_ROLES },
+  { id: "CALENDAR_ENTRY", label: "Calendar", roles: ANNOUNCEMENT_ROLES },
+  { id: "GUEST_LECTURE", label: "Guest lecture", roles: ANNOUNCEMENT_ROLES },
+  { id: "EMERGENCY", label: "Emergency", roles: EMERGENCY_ROLES },
+  { id: "SCHEDULE_CHANGE", label: "Schedule change", roles: EMERGENCY_ROLES },
+  { id: "JOB", label: "Job", roles: EMERGENCY_ROLES },
+] as const;
+
 export const STAFF_WORKSPACE_ROLES: readonly RoleName[] = [
   ROLES.ACADEMIC,
   ROLES.SOCIETY_REP,
@@ -162,8 +171,17 @@ export function canCreateEmergency(role: string): boolean {
   return EMERGENCY_ROLES.includes(role as RoleName);
 }
 
+export function staffPostTypesForRole(role: string) {
+  return STAFF_POST_TYPES.filter((item) => item.roles.includes(role as RoleName));
+}
+
+export function canHandleRequest(role: string, type: string): boolean {
+  if (isAdmin(role)) return true;
+  return role === ROLES.ACADEMIC && type === REQUEST_TYPE.ACADEMIC_SUPPORT;
+}
+
 export function canManageContent(role: string): boolean {
-  return canCreateAnnouncement(role) || canCreateEmergency(role);
+  return staffPostTypesForRole(role).length > 0;
 }
 
 export function staffContentEditPath(id: string): string {

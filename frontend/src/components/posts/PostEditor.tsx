@@ -9,13 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ApiError, createPost, updatePost } from "@/lib/api";
-import {
-  FACULTIES,
-  ROUTES,
-  WAVE1_POST_TYPES,
-  YEARS,
-  canCreateEmergency,
-} from "@/lib/constants";
+import { FACULTIES, ROUTES, YEARS, staffPostTypesForRole } from "@/lib/constants";
 import { fromDatetimeLocalValue, toDatetimeLocalValue } from "@/lib/datetime";
 import type { PostCreatePayload, PostRead, PostStatusName, PostTypeName, UserPublic } from "@/types";
 
@@ -23,13 +17,17 @@ const postSchema = z
   .object({
     title: z.string().trim().min(1, "Title is required").max(200),
     body: z.string().trim().min(1, "Write a short message").max(10000),
-    type: z.enum(["ANNOUNCEMENT", "EMERGENCY"]),
+    type: z.enum(["ANNOUNCEMENT", "CALENDAR_ENTRY", "GUEST_LECTURE", "EMERGENCY", "SCHEDULE_CHANGE", "JOB"]),
     faculty: z.string(),
     year: z.string(),
     programme: z.string().trim().max(120),
     pinned: z.boolean(),
     starts_at: z.string(),
     expires_at: z.string(),
+    location: z.string().trim().max(200),
+    event_at: z.string(),
+    deadline_at: z.string(),
+    apply_url: z.string().trim().max(500),
   })
   .superRefine((value, ctx) => {
     const starts = fromDatetimeLocalValue(value.starts_at);
@@ -41,9 +39,24 @@ const postSchema = z
         message: "Expiry must be after the start time",
       });
     }
+    if ((value.type === "CALENDAR_ENTRY" || value.type === "GUEST_LECTURE") && !value.event_at) {
+      ctx.addIssue({ code: "custom", path: ["event_at"], message: "Event date is required" });
+    }
+    if (value.type === "GUEST_LECTURE" && !value.location) {
+      ctx.addIssue({ code: "custom", path: ["location"], message: "Location is required" });
+    }
+    if (value.type === "JOB" && !value.deadline_at && !value.apply_url) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["deadline_at"],
+        message: "Add a deadline or an apply link",
+      });
+    }
   });
 
-type FieldErrors = Partial<Record<"title" | "body" | "expires_at", string>>;
+type FieldErrors = Partial<
+  Record<"title" | "body" | "expires_at" | "event_at" | "location" | "deadline_at", string>
+>;
 
 type PostEditorProps = {
   user: UserPublic;
@@ -55,26 +68,34 @@ const selectClassName =
 
 export function PostEditor({ user, existing }: PostEditorProps) {
   const router = useRouter();
-  const allowEmergency = canCreateEmergency(user.role);
-  const typeOptions = useMemo(
-    () => WAVE1_POST_TYPES.filter((item) => item.id === "ANNOUNCEMENT" || allowEmergency),
-    [allowEmergency],
-  );
+  const typeOptions = useMemo(() => staffPostTypesForRole(user.role), [user.role]);
+  const allowedIds = typeOptions.map((item) => item.id);
 
   const [title, setTitle] = useState(existing?.title ?? "");
   const [body, setBody] = useState(existing?.body ?? "");
-  const [type, setType] = useState<PostTypeName>(
-    existing?.type === "EMERGENCY" && allowEmergency ? "EMERGENCY" : "ANNOUNCEMENT",
-  );
+  const [type, setType] = useState<PostTypeName>(() => {
+    if (existing && allowedIds.includes(existing.type as (typeof allowedIds)[number])) {
+      return existing.type as PostTypeName;
+    }
+    return (typeOptions[0]?.id ?? "ANNOUNCEMENT") as PostTypeName;
+  });
   const [faculty, setFaculty] = useState(existing?.faculty ?? "");
   const [year, setYear] = useState(existing?.year ? String(existing.year) : "");
   const [programme, setProgramme] = useState(existing?.programme ?? "");
   const [pinned, setPinned] = useState(existing?.pinned ?? false);
   const [startsAt, setStartsAt] = useState(toDatetimeLocalValue(existing?.starts_at));
   const [expiresAt, setExpiresAt] = useState(toDatetimeLocalValue(existing?.expires_at));
+  const [location, setLocation] = useState(existing?.location ?? "");
+  const [eventAt, setEventAt] = useState(toDatetimeLocalValue(existing?.event_at));
+  const [deadlineAt, setDeadlineAt] = useState(toDatetimeLocalValue(existing?.deadline_at));
+  const [applyUrl, setApplyUrl] = useState(existing?.apply_url ?? "");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState<PostStatusName | null>(null);
+
+  const needsEventAt = type === "CALENDAR_ENTRY" || type === "GUEST_LECTURE";
+  const needsLocation = type === "GUEST_LECTURE";
+  const needsJobFields = type === "JOB";
 
   async function save(status: PostStatusName) {
     const parsed = postSchema.safeParse({
@@ -87,12 +108,23 @@ export function PostEditor({ user, existing }: PostEditorProps) {
       pinned,
       starts_at: startsAt,
       expires_at: expiresAt,
+      location,
+      event_at: eventAt,
+      deadline_at: deadlineAt,
+      apply_url: applyUrl,
     });
     if (!parsed.success) {
       const next: FieldErrors = {};
       for (const issue of parsed.error.issues) {
         const key = issue.path[0];
-        if (key === "title" || key === "body" || key === "expires_at") {
+        if (
+          key === "title" ||
+          key === "body" ||
+          key === "expires_at" ||
+          key === "event_at" ||
+          key === "location" ||
+          key === "deadline_at"
+        ) {
           next[key] = issue.message;
         }
       }
@@ -114,12 +146,16 @@ export function PostEditor({ user, existing }: PostEditorProps) {
       programme: parsed.data.programme || null,
       starts_at: fromDatetimeLocalValue(parsed.data.starts_at),
       expires_at: fromDatetimeLocalValue(parsed.data.expires_at),
+      location: parsed.data.location || null,
+      event_at: fromDatetimeLocalValue(parsed.data.event_at),
+      deadline_at: fromDatetimeLocalValue(parsed.data.deadline_at),
+      apply_url: parsed.data.apply_url || null,
     };
 
     try {
       if (existing) {
         await updatePost(existing.id, payload);
-        toast.success(status === "DRAFT" ? "Draft saved." : "Announcement updated.");
+        toast.success(status === "DRAFT" ? "Draft saved." : "Post updated.");
       } else {
         await createPost(payload);
         toast.success(status === "DRAFT" ? "Draft saved." : "Published successfully.");
@@ -171,6 +207,56 @@ export function PostEditor({ user, existing }: PostEditorProps) {
       <FormField id="body" label="Message" error={fieldErrors.body}>
         <Textarea id="body" value={body} rows={8} onChange={(event) => setBody(event.target.value)} />
       </FormField>
+
+      {needsLocation || needsEventAt ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          {needsLocation ? (
+            <FormField id="location" label="Location" error={fieldErrors.location}>
+              <Input
+                id="location"
+                value={location}
+                className="h-11"
+                placeholder="Hall A"
+                onChange={(event) => setLocation(event.target.value)}
+              />
+            </FormField>
+          ) : null}
+          {needsEventAt ? (
+            <FormField id="event_at" label="Date and time" error={fieldErrors.event_at}>
+              <Input
+                id="event_at"
+                type="datetime-local"
+                value={eventAt}
+                className="h-11"
+                onChange={(event) => setEventAt(event.target.value)}
+              />
+            </FormField>
+          ) : null}
+        </div>
+      ) : null}
+
+      {needsJobFields ? (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField id="deadline_at" label="Apply by" error={fieldErrors.deadline_at}>
+            <Input
+              id="deadline_at"
+              type="datetime-local"
+              value={deadlineAt}
+              className="h-11"
+              onChange={(event) => setDeadlineAt(event.target.value)}
+            />
+          </FormField>
+          <FormField id="apply_url" label="Apply link">
+            <Input
+              id="apply_url"
+              value={applyUrl}
+              className="h-11"
+              placeholder="https://"
+              onChange={(event) => setApplyUrl(event.target.value)}
+            />
+          </FormField>
+        </div>
+      ) : null}
 
       <fieldset className="grid gap-4 sm:grid-cols-3">
         <legend className="sr-only">Audience</legend>
