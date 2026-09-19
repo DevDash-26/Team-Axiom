@@ -207,3 +207,16 @@ class SearchResponse(BaseModel):
     page_size: int
     total: int
     query: str
+
+
+class InterestPersonRead(BaseModel):
+    id: uuid.UUID
+    created_at: datetime
+    full_name: str
+    programme: str | None = None
+
+
+class InterestListResponse(BaseModel):
+    items: list[InterestPersonRead]
+    total: int
+    viewer_interested: bool = False

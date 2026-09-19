@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -9,16 +8,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { usePublishedPosts } from "@/hooks/use-published-posts";
 import { ROUTES } from "@/lib/constants";
-import { FIXTURE_POSTS } from "@/lib/fixtures/campus";
 import { formatDate } from "@/lib/datetime";
 
 export default function CalendarPage() {
   const { user, setUser } = useSessionUser();
-  const { posts, loading } = usePublishedPosts("CALENDAR_ENTRY");
-  const items = useMemo(
-    () => (posts.length > 0 ? posts : FIXTURE_POSTS.filter((post) => post.type === "CALENDAR_ENTRY")),
-    [posts],
-  );
+  const { posts: items, loading } = usePublishedPosts("CALENDAR_ENTRY");
 
   return (
     <AppShell variant="student" user={user} onSignedOut={() => setUser(null)}>

@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.db import init_db
 from app.errors import register_exception_handlers
-from app.routers import assistant, auth, health, info, listings, posts, requests, search
+from app.routers import assistant, auth, bookings, health, info, listings, notifications, posts, requests, search, societies
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +49,9 @@ def create_app() -> FastAPI:
     application.include_router(search.router)
     application.include_router(requests.router)
     application.include_router(listings.router)
+    application.include_router(bookings.router)
+    application.include_router(societies.router)
+    application.include_router(notifications.router)
     return application
 
 

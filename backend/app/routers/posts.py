@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from app.constants import PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, Permission, PostStatus, PostType
 from app.db import get_db
 from app.models.user import User
-from app.schemas.post import PostCreate, PostListResponse, PostRead, PostUpdate
+from app.schemas.post import InterestListResponse, PostCreate, PostListResponse, PostRead, PostUpdate
 from app.security import get_current_user, get_optional_user, require_permission
 from app.services import post_service
 
@@ -82,3 +82,21 @@ def update_post(
     user: Annotated[User, Depends(require_permission(Permission.POSTS_EDIT))],
 ) -> PostRead:
     return PostRead.model_validate(post_service.update_post(db, user, post_id, payload))
+
+
+@router.post("/{post_id}/interest", response_model=InterestListResponse, status_code=201)
+def add_event_interest(
+    post_id: UUID,
+    db: Annotated[Session, Depends(get_db)],
+    user: Annotated[User, Depends(get_current_user)],
+) -> InterestListResponse:
+    return post_service.add_event_interest(db, user, post_id)
+
+
+@router.get("/{post_id}/interests", response_model=InterestListResponse)
+def list_event_interest(
+    post_id: UUID,
+    db: Annotated[Session, Depends(get_db)],
+    user: Annotated[User | None, Depends(get_optional_user)],
+) -> InterestListResponse:
+    return post_service.list_event_interest(db, user, post_id)

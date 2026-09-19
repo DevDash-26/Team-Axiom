@@ -30,9 +30,10 @@ def test_student_can_create_listing(computing_client: TestClient) -> None:
     assert "email" not in body["owner"]
 
 
-def test_textbook_type_is_rejected(computing_client: TestClient) -> None:
+def test_student_can_create_textbook(computing_client: TestClient) -> None:
     response = computing_client.post("/api/listings", json=_payload(type="TEXTBOOK"))
-    assert response.status_code == 422
+    assert response.status_code == 201
+    assert response.json()["type"] == ListingType.TEXTBOOK.value
 
 
 def test_owner_can_resolve_listing(computing_client: TestClient) -> None:

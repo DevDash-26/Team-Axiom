@@ -20,13 +20,8 @@ export function usePublishedPosts(type?: string) {
         query.set("type", type);
       }
       const feed = await apiGet<PostListResponse>(`/api/posts?${query.toString()}`);
-      if (feed.items.length > 0) {
-        setPosts(feed.items);
-        setFromApi(true);
-        return;
-      }
-      setPosts(FIXTURE_POSTS.filter((post) => (type ? post.type === type : true)));
-      setFromApi(false);
+      setPosts(feed.items);
+      setFromApi(true);
     } catch {
       setPosts(FIXTURE_POSTS.filter((post) => (type ? post.type === type : true)));
       setFromApi(false);

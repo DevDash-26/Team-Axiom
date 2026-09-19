@@ -3,13 +3,17 @@
 import { getAccessToken } from "@/lib/supabase";
 import { PAGE_SIZE } from "@/lib/constants";
 import type {
+  BookingListResponse,
+  BookingRead,
   FaqRead,
   InfoPageRead,
+  InterestListResponse,
   ListingCreatePayload,
   ListingInterestListResponse,
   ListingInterestRead,
   ListingListResponse,
   ListingRead,
+  NotificationRead,
   PostCreatePayload,
   PostListResponse,
   PostRead,
@@ -18,8 +22,11 @@ import type {
   RequestListResponse,
   RequestRead,
   RequestUpdatePayload,
+  ResourceListResponse,
   SearchResponse,
+  SocietyRead,
   StaffContactRead,
+  UserPublic,
 } from "@/types";
 
 export class ApiError extends Error {
@@ -93,6 +100,10 @@ export function apiPatch<T>(path: string, body: unknown): Promise<T> {
   return request<T>(path, { method: "PATCH", body: JSON.stringify(body) });
 }
 
+export function apiDelete<T>(path: string): Promise<T> {
+  return request<T>(path, { method: "DELETE" });
+}
+
 export type FaqItem = {
   id: string;
   question: string;
@@ -161,6 +172,22 @@ export function assistantFeedback(body: {
   rating: -1 | 1;
 }): Promise<{ status: string }> {
   return apiPost<{ status: string }>("/api/assistant/feedback", body);
+}
+
+export type AssistantInsightQuestion = {
+  question: string;
+  intent: string | null;
+  answered: boolean;
+  fallback: boolean;
+  feedback: number | null;
+  created_at: string | null;
+};
+
+export function fetchAssistantInsights(): Promise<{
+  unanswered: AssistantInsightQuestion[];
+  top_questions: AssistantInsightQuestion[];
+}> {
+  return apiGet("/api/admin/assistant/insights");
 }
 
 export function fetchPosts(params?: {
@@ -282,4 +309,74 @@ export function fetchFaqs(category?: string): Promise<{ items: FaqRead[] }> {
 
 export function fetchStaffContacts(): Promise<{ items: StaffContactRead[] }> {
   return apiGet<{ items: StaffContactRead[] }>("/api/info/contacts");
+}
+
+export function fetchResources(params?: {
+  kind?: string;
+  min_capacity?: number;
+  starts_at?: string;
+  ends_at?: string;
+}): Promise<ResourceListResponse> {
+  return apiGet<ResourceListResponse>(`/api/resources${toQuery(params ?? {})}`);
+}
+
+export function fetchBookings(params?: {
+  page?: number;
+  status?: string;
+  mine?: boolean;
+}): Promise<BookingListResponse> {
+  return apiGet<BookingListResponse>(`/api/bookings${toQuery({ page_size: PAGE_SIZE, ...params })}`);
+}
+
+export function createBooking(body: {
+  resource_id: string;
+  starts_at: string;
+  ends_at: string;
+  purpose: string;
+  group_size: number;
+}): Promise<BookingRead> {
+  return apiPost<BookingRead>("/api/bookings", body);
+}
+
+export function updateBooking(
+  id: string,
+  body: { status: "APPROVED" | "REJECTED" | "CANCELLED"; staff_note?: string },
+): Promise<BookingRead> {
+  return apiPatch<BookingRead>(`/api/bookings/${id}`, body);
+}
+
+export function fetchSocieties(): Promise<{ items: SocietyRead[]; total: number }> {
+  return apiGet<{ items: SocietyRead[]; total: number }>("/api/societies");
+}
+
+export function fetchSociety(slug: string): Promise<SocietyRead> {
+  return apiGet<SocietyRead>(`/api/societies/${slug}`);
+}
+
+export function addSocietyInterest(slug: string): Promise<SocietyRead> {
+  return request<SocietyRead>(`/api/societies/${slug}/interest`, { method: "POST" });
+}
+
+export function fetchSocietyInterests(slug: string): Promise<InterestListResponse> {
+  return apiGet<InterestListResponse>(`/api/societies/${slug}/interests`);
+}
+
+export function addEventInterest(id: string): Promise<InterestListResponse> {
+  return request<InterestListResponse>(`/api/posts/${id}/interest`, { method: "POST" });
+}
+
+export function fetchEventInterests(id: string): Promise<InterestListResponse> {
+  return apiGet<InterestListResponse>(`/api/posts/${id}/interests`);
+}
+
+export function updateMe(body: {
+  faculty?: string | null;
+  year?: number | null;
+  programme?: string | null;
+}): Promise<UserPublic> {
+  return apiPatch<UserPublic>("/api/auth/me", body);
+}
+
+export function fetchNotifications(): Promise<{ items: NotificationRead[]; total: number }> {
+  return apiGet<{ items: NotificationRead[]; total: number }>("/api/notifications");
 }

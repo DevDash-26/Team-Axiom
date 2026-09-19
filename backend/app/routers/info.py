@@ -7,8 +7,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 
-from app.constants import PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, Permission
+from app.constants import PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, Permission, InfoCategory
 from app.db import get_db
+from app.errors import AppError
 from app.models.info import Faq
 from app.models.user import User
 from app.schemas.info import (
@@ -21,7 +22,7 @@ from app.schemas.info import (
     StaffContactListResponse,
     StaffContactRead,
 )
-from app.security import get_optional_user, require_permission
+from app.security import get_current_user, get_optional_user, require_permission, user_has_permission
 from app.services import info_service
 
 router = APIRouter(prefix="/api/info", tags=["info"])
@@ -75,8 +76,12 @@ def check_faq_similarity(
 def create_faq(
     payload: FaqCreate,
     db: Annotated[Session, Depends(get_db)],
-    _user: Annotated[User, Depends(require_permission(Permission.INFO_MANAGE))],
+    user: Annotated[User, Depends(get_current_user)],
 ) -> Faq:
+    can_all = user_has_permission(user.role, Permission.INFO_MANAGE)
+    can_finance = user_has_permission(user.role, Permission.INFO_MANAGE_FINANCE)
+    if not can_all and not (can_finance and payload.category == InfoCategory.FINANCIAL_AID):
+        raise AppError(403, "FORBIDDEN", "You do not have permission to do that")
     return info_service.create_faq(db, payload)
 
 
