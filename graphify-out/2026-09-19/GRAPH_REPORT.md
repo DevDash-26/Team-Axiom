@@ -1,11 +1,11 @@
 # Graph Report - Team-Axiom  (2026-09-19)
 
 ## Corpus Check
-- 240 files · ~84,107 words
+- 240 files · ~84,225 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1936 nodes · 5426 edges · 109 communities (94 shown, 15 thin omitted)
+- 1936 nodes · 5426 edges · 107 communities (92 shown, 15 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 104 edges (avg confidence: 0.51)
 - Token cost: 0 input · 0 output
 
@@ -112,9 +112,7 @@
 - 1. Product and UI Concept
 - 2. Design
 - 4. Implementation highlights
-- student/events/[id]/page.tsx
 - Library
-- cmdk
 - cn
 - AGENTS.md
 - motion
@@ -151,7 +149,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (109 total, 15 thin omitted)
+## Communities (107 total, 15 thin omitted)
 
 ### Community 0 - "User"
 Cohesion: 0.06
@@ -163,7 +161,7 @@ Nodes (27): complete(), Thin LLM client behind a small interface. Missing keys f
 
 ### Community 2 - "new/page.tsx"
 Cohesion: 0.05
-Nodes (76): InfoCategoryPage(), LostFoundDetailPage(), SocietiesPage(), StaffAssistantInsightsPage(), StaffSocietyInterestPage(), FieldErrors, PostEditorProps, postSchema (+68 more)
+Nodes (71): InfoCategoryPage(), LostFoundDetailPage(), SearchResults(), SocietiesPage(), StaffAssistantInsightsPage(), apiBase(), apiDelete(), apiGet() (+63 more)
 
 ### Community 3 - "Demo Script"
 Cohesion: 0.22
@@ -234,8 +232,8 @@ Cohesion: 0.22
 Nodes (8): 1. Frameworks and libraries, 2. External APIs and services, 3. Datasets, fonts, icons, images, and other assets, 4. Development tooling, 5. AI usage statement, 6. Code adapted from public sources, 7. Declaration, Disclosures
 
 ### Community 21 - "UniHive_UI_UX_Plan.md"
-Cohesion: 0.17
-Nodes (11): 15. Suggested Four-Person Ownership, 18. Suggested Data Entities, 19. Out of Scope for the Hackathon MVP, 20. Final Recommendation, 5.1 Student Navigation, 5.2 Staff Navigation, 5.3 Administrator Navigation, 5. Navigation Structure (+3 more)
+Cohesion: 0.12
+Nodes (16): 15. Suggested Four-Person Ownership, 18. Suggested Data Entities, 19. Out of Scope for the Hackathon MVP, 1.1 Product Vision, 1.2 Core Experience by Role, 1.3 Core UX Principles, 1.4 Primary Student Landing Experience, 1. Product and UI Concept (+8 more)
 
 ### Community 22 - "14. Recommended Build Order"
 Cohesion: 0.25
@@ -290,16 +288,16 @@ Cohesion: 0.50
 Nodes (4): 6. Complete Screen Inventory, P0 — Must Build, P1 — Build After P0 Works, P2 — Only If Time Remains
 
 ### Community 36 - "app/__init__.py"
-Cohesion: 0.10
-Nodes (24): initials(), ProfilePage(), profileSchema, NewRequestPage(), requestSchema, TYPE_OPTIONS, StaffDashboardPage(), FormField() (+16 more)
+Cohesion: 0.09
+Nodes (36): LostFoundPage(), initials(), ProfilePage(), profileSchema, requestSchema, TYPE_OPTIONS, TextbooksPage(), FormField() (+28 more)
 
 ### Community 41 - "ListingReportDialog.tsx"
 Cohesion: 0.11
 Nodes (21): ROLES, ASSISTANT_INSIGHTS, AssistantInsight, EVENT_INTEREST_LISTS, InterestPerson, ManagedUser, SOCIETY_INTEREST_LISTS, STAFF_BOOKINGS (+13 more)
 
 ### Community 42 - "AppShell"
-Cohesion: 0.17
-Nodes (22): CalendarPage(), EventDetailPage(), EventsPage(), LecturesPage(), OpportunitiesPage(), SocietyDetailPage(), StaffEventInterestPage(), StaffLostFoundPage() (+14 more)
+Cohesion: 0.12
+Nodes (31): AdminStaffPage(), CalendarPage(), ErrorPage(), ErrorPageProps, EventDetailPage(), EventsPage(), LecturesPage(), OpportunitiesPage() (+23 more)
 
 ### Community 43 - "UniHive — Frontend Roadmap"
 Cohesion: 0.05
@@ -307,15 +305,15 @@ Nodes (39): 0. Scope split, 10. Definition of done (each screen), 11. Dependenci
 
 ### Community 44 - "content/page.tsx"
 Cohesion: 0.13
-Nodes (37): AdminRolesPage(), mark(), ROLE_ORDER, AdminStaffPage(), addUserSchema, AdminUsersPage(), audienceLabel(), StaffContentPage() (+29 more)
+Nodes (48): AdminRolesPage(), mark(), ROLE_ORDER, addUserSchema, AdminUsersPage(), MyBookingsPage(), RequestsPage(), StaffBookingsPage() (+40 more)
 
 ### Community 45 - "ROUTES"
-Cohesion: 0.12
-Nodes (28): BookingsPage(), KIND_FILTERS, toIso(), LostFoundPage(), SearchResults(), TextbooksPage(), RoomCard(), RoomCardProps (+20 more)
+Cohesion: 0.36
+Nodes (6): BookingsPage(), KIND_FILTERS, toIso(), RoomCard(), RoomCardProps, ResourceRead
 
 ### Community 46 - "staff/dashboard/page.tsx"
-Cohesion: 0.15
-Nodes (18): AdminDashboardPage(), CATEGORY_ICONS, InfoHubPage(), loginSchema, AttentionTable(), EventCardProps, UpcomingPanelProps, Card() (+10 more)
+Cohesion: 0.08
+Nodes (33): AdminDashboardPage(), CATEGORY_ICONS, InfoHubPage(), loginSchema, StaffDashboardPage(), StudentEventRedirect(), StudentEventRedirectProps, AttentionTable() (+25 more)
 
 ### Community 47 - "main.py"
 Cohesion: 0.06
@@ -338,16 +336,16 @@ Cohesion: 0.14
 Nodes (34): ListingStatus, ListingType, get_db(), Session, add_listing_interest(), create_listing(), get_listing(), list_listing_interests() (+26 more)
 
 ### Community 52 - "AppShell.tsx"
-Cohesion: 0.11
-Nodes (25): MyBookingsPage(), RequestsPage(), StaffBookingsPage(), StaffRequestsPage(), toneForStatus(), EmergencyBanner(), EmergencyBannerProps, LostItemCard() (+17 more)
+Cohesion: 0.29
+Nodes (6): dateFormatter, dateTimeFormatter, fromDatetimeLocalValue(), pad(), timeFormatter, toDatetimeLocalValue()
 
 ### Community 53 - "constants.ts"
 Cohesion: 0.03
-Nodes (53): ForbiddenPage(), ErrorPage(), ErrorPageProps, GlobalErrorProps, NotFoundPage(), UnauthorizedPage(), StatusPage(), StatusPageProps (+45 more)
+Nodes (48): ForbiddenPage(), GlobalErrorProps, NotFoundPage(), UnauthorizedPage(), StatusPage(), StatusPageProps, AICommandBar(), RequestStatusTracker() (+40 more)
 
 ### Community 54 - "useSessionUser"
-Cohesion: 0.29
-Nodes (4): AssistantView(), ChatMessage, AI_SUGGESTED_PROMPTS, ASSISTANT_LANGUAGE_LABELS
+Cohesion: 0.15
+Nodes (11): AssistantView(), ChatMessage, AILauncher(), AppFooter(), AppShellProps, EmergencyBanner(), EmergencyBannerProps, assistantFeedback() (+3 more)
 
 ### Community 55 - "legacy.tsx"
 Cohesion: 0.16
@@ -379,7 +377,7 @@ Nodes (12): _payload(), Session, TestClient, Lost and found listings: create, re
 
 ### Community 62 - "dependencies"
 Cohesion: 0.12
-Nodes (17): class-variance-authority, clsx, dependencies, class-variance-authority, clsx, lucide-react, next-themes, radix-ui (+9 more)
+Nodes (17): class-variance-authority, clsx, cmdk, dependencies, class-variance-authority, clsx, cmdk, lucide-react (+9 more)
 
 ### Community 63 - "request_service.py"
 Cohesion: 0.35
@@ -390,8 +388,8 @@ Cohesion: 0.39
 Nodes (6): WelcomeHeader(), WelcomeHeaderProps, Badge(), badgeVariants, firstName(), greetingForNow()
 
 ### Community 65 - "edit/page.tsx"
-Cohesion: 0.16
-Nodes (22): HomePage(), NewPostPage(), StaffContentEditPage(), StaffContentNewPage(), FeedList(), AICommandBar(), ACTIONS, QuickActions() (+14 more)
+Cohesion: 0.14
+Nodes (22): HomePage(), NewPostPage(), StaffContentEditPage(), StaffContentNewPage(), FeedList(), FeedListProps, audienceLabel(), PostCard() (+14 more)
 
 ### Community 66 - "search-results.tsx"
 Cohesion: 0.22
@@ -505,10 +503,6 @@ Nodes (4): Lost student ID card, Onboarding week one, Student services and lost 
 Cohesion: 0.40
 Nodes (5): 6.1 Strategy, 6.2 Test cases, 6.3 Evidence, 6.4 Known issues, 6. Testing
 
-### Community 94 - "1. Product and UI Concept"
-Cohesion: 0.40
-Nodes (5): 1.1 Product Vision, 1.2 Core Experience by Role, 1.3 Core UX Principles, 1.4 Primary Student Landing Experience, 1. Product and UI Concept
-
 ### Community 95 - "2. Design"
 Cohesion: 0.50
 Nodes (4): 2.1 Users and roles, 2.2 Key user flows, 2.3 UI design decisions, 2. Design
@@ -516,10 +510,6 @@ Nodes (4): 2.1 Users and roles, 2.2 Key user flows, 2.3 UI design decisions, 2. 
 ### Community 96 - "4. Implementation highlights"
 Cohesion: 0.50
 Nodes (4): 4.1 Audience targeting, 4.2 Permission map, 4.3 Supabase boundary, 4. Implementation highlights
-
-### Community 97 - "student/events/[id]/page.tsx"
-Cohesion: 0.67
-Nodes (3): StudentEventRedirect(), StudentEventRedirectProps, eventPath()
 
 ### Community 98 - "Library"
 Cohesion: 0.50
@@ -535,7 +525,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `User` connect `AuthGate.tsx` to `User`, `security.py`, `cn`, `constants.py`, `Base`, `test_bookings.py`, `conftest.py`, `main.py`, `test_posts.py`, `requests.py`, `Display.tsx`, `listing_service.py`, `info_service.py`, `listings.py`, `1. Product and UI Concept`, `request_service.py`?**
   _High betweenness centrality (0.057) - this node is a cross-community bridge._
-- **Why does `cn()` connect `select.tsx` to `app/page.tsx`, `5. Navigation Structure`, `search-results.tsx`, `app/__init__.py`, `ConfirmDialog.tsx`, `bind_user`, `AppShell`, `layout.tsx`, `content/page.tsx`, `ROUTES`, `staff/dashboard/page.tsx`, `popover.tsx`, `constants.ts`, `legacy.tsx`, `tabs.tsx`, `require_permission`, `student/dashboard/page.tsx`?**
+- **Why does `cn()` connect `select.tsx` to `app/page.tsx`, `5. Navigation Structure`, `search-results.tsx`, `edit/page.tsx`, `app/__init__.py`, `ConfirmDialog.tsx`, `bind_user`, `layout.tsx`, `content/page.tsx`, `staff/dashboard/page.tsx`, `popover.tsx`, `constants.ts`, `useSessionUser`, `legacy.tsx`, `tabs.tsx`, `require_permission`, `student/dashboard/page.tsx`?**
   _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Why does `AppError` connect `User` to `security.py`, `apiGet`, `constants.py`, `main.py`, `get_engine`, `requests.py`, `AuthGate.tsx`, `info_service.py`, `1. Product and UI Concept`?**
   _High betweenness centrality (0.008) - this node is a cross-community bridge._

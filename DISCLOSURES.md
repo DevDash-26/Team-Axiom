@@ -46,6 +46,7 @@ Exact frontend patch versions are in `frontend/package-lock.json` after `npm ins
 | OpenAI-compatible Chat Completions (`LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL`) | Optional UniHive AI answer synthesis | API key in `.env` | Search-only fallback with `fallback=true` | Provider chosen via env (e.g. OpenAI) |
 | OpenAI-compatible Embeddings (`EMBEDDING_MODEL`) | Embed markdown chunks for pgvector RAG | Same API key | Keyword match on chunks + SQL FAQ/info fallback | e.g. `text-embedding-3-small` |
 | Supabase Postgres **pgvector** extension | Store/search chunk embeddings in-database (no Qdrant) | Database role that can `CREATE EXTENSION` (or enable in Dashboard → Database → Extensions) | Chunk keyword ILIKE + live SQL retrieval | https://supabase.com/docs/guides/database/extensions/pgvector |
+| SMTP (`SMTP_HOST` / `SMTP_FROM`) | Optional emergency emails to matching users | Optional username/password | Log recipient count; in-app notification still written | stdlib `smtplib` |
 
 Campus data is **not** read through the Supabase Data API / PostgREST. FastAPI + SQLAlchemy are the only data path.
 UniHive AI prefers markdown chunk retrieval via **pgvector**; if embeddings or the extension are missing, it falls back to SQL keyword search over FAQs, info pages, staff, and posts.
