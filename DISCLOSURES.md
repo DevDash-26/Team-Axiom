@@ -21,6 +21,7 @@
 | Tailwind CSS | 4 | Styling | frontend | https://tailwindcss.com |
 | zod | 4.6.5 | Login and form validation | frontend | https://zod.dev |
 | @supabase/supabase-js | 2.116.0 | Browser Auth (`signInWithPassword`) | frontend | https://supabase.com/docs |
+| lucide-react | (see package-lock) | Outline icons for UniHive UI | frontend | https://lucide.dev |
 
 Exact frontend patch versions are in `frontend/package-lock.json` after `npm install`.
 
@@ -37,7 +38,9 @@ Campus data is **not** read through the Supabase Data API / PostgREST. FastAPI +
 
 | Asset | Source | Licence | Where used |
 |-------|--------|---------|------------|
-| Geist font | Next.js / Vercel | SIL OFL | `frontend/src/app/layout.tsx` |
+| Inter font | Google Fonts via `next/font` | SIL OFL | UniHive UI (per UI/UX plan) |
+| lucide icons | lucide-react | ISC | Navigation and actions |
+| UCL logo reference | `.cursor/UCL.png` (team asset) | Event / UCL | Brand reference |
 
 No real student data. Seed names are invented.
 

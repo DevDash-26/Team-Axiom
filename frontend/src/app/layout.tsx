@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { APP_NAME } from "@/lib/constants";
+import { APP_NAME, APP_TAGLINE } from "@/lib/constants";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: APP_NAME,
-  description: "One trusted channel for UCL campus announcements and services.",
+  description: APP_TAGLINE,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geistSans.variable} h-full`}>
-      <body className="min-h-full bg-slate-50 text-slate-900 antialiased">{children}</body>
+    <html lang="en" className={`${inter.variable} h-full`}>
+      <body className="min-h-full antialiased">{children}</body>
     </html>
   );
 }

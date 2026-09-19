@@ -3,6 +3,7 @@
 from app.models.booking import Booking, Resource
 from app.models.info import Faq, InfoPage, StaffContact
 from app.models.listing import Interest, Listing, SocietyMembership
+from app.models.notification import Notification
 from app.models.platform import AssistantQuery, AuditLog
 from app.models.post import Post
 from app.models.request import Request
@@ -17,6 +18,7 @@ __all__ = [
     "InfoPage",
     "Interest",
     "Listing",
+    "Notification",
     "Post",
     "Request",
     "Resource",

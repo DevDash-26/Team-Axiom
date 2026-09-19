@@ -1,97 +1,91 @@
-# Requirements Traceability (pre-filled from the DevDash'26 Problem Statement)
+# Requirements Traceability
 
-> Single source of truth. Update status every time a feature lands or is cut.
-> Marks: 33 business requirements = 85, 6 non-functional = 15, total 100, scaled to the 45 Requirement Coverage marks.
+> Single source of truth for what we were asked to build, what we built, and what we cut.
 
-**Problem (one line):** One trusted digital channel for UCL students to access campus information and services, replacing WhatsApp groups, notice boards and word of mouth.
+**Product:** UniHive — Everything campus. One place.  
+**Problem statement (summary):** UCL students get campus info from WhatsApp, lecturers, notice boards, societies, and word of mouth. UniHive is one trusted channel for information, services, and an AI assistant.  
+**Target users / roles:** STUDENT, ACADEMIC, SOCIETY_REP, FINANCE, ADMIN, SUPER_ADMIN (UI groups Staff / Admin)  
+**Stack:** Next.js + TypeScript + Tailwind | FastAPI + SQLAlchemy | Supabase Postgres + Auth | FTS/LLM assistant (later)  
+**UI/UX source:** `.cursor/UniHive_UI_UX_Plan.md`  
+**Last updated:** 2026-09-19
 
-**Roles:** Student, Academic staff, Society representative, Finance staff, Administrative staff, Super admin.
+---
 
-**Last updated:** 2026-09-19 (Hour 0)
+## Priority key
+
+- **P0:** Must work end to end for demo (UniHive UI/UX §13)
+- **P1:** After P0 stable
+- **P2:** Extra time only
 
 ## Status key
-Done = works end to end, validated, tested. Partial = state what is missing. Not done = state why.
 
-## Build engines (why we can cover all 33 requirements)
+- **Done** / **Partial** / **Not done**
 
-| Engine | Idea | Requirements covered |
-|--------|------|----------------------|
-| E1 Content/Post engine | One model with a type, audience targeting (faculty / year / programme), scheduling, expiry, pinning, author and role permission per type | BR2, BR3, BR5, BR13, BR15, BR16, BR18, BR19, BR20, BR28, BR32, plus info pages |
-| E2 Knowledge/Info engine | Categorised info pages and FAQ entries, editable by staff | BR10, BR14, BR22, BR23, BR25, BR26, BR29, BR30, BR31, BR24 (info part) |
-| E3 Booking engine | Resources (rooms, sports facilities) with availability, conflict detection, request and approval | BR8, BR24 (booking part) |
-| E4 Request/ticket engine | Typed requests with status workflow and staff response | BR9, BR17, BR21 |
-| E5 Listing and sign-up engine | Listings with status, and join/interest records | BR4, BR6, BR7, BR27 |
-| Platform | Auth, RBAC, unified search and home feed, AI assistant, audit, admin UI | BR1, BR11, BR12, BR33 |
+---
 
-## A. Business requirements
+## A. Functional requirements (mapped to engines + UI)
 
-| ID | Requirement | Marks | Engine | Build order | Status | Owner | Where implemented | Tests | Notes |
-|----|-------------|-------|--------|-------------|--------|-------|-------------------|-------|-------|
-| BR1 | Unified access (single home, search, feed) | 5 | Platform | 1 | Partial | | `frontend/src/app/page.tsx`, `GET /api/posts` | `test_posts.py` | Home feed works. Global search not built. |
-| BR2 | Targeted announcements by faculty/year/programme | 3 | E1 | 1 | Partial | | `post_service.apply_visibility` | `test_student_sees_only_targeted_posts` | API + feed. Staff targeting UI is still a simple form. |
-| BR3 | Event visibility (university + student organiser) | 3 | E1 | 2 | Not done | | | | Schema ready (`EVENT` type). No events UI. |
-| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Not done | | | | `interests` table exists. |
-| BR5 | Society visibility (society pages and updates) | 3 | E1 | 2 | Not done | | | | `societies` seeded. No pages. |
-| BR6 | Society sign-up / interest | 2 | E5 | 2 | Not done | | | | `society_memberships` table exists. |
-| BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Not done | | | | `listings` table exists. |
-| BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Not done | | | | `resources` / `bookings` tables exist. |
-| BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Not done | | | | `requests` table exists. |
-| BR10 | FAQ access | 2 | E2 | 3 | Not done | | | | `faqs` table exists. |
-| BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `POST /api/posts`, `/posts/new` | `test_admin_can_create_announcement` | Create announcement only. No edit/archive/my-content list. |
-| BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `PERMISSION_ROLES` | `test_student_cannot_create_announcement` | Login + server permission map. Not every action has a UI. |
-| BR13 | Academic calendar (exams, add/drop, milestones) | 3 | E1 | 3 | Not done | | | | |
-| BR14 | Student onboarding info | 2 | E2 | 4 | Not done | | | | |
-| BR15 | Emergency communication | 3 | E1 | 2 | Not done | | | | Seed includes an emergency post. No site-wide banner yet. |
-| BR16 | Schedule changes / closures | 1 | E1 | 3 | Not done | | | | |
-| BR17 | Feedback loop | 1 | E4 | 4 | Not done | | | | |
-| BR18 | Volunteering opportunities | 1 | E1 | 4 | Not done | | | | |
-| BR19 | Alumni engagement | 1 | E1 | 4 | Not done | | | | |
-| BR20 | Job and internship visibility | 3 | E1 | 3 | Not done | | | | |
-| BR21 | Facility issue reporting | 2 | E4 | 3 | Not done | | | | |
-| BR22 | Staff directory | 2 | E2 | 4 | Not done | | | | |
-| BR23 | Financial support info | 3 | E2 | 3 | Not done | | | | |
-| BR24 | Sports and recreation (info + booking) | 2 | E2 + E3 | 4 | Not done | | | | |
-| BR25 | Dining info (menu, hours) | 1 | E2 | 4 | Not done | | | | |
-| BR26 | Printing services info | 1 | E2 | 4 | Not done | | | | |
-| BR27 | Textbook exchange | 1 | E5 | 4 | Not done | | | | |
-| BR28 | Guest lectures | 1 | E1 | 3 | Not done | | | | |
-| BR29 | Wellbeing and counselling info | 3 | E2 | 3 | Not done | | | | |
-| BR30 | IT support info | 2 | E2 | 4 | Not done | | | | |
-| BR31 | Library resources and hours | 2 | E2 | 4 | Not done | | | | |
-| BR32 | Student life highlights | 1 | E1 | 4 | Not done | | | | |
-| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Not done | | | | `assistant_queries` table exists. No pipeline yet. |
+| ID | Requirement | Source | Priority | Status | Notes |
+|----|-------------|--------|----------|--------|-------|
+| FR-01 | Auth + role redirect (student/staff/admin shells) | BR12 | P0 | Partial | Supabase Auth + `/api/auth/me`; UI shells in progress |
+| FR-02 | Student dashboard (AI bar, feed, quick actions) | BR1, BR2, BR33 | P0 | Partial | Feed API exists; UniHive layout in progress |
+| FR-03 | Targeted announcements (audience faculty/year/programme) | BR2, BR11 | P0 | Partial | Post engine + create announcement |
+| FR-04 | Events + interest | BR3, BR4 | P0 | Partial | Post type EVENT; Interest model; UI pending |
+| FR-05 | Classroom booking request + staff review | BR8 | P0 | Partial | Resource/Booking models enriched; APIs pending |
+| FR-06 | AI assistant grounded answers + actions | BR33, BR10 | P0 | Not done | AssistantQuery model ready; service pending |
+| FR-07 | Lost & Found | BR7 | P0 | Partial | Listing model enriched; APIs/UI pending |
+| FR-08 | Staff content CRUD | BR11 | P0 | Partial | POST announcements; staff UI pending |
+| FR-09 | Admin users / staff / roles matrix | BR12 | P0 | Partial | Models + seed; admin UI pending |
+| FR-10 | Notifications | BR8 flow | P0 | Partial | `Notification` model added |
+| FR-11 | Societies + sign-up | BR5, BR6 | P1 | Partial | Society + SocietyMembership |
+| FR-12 | Calendar / jobs / campus info | BR13, BR20, … | P1 | Partial | Post types + Info engine |
+| FR-13 | Requests (support, facility, feedback) | BR9, BR17, BR21 | P1 | Partial | Request model |
 
-## B. Non-functional requirements
+## B. Non-functional
 
-| ID | Requirement | Marks | How we address it | Status | Where | Notes |
-|----|-------------|-------|-------------------|--------|-------|-------|
-| NFR1 | Usability (first-time students, mixed digital literacy) | 2 | Mobile-first, simple navigation, plain language, clear labels, empty-state guidance | Partial | `frontend/src` | Feed, login, and new-post have labels and empty/error states. |
-| NFR2 | Performance and scalability (semester-start peaks) | 3 | Pagination, DB indexes, caching of feeds, lightweight pages, note on scaling path | Partial | `models/post.py`, list endpoint | Pagination and indexes. No feed cache. |
-| NFR3 | Reliability and availability | 1 | Health check, graceful error pages, AI fallback to search, documented deploy | Partial | `/health`, `/ready` | Hosted Supabase is a single-network dependency; demo needs a hotspot. |
-| NFR4 | Security and privacy | 2 | Managed Auth, server-side RBAC, only authorised publish, minimal personal data, audit log | Partial | `security.py`, RLS with no anon policies | No password hashes in our DB. Roles are in `users`, not JWT claims. |
-| NFR5 | Maintainability | 4 | Clear layers, constants, seed, tests, README | Partial | `backend/app` | Admin UI is only “New announcement”. |
-| NFR6 | Robustness (bad/incomplete input) | 3 | Server + client validation, sensible defaults | Partial | Pydantic + zod | 422 on empty title. |
+| ID | Requirement | Status | Notes |
+|----|-------------|--------|-------|
+| NFR-01 | Auth (Supabase) | Partial | |
+| NFR-02 | RBAC server-side | Partial | `PERMISSION_ROLES` + deps |
+| NFR-03 | Validation | Partial | Posts/auth |
+| NFR-04 | Friendly errors | Partial | |
+| NFR-05 | Pagination / search / filter | Partial | Posts list |
+| NFR-06 | Loading / empty / error UI | In progress | UniHive shells |
+| NFR-07 | Responsive | In progress | |
+| NFR-08 | No secrets in repo | Done | `.env.example` |
+| NFR-09 | pytest one command | Partial | `make test` |
+| NFR-10 | Seed + README | Partial | |
+| NFR-11 | Server logging | Partial | |
 
-## C. Deliberately left out (fill as we cut)
+## C. Differentiator
 
-| What was cut | Why (marks, time, risk) | Next step |
-|--------------|-------------------------|-----------|
-| Integration with real student records / timetable | Not available per assumptions; out of scope | Adapter layer for SIS in future |
-| SQLite / homemade JWT | Team chose Supabase Postgres + Auth | Disclose and keep hotspot ready |
-| Local-only demo if Supabase is down | Hosted auth and DB | Pre-fill `.env`, hotspot |
+| ID | Idea | Status |
+|----|------|--------|
+| INN-01 | UniHive AI with sources + deep-link actions (BR33) | Not done |
 
-## D. Assumptions (from the PS and ours)
+## D. Deliberately left out
 
-| # | Assumption | Source |
-|---|------------|--------|
-| 1 | Demo data is invented by the team | PS section 7 |
-| 2 | No integration with existing university systems | PS section 7 |
-| 3 | University staff populate and maintain content | PS section 7 |
-| 4 | Users have smartphone/tablet/computer access, so mobile-first web app | PS section 7 |
-| 5 | Small admin office maintains it, so simple stack and admin UI, no complex infra | PS section 8 |
-| 6 | Supabase project credentials are available in `.env` before `make seed` | Team |
+| What | Why |
+|------|-----|
+| Full 33 BR as separate apps | Engine reuse + depth over breadth |
+| Vector DB | FTS5 / SQL retrieval when assistant ships |
+| Native mobile apps | Responsive web |
+| Dark mode / advanced analytics | P2 in UI/UX plan |
 
-## E. Progress summary (update before final push)
+## E. Model inventory (backend)
 
-- BR done: 0 / 33 fully; Partial: BR1, BR2, BR11, BR12 (marks not claimed as Done)
-- NFR done: 0 / 6 fully; Partial: NFR1–NFR6 started
+| Model | Status |
+|-------|--------|
+| User, Society, Post | Done |
+| Resource, Booking (+ purpose, group_size, floor) | Done |
+| Listing (+ category, location, occurred_at, image_url), Interest, SocietyMembership | Done |
+| Request, InfoPage, Faq, StaffContact | Done |
+| AssistantQuery (+ session_id, source_ids), AuditLog | Done |
+| **Notification** | **Added** |
+
+## F. Next build slices
+
+1. Finish UniHive P0 frontend shells (student / staff / admin) per UI/UX doc  
+2. Booking + listing + notification API routers/services  
+3. Assistant pipeline (`assistant.mdc`)  
+4. Harden NFRs, DEMO.md, seed rooms/lost&found/notifications  

@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.constants import Faculty, Role
-from app.db import engine, get_db, init_db
+from app.db import get_db, get_engine, init_db
 from app.main import app
 from app.models.user import User
 from app.security import get_current_user, get_optional_user
@@ -26,7 +26,7 @@ def _create_schema() -> None:
 
 @pytest.fixture
 def db_session() -> Generator[Session, None, None]:
-    connection = engine.connect()
+    connection = get_engine().connect()
     transaction = connection.begin()
     session = Session(bind=connection)
     session.begin_nested()

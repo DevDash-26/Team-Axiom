@@ -11,7 +11,7 @@ from supabase import create_client
 
 from app.config import get_settings
 from app.constants import DEMO_PASSWORD, SEED_MARKER, Faculty, PostStatus, PostType, Role
-from app.db import SessionLocal, init_db
+from app import db as database
 from app.models.post import Post
 from app.models.society import Society
 from app.models.user import User
@@ -229,15 +229,17 @@ def _replace_seed_posts(db, admin: User) -> None:
 
 def seed() -> None:
     logging.basicConfig(level=logging.INFO)
+    get_settings.cache_clear()
     settings = get_settings()
     if not settings.database_url or not settings.supabase_url or not settings.supabase_service_role_key:
         raise SystemExit(
             "Set DATABASE_URL, SUPABASE_URL, and SUPABASE_SERVICE_ROLE_KEY before seeding."
         )
 
-    init_db()
+    database.init_db()
     client = create_client(settings.supabase_url, settings.supabase_service_role_key)
-    db = SessionLocal()
+    assert database.SessionLocal is not None
+    db = database.SessionLocal()
     try:
         societies = {spec["slug"]: _upsert_society(db, spec) for spec in SOCIETIES}
         users_by_email: dict[str, User] = {}

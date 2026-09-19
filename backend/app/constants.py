@@ -85,6 +85,27 @@ class MembershipStatus(str, Enum):
     MEMBER = "MEMBER"
 
 
+class NotificationType(str, Enum):
+    BOOKING_UPDATE = "BOOKING_UPDATE"
+    POST_PUBLISHED = "POST_PUBLISHED"
+    REQUEST_UPDATE = "REQUEST_UPDATE"
+    LISTING_UPDATE = "LISTING_UPDATE"
+    SYSTEM = "SYSTEM"
+
+
+class InfoCategory(str, Enum):
+    FAQ = "FAQ"
+    ONBOARDING = "ONBOARDING"
+    DIRECTORY = "DIRECTORY"
+    FINANCIAL_AID = "FINANCIAL_AID"
+    DINING = "DINING"
+    PRINTING = "PRINTING"
+    WELLBEING = "WELLBEING"
+    IT = "IT"
+    LIBRARY = "LIBRARY"
+    SPORTS = "SPORTS"
+
+
 class Permission(str, Enum):
     POSTS_VIEW_PUBLISHED = "posts.view_published"
     POSTS_CREATE_ANNOUNCEMENT = "posts.create_announcement"

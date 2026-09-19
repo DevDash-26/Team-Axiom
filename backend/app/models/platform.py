@@ -20,10 +20,12 @@ class AssistantQuery(Base):
     user_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id"), nullable=True
     )
+    session_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     question: Mapped[str] = mapped_column(Text)
     intent: Mapped[str | None] = mapped_column(String(32), nullable=True)
     answered: Mapped[bool] = mapped_column(Boolean, default=False)
     fallback: Mapped[bool] = mapped_column(Boolean, default=False)
+    source_ids: Mapped[list[Any] | None] = mapped_column(JSONB, nullable=True)
     latency_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
     feedback: Mapped[int | None] = mapped_column(Integer, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

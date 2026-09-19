@@ -3,6 +3,7 @@
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine.url import URL, make_url
 
 
 class Settings(BaseSettings):
@@ -28,12 +29,26 @@ class Settings(BaseSettings):
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
     def sqlalchemy_url(self) -> str:
-        url = self.database_url
-        if url.startswith("postgres://"):
-            return url.replace("postgres://", "postgresql+psycopg://", 1)
-        if url.startswith("postgresql://") and "+psycopg" not in url:
-            return url.replace("postgresql://", "postgresql+psycopg://", 1)
-        return url
+        """Build a psycopg URL. Keep pooler usernames like postgres.<ref> intact."""
+        raw = (self.database_url or "").strip()
+        if not raw:
+            return ""
+        if raw.startswith("postgres://"):
+            raw = "postgresql://" + raw[len("postgres://") :]
+        if raw.startswith("postgresql://") and "+psycopg" not in raw:
+            raw = "postgresql+psycopg://" + raw[len("postgresql://") :]
+
+        parsed = make_url(raw)
+        rebuilt = URL.create(
+            drivername="postgresql+psycopg",
+            username=parsed.username,
+            password=parsed.password,
+            host=parsed.host,
+            port=parsed.port or 5432,
+            database=parsed.database or "postgres",
+            query={"sslmode": "require"},
+        )
+        return rebuilt.render_as_string(hide_password=False)
 
 
 @lru_cache

@@ -28,7 +28,16 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(`${apiBase()}${path}`, { ...init, headers });
+  let response: Response;
+  try {
+    response = await fetch(`${apiBase()}${path}`, { ...init, headers });
+  } catch {
+    throw new ApiError(
+      0,
+      "NETWORK_ERROR",
+      "Could not reach the UniHive API. Make sure the backend is running on port 8000.",
+    );
+  }
   const payload: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
