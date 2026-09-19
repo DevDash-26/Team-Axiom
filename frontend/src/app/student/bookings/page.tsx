@@ -4,8 +4,7 @@ import { useState } from "react";
 import { AuthGate } from "@/components/layout/AuthGate";
 import { RoomCard } from "@/components/feature/CampusCards";
 import { EmptyState, PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
-import { Input, Textarea } from "@/components/ui/Input";
+import { Button, Input, Textarea } from "@/components/ui/legacy";
 
 const ROOMS = [
   { id: "1", name: "Room 302", floor: "Floor 3", capacity: 8, available: "Available 14:00–16:00" },

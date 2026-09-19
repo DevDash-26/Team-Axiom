@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { AuthGate } from "@/components/layout/AuthGate";
 import { Badge, PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/legacy";
 import { ROUTES } from "@/lib/constants";
 
 function EventDetail() {

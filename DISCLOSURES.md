@@ -11,7 +11,7 @@
 | SQLAlchemy | 2.0.54 | ORM | backend | https://www.sqlalchemy.org |
 | psycopg | 3.3.6 | Postgres driver | backend | https://www.psycopg.org |
 | Pydantic | 2.13.5 | Request/response validation | backend | https://docs.pydantic.dev |
-| pydantic-settings | 2.15.0 | Environment config | backend | https://docs.pydantic.dev/latest/concepts/pydantic_settings |
+| pydantic-settings | 2.15.0 | Environment config | backend | https://docs.pydantic.dev/latest/concepts/pydantic-settings |
 | PyJWT | 2.14.0 | Verify Supabase access tokens | backend | https://pyjwt.readthedocs.io |
 | httpx | 0.28.1 | HTTP client (Supabase SDK / tests) | backend | https://www.python-httpx.org |
 | supabase (Python) | 2.31.0 | Auth Admin for seed only | backend | https://github.com/supabase/supabase-py |
@@ -21,7 +21,19 @@
 | Tailwind CSS | 4 | Styling | frontend | https://tailwindcss.com |
 | zod | 4.6.5 | Login and form validation | frontend | https://zod.dev |
 | @supabase/supabase-js | 2.116.0 | Browser Auth (`signInWithPassword`) | frontend | https://supabase.com/docs |
-| lucide-react | (see package-lock) | Outline icons for UniHive UI | frontend | https://lucide.dev |
+| lucide-react | 1.47.0 | Outline icons for UniHive UI | frontend | https://lucide.dev |
+| shadcn/ui | copied source (CLI 4.21.0) | UI primitives (button, dialog, table, …) | frontend | https://ui.shadcn.com |
+| radix-ui | 1.6.7 | Accessible primitive behaviours used by shadcn | frontend | https://www.radix-ui.com |
+| class-variance-authority | 0.7.1 | Component variants | frontend | https://cva.style |
+| clsx | 2.1.1 | Conditional class names | frontend | https://github.com/lukeed/clsx |
+| tailwind-merge | 3.7.0 | Merge Tailwind classes | frontend | https://github.com/dcastil/tailwind-merge |
+| cn | 0.3.0 | shadcn `cn()` helper | frontend | https://www.npmjs.com/package/cn |
+| sonner | 2.0.8 | Toast notifications | frontend | https://sonner.emilkowal.ski |
+| cmdk | 1.1.1 | Command palette primitive | frontend | https://cmdk.paco.me |
+| next-themes | 0.4.6 | Theme hook used by the toast host | frontend | https://github.com/pacocoursey/next-themes |
+| tw-animate-css | 1.4.0 | Enter/leave animations for dialogs (CSS copied to `frontend/src/styles/tw-animate.css` because Tailwind v4 cannot resolve the package `style` export) | frontend | https://github.com/Wombosvideo/tw-animate-css |
+| Magic UI (via 21st.dev / shadcn registry) | copied `shine-border`, `number-ticker` | AI bar border and dashboard count animation | frontend | https://magicui.design · https://21st.dev |
+| motion | 13.4.0 | Number ticker animation | frontend | https://motion.dev |
 
 Exact frontend patch versions are in `frontend/package-lock.json` after `npm install`.
 
@@ -38,9 +50,9 @@ Campus data is **not** read through the Supabase Data API / PostgREST. FastAPI +
 
 | Asset | Source | Licence | Where used |
 |-------|--------|---------|------------|
-| Inter font | Google Fonts via `next/font` | SIL OFL | UniHive UI (per UI/UX plan) |
+| Inter font | Google Fonts via `next/font` | SIL OFL | UniHive UI (`frontend/src/app/layout.tsx`) |
 | lucide icons | lucide-react | ISC | Navigation and actions |
-| UCL logo reference | `.cursor/UCL.png` (team asset) | Event / UCL | Brand reference |
+| UCL logo | Team asset (`.cursor/UCL.png`) | Institutional mark for the demo UI | `frontend/public/ucl-logo.png` |
 
 No real student data. Seed names are invented.
 

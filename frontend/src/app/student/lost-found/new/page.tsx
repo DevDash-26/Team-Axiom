@@ -4,8 +4,7 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AuthGate } from "@/components/layout/AuthGate";
 import { PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
-import { Input, Textarea } from "@/components/ui/Input";
+import { Button, Input, Textarea } from "@/components/ui/legacy";
 import { ROUTES } from "@/lib/constants";
 
 function ReportForm() {

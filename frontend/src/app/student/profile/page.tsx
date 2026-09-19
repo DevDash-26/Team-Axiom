@@ -2,8 +2,7 @@
 
 import { AuthGate } from "@/components/layout/AuthGate";
 import { PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { Button, Input } from "@/components/ui/legacy";
 import { signOut } from "@/lib/auth";
 import { ROUTES } from "@/lib/constants";
 import { useRouter } from "next/navigation";

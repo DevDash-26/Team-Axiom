@@ -1,10 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { AuthGate } from "@/components/layout/AuthGate";
-import { Badge, PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
-import { Textarea } from "@/components/ui/Input";
+import { toast } from "sonner";
+import { AppShell } from "@/components/layout/AppShell";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { FormField } from "@/components/feedback/FormField";
+import { StatusBadge, toneForStatus } from "@/components/feedback/StatusBadge";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useSessionUser } from "@/hooks/use-session-user";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 type RequestRow = {
   id: string;
@@ -40,82 +52,78 @@ const INITIAL: RequestRow[] = [
   },
 ];
 
-function StaffRequests() {
+export default function StaffRequestsPage() {
+  const { user, setUser } = useSessionUser();
   const [rows, setRows] = useState(INITIAL);
   const [selected, setSelected] = useState<RequestRow | null>(null);
   const [reason, setReason] = useState("");
-  const [toast, setToast] = useState<string | null>(null);
 
   function updateStatus(id: string, status: RequestRow["status"]) {
     setRows((prev) => prev.map((row) => (row.id === id ? { ...row, status } : row)));
     setSelected(null);
     setReason("");
-    setToast(status === "APPROVED" ? "Room request approved." : "Room request rejected.");
+    toast.success(status === "APPROVED" ? "Room request approved." : "Room request rejected.");
   }
 
   return (
-    <div>
-      <PageHeader title="Room Requests" description="Approve or reject classroom booking requests." />
-      <div className="mb-4 flex gap-2">
-        {["PENDING", "APPROVED", "REJECTED"].map((status) => (
-          <Badge key={status} tone={status === "PENDING" ? "warning" : status === "APPROVED" ? "success" : "error"}>
-            {status}: {rows.filter((row) => row.status === status).length}
-          </Badge>
+    <AppShell variant="staff" user={user} onSignedOut={() => setUser(null)}>
+      <PageHeader title="Student Requests" description="Approve or reject classroom booking requests." />
+      <div className="mb-4 flex flex-wrap gap-2">
+        {(["PENDING", "APPROVED", "REJECTED"] as const).map((status) => (
+          <StatusBadge
+            key={status}
+            label={`${status}: ${rows.filter((row) => row.status === status).length}`}
+            tone={toneForStatus(status)}
+          />
         ))}
       </div>
-      <div className="overflow-x-auto rounded-xl border border-[var(--uh-border)] bg-white">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-[var(--uh-border)] bg-[#FAFAFA] text-xs text-[var(--uh-muted)]">
-            <tr>
-              <th className="px-4 py-3">Request</th>
-              <th className="px-4 py-3">Student</th>
-              <th className="px-4 py-3">Room</th>
-              <th className="px-4 py-3">Slot</th>
-              <th className="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Request</TableHead>
+              <TableHead>Student</TableHead>
+              <TableHead>Room</TableHead>
+              <TableHead>Slot</TableHead>
+              <TableHead>Status</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {rows.map((row) => (
-              <tr
-                key={row.id}
-                className="cursor-pointer border-b border-[var(--uh-border)] hover:bg-[#FAFAFA]"
-                onClick={() => setSelected(row)}
-              >
-                <td className="px-4 py-3 font-medium">{row.id}</td>
-                <td className="px-4 py-3">{row.student}</td>
-                <td className="px-4 py-3">{row.room}</td>
-                <td className="px-4 py-3">{row.slot}</td>
-                <td className="px-4 py-3">
-                  <Badge tone={row.status === "APPROVED" ? "success" : row.status === "REJECTED" ? "error" : "warning"}>
-                    {row.status}
-                  </Badge>
-                </td>
-              </tr>
+              <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelected(row)}>
+                <TableCell className="font-medium">{row.id}</TableCell>
+                <TableCell>{row.student}</TableCell>
+                <TableCell>{row.room}</TableCell>
+                <TableCell>{row.slot}</TableCell>
+                <TableCell>
+                  <StatusBadge label={row.status} tone={toneForStatus(row.status)} />
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {selected ? (
-        <div className="fixed inset-y-0 right-0 z-40 w-full max-w-md border-l border-[var(--uh-border)] bg-white p-5 shadow-xl">
+        <div className="fixed inset-y-0 right-0 z-40 w-full max-w-md border-l border-border bg-card p-5 shadow-xl">
           <h3 className="text-lg font-semibold">{selected.id}</h3>
           <dl className="mt-4 space-y-2 text-sm">
             <div>
-              <dt className="text-[var(--uh-muted)]">Student</dt>
+              <dt className="text-muted-foreground">Student</dt>
               <dd>{selected.student}</dd>
             </div>
             <div>
-              <dt className="text-[var(--uh-muted)]">Programme</dt>
+              <dt className="text-muted-foreground">Programme</dt>
               <dd>{selected.programme}</dd>
             </div>
             <div>
-              <dt className="text-[var(--uh-muted)]">Room / slot</dt>
+              <dt className="text-muted-foreground">Room / slot</dt>
               <dd>
                 {selected.room} · {selected.slot}
               </dd>
             </div>
             <div>
-              <dt className="text-[var(--uh-muted)]">Purpose</dt>
+              <dt className="text-muted-foreground">Purpose</dt>
               <dd>
                 {selected.purpose} · group of {selected.groupSize}
               </dd>
@@ -123,12 +131,10 @@ function StaffRequests() {
           </dl>
           {selected.status === "PENDING" ? (
             <div className="mt-6 space-y-3">
-              <Textarea
-                label="Rejection reason (required to reject)"
-                value={reason}
-                onChange={(event) => setReason(event.target.value)}
-              />
-              <div className="flex gap-2">
+              <FormField id="reject-reason" label="Rejection reason (required to reject)">
+                <Textarea id="reject-reason" value={reason} onChange={(event) => setReason(event.target.value)} />
+              </FormField>
+              <div className="flex flex-wrap gap-2">
                 <Button onClick={() => updateStatus(selected.id, "APPROVED")}>Approve</Button>
                 <Button
                   variant="destructive"
@@ -139,28 +145,18 @@ function StaffRequests() {
                 >
                   Reject
                 </Button>
-                <Button variant="secondary" onClick={() => setSelected(null)}>
+                <Button variant="outline" onClick={() => setSelected(null)}>
                   Close
                 </Button>
               </div>
             </div>
           ) : (
-            <Button className="mt-6" variant="secondary" onClick={() => setSelected(null)}>
+            <Button className="mt-6" variant="outline" onClick={() => setSelected(null)}>
               Close
             </Button>
           )}
         </div>
       ) : null}
-
-      {toast ? (
-        <div className="fixed right-4 bottom-4 rounded-lg bg-[var(--uh-near-black)] px-4 py-3 text-sm text-white">
-          {toast}
-        </div>
-      ) : null}
-    </div>
+    </AppShell>
   );
-}
-
-export default function StaffRequestsPage() {
-  return <AuthGate mode="staff">{() => <StaffRequests />}</AuthGate>;
 }

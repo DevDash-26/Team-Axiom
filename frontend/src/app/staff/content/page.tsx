@@ -2,20 +2,38 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { AuthGate } from "@/components/layout/AuthGate";
-import { Badge, EmptyState, PageHeader, Skeleton } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
+import { AppShell } from "@/components/layout/AppShell";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { EmptyState, ErrorState } from "@/components/feedback/EmptyState";
+import { StatusBadge, toneForStatus } from "@/components/feedback/StatusBadge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useSessionUser } from "@/hooks/use-session-user";
 import { apiGet, ApiError } from "@/lib/api";
 import { ROUTES } from "@/lib/constants";
 import type { PostListResponse, PostRead } from "@/types";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-function ContentTable() {
+function audienceLabel(post: PostRead): string {
+  return [post.faculty, post.programme, post.year ? `Y${post.year}` : null].filter(Boolean).join(" · ") || "Everyone";
+}
+
+export default function StaffContentPage() {
+  const { user, setUser } = useSessionUser();
   const [posts, setPosts] = useState<PostRead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
       const feed = await apiGet<PostListResponse>("/api/posts");
       setPosts(feed.items);
@@ -31,57 +49,50 @@ function ContentTable() {
   }, [load]);
 
   return (
-    <div>
+    <AppShell variant="staff" user={user} onSignedOut={() => setUser(null)}>
       <PageHeader
-        title="Announcements"
-        description="Create and maintain official campus content."
+        title="My Content"
+        description="Create and maintain official campus announcements."
         actions={
-          <Link href={ROUTES.staffContentNew}>
-            <Button>Create Announcement</Button>
-          </Link>
+          <Button asChild>
+            <Link href={ROUTES.newPost}>Create Announcement</Link>
+          </Button>
         }
       />
       {loading ? (
-        <Skeleton className="h-40" />
+        <Skeleton className="h-40 w-full" />
       ) : error ? (
-        <EmptyState title="Unable to load content" description={error} />
+        <ErrorState message={error} onRetry={() => void load()} />
       ) : posts.length === 0 ? (
         <EmptyState title="No announcements yet" description="Publish your first update for students." />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-[var(--uh-border)] bg-white">
-          <table className="min-w-full text-left text-sm">
-            <thead className="border-b border-[var(--uh-border)] bg-[#FAFAFA] text-xs text-[var(--uh-muted)]">
-              <tr>
-                <th className="px-4 py-3">Announcement</th>
-                <th className="px-4 py-3">Audience</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Author</th>
-                <th className="px-4 py-3">Updated</th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="overflow-hidden rounded-xl border border-border bg-card">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Announcement</TableHead>
+                <TableHead>Audience</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Author</TableHead>
+                <TableHead>Updated</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {posts.map((post) => (
-                <tr key={post.id} className="border-b border-[var(--uh-border)] hover:bg-[#FAFAFA]">
-                  <td className="px-4 py-3 font-medium">{post.title}</td>
-                  <td className="px-4 py-3">
-                    {[post.faculty, post.programme, post.year ? `Y${post.year}` : null].filter(Boolean).join(" · ") ||
-                      "Everyone"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge tone={post.status === "PUBLISHED" ? "success" : "warning"}>{post.status}</Badge>
-                  </td>
-                  <td className="px-4 py-3">{post.author.full_name}</td>
-                  <td className="px-4 py-3">{new Date(post.created_at).toLocaleDateString()}</td>
-                </tr>
+                <TableRow key={post.id}>
+                  <TableCell className="font-medium">{post.title}</TableCell>
+                  <TableCell>{audienceLabel(post)}</TableCell>
+                  <TableCell>
+                    <StatusBadge label={post.status} tone={toneForStatus(post.status)} />
+                  </TableCell>
+                  <TableCell>{post.author.full_name}</TableCell>
+                  <TableCell>{new Date(post.created_at).toLocaleDateString()}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
-    </div>
+    </AppShell>
   );
-}
-
-export default function StaffContentPage() {
-  return <AuthGate mode="staff">{() => <ContentTable />}</AuthGate>;
 }

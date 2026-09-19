@@ -10,7 +10,7 @@ install:
 	cd frontend && npm install
 
 backend:
-	cd backend && .venv/bin/uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+	cd backend && env -u DATABASE_URL .venv/bin/uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 frontend:
 	cd frontend && npm run dev -- --port 3000
@@ -19,7 +19,7 @@ dev:
 	$(MAKE) -j2 backend frontend
 
 seed:
-	cd backend && .venv/bin/python -m app.seed
+	cd backend && env -u DATABASE_URL .venv/bin/python -m app.seed
 
 test:
-	cd backend && .venv/bin/pytest -q
+	cd backend && env -u DATABASE_URL .venv/bin/pytest -q
