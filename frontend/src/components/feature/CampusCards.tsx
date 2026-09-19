@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, Bot, CalendarDays, DoorOpen, Search } from "lucide-react";
 import { Badge } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/legacy";
 import { POST_TYPE_LABELS, ROUTES } from "@/lib/constants";
 import type { PostRead } from "@/types";
 

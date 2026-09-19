@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { APP_NAME, APP_TAGLINE, DEMO_PASSWORD_HINT, ROUTES, dashboardPathForRole } from "@/lib/constants";
+import { BrandMark } from "@/components/layout/BrandMark";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/feedback/FormField";
+import { APP_NAME, APP_TAGLINE, DEMO_PASSWORD_HINT, dashboardPathForRole } from "@/lib/constants";
 import { fetchMe, signIn } from "@/lib/auth";
 
 const loginSchema = z.object({
@@ -49,55 +51,58 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--uh-bg)]">
-      <header className="border-b border-[var(--uh-border)] bg-white px-4 py-4">
-        <div className="mx-auto flex max-w-md items-center gap-2 font-bold">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--uh-primary)] text-white">
-            U
-          </span>
-          {APP_NAME}
-        </div>
-      </header>
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-10">
-        <h1 className="text-[32px] leading-10 font-bold">Sign in</h1>
-        <p className="mt-2 text-sm text-[var(--uh-muted)]">{APP_TAGLINE}</p>
-        <form onSubmit={(event) => void handleSubmit(event)} className="mt-8 space-y-4" noValidate>
-          <Input
-            label="University email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            error={fieldErrors.email}
-            placeholder="name@student.ucl.lk"
-          />
-          <Input
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            error={fieldErrors.password}
-          />
-          {formError ? (
-            <p className="rounded-lg bg-[var(--uh-error-soft)] px-3 py-2 text-sm text-[var(--uh-error)]" role="alert">
-              {formError}
+    <div className="flex min-h-full items-center justify-center px-4 py-12">
+      <div className="w-full max-w-md space-y-6">
+        <BrandMark className="justify-center" />
+        <Card className="gap-0 py-0">
+          <CardHeader className="border-b border-border px-6 py-5">
+            <CardTitle>Sign in</CardTitle>
+            <CardDescription>
+              Use your {APP_NAME} demo account. You do not choose a role — it is already assigned.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="px-6 py-6">
+            <p className="mb-4 text-sm text-muted-foreground">{APP_TAGLINE}</p>
+            <form onSubmit={(event) => void handleSubmit(event)} className="space-y-4" noValidate>
+              <FormField id="email" label="University email" error={fieldErrors.email}>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  className="h-11"
+                  aria-invalid={Boolean(fieldErrors.email)}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </FormField>
+              <FormField id="password" label="Password" error={fieldErrors.password}>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  className="h-11"
+                  aria-invalid={Boolean(fieldErrors.password)}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </FormField>
+              {formError ? (
+                <p className="rounded-md bg-[var(--danger-soft)] px-3 py-2 text-sm text-destructive" role="alert">
+                  {formError}
+                </p>
+              ) : null}
+              <Button type="submit" className="h-11 w-full" disabled={submitting}>
+                {submitting ? "Signing in…" : "Sign in"}
+              </Button>
+            </form>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Demo password: <code>{DEMO_PASSWORD_HINT}</code>. Accounts are seed-managed.
             </p>
-          ) : null}
-          <Button type="submit" loading={submitting} className="w-full">
-            Sign in
-          </Button>
-        </form>
-        <p className="mt-6 text-sm text-[var(--uh-muted)]">
-          Demo password: <code>{DEMO_PASSWORD_HINT}</code>. New accounts are seed-managed —{" "}
-          <Link href={ROUTES.register} className="font-medium text-[var(--uh-primary)]">
-            see registration notes
-          </Link>
-          .
-        </p>
-      </main>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

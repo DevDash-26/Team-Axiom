@@ -1,9 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { AuthGate } from "@/components/layout/AuthGate";
-import { Badge, PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
+import { AppShell } from "@/components/layout/AppShell";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { ConfirmDialog } from "@/components/feedback/ConfirmDialog";
+import { StatusBadge } from "@/components/feedback/StatusBadge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useSessionUser } from "@/hooks/use-session-user";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const USERS = [
   {
@@ -29,82 +41,78 @@ const USERS = [
   },
 ];
 
-function UsersPage() {
+export default function AdminUsersPage() {
+  const { user, setUser } = useSessionUser();
+  const [query, setQuery] = useState("");
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
+  const visible = USERS.filter((row) => {
+    const haystack = `${row.name} ${row.id} ${row.programme} ${row.role}`.toLowerCase();
+    return haystack.includes(query.trim().toLowerCase());
+  });
+
   return (
-    <div>
+    <AppShell variant="admin" user={user} onSignedOut={() => setUser(null)}>
       <PageHeader
         title="Users"
-        description="Manage student and staff accounts."
+        description="Search, filter, and manage accounts. Super admin only on the server."
         actions={<Button>Add User</Button>}
       />
-      <input
-        placeholder="Search by name, ID, or email"
-        className="mb-4 h-11 w-full max-w-md rounded-lg border border-[var(--uh-border)] bg-white px-3 text-sm"
+      <Input
+        placeholder="Search by name, ID, or programme"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        className="mb-4 h-11 max-w-md"
       />
-      <div className="overflow-x-auto rounded-xl border border-[var(--uh-border)] bg-white">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-[var(--uh-border)] bg-[#FAFAFA] text-xs text-[var(--uh-muted)]">
-            <tr>
-              <th className="px-4 py-3">User</th>
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Programme</th>
-              <th className="px-4 py-3">Role</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {USERS.map((user) => (
-              <tr key={user.id} className="border-b border-[var(--uh-border)] hover:bg-[#FAFAFA]">
-                <td className="px-4 py-3 font-medium">{user.name}</td>
-                <td className="px-4 py-3">{user.id}</td>
-                <td className="px-4 py-3">{user.programme}</td>
-                <td className="px-4 py-3">
-                  <Badge>{user.role}</Badge>
-                </td>
-                <td className="px-4 py-3">
-                  <Badge tone="success">{user.status}</Badge>
-                </td>
-                <td className="px-4 py-3">
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>User</TableHead>
+              <TableHead>ID</TableHead>
+              <TableHead>Programme</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {visible.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell className="font-medium">{row.name}</TableCell>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.programme}</TableCell>
+                <TableCell>
+                  <StatusBadge label={row.role} />
+                </TableCell>
+                <TableCell>
+                  <StatusBadge label={row.status} tone="success" />
+                </TableCell>
+                <TableCell>
                   <button
                     type="button"
-                    className="text-[var(--uh-error)]"
-                    onClick={() => setConfirmDelete(user.name)}
+                    className="text-sm text-destructive"
+                    onClick={() => setConfirmDelete(row.name)}
                   >
                     Delete
                   </button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
-
-      {confirmDelete ? (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-5">
-            <h3 className="text-lg font-semibold">Delete user?</h3>
-            <p className="mt-2 text-sm text-[var(--uh-muted)]">
-              This action cannot be undone. Historical records for {confirmDelete} may also be affected.
-              Prefer disabling accounts when possible.
-            </p>
-            <div className="mt-5 flex justify-end gap-2">
-              <Button variant="secondary" onClick={() => setConfirmDelete(null)}>
-                Cancel
-              </Button>
-              <Button variant="destructive" onClick={() => setConfirmDelete(null)}>
-                Delete User
-              </Button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </div>
+      <ConfirmDialog
+        open={Boolean(confirmDelete)}
+        title="Delete user?"
+        description={`This action cannot be undone. Historical records for ${confirmDelete ?? "this user"} may also be affected. Prefer disabling accounts when possible.`}
+        confirmLabel="Delete User"
+        destructive
+        onConfirm={() => setConfirmDelete(null)}
+        onOpenChange={(open) => {
+          if (!open) setConfirmDelete(null);
+        }}
+      />
+    </AppShell>
   );
-}
-
-export default function AdminUsersPage() {
-  return <AuthGate mode="admin">{() => <UsersPage />}</AuthGate>;
 }

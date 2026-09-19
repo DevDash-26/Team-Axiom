@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AuthGate } from "@/components/layout/AuthGate";
 import { PageHeader, Badge, EmptyState } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/legacy";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 
 const SUGGESTIONS = [

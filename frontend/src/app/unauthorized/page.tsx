@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ROUTES, dashboardPathForRole } from "@/lib/constants";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/legacy";
 
 export default function UnauthorizedPage() {
   return (

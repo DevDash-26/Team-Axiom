@@ -2,7 +2,7 @@
 
 import { AuthGate } from "@/components/layout/AuthGate";
 import { Badge, PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/legacy";
 
 const STAFF = [
   { name: "Dr. Amaya Jayasuriya", department: "Computing", role: "ACADEMIC", scope: "Own faculty", status: "Active" },

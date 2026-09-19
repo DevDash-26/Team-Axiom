@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AuthGate } from "@/components/layout/AuthGate";
 import { LostItemCard } from "@/components/feature/CampusCards";
 import { PageHeader } from "@/components/ui/Display";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/legacy";
 import { ROUTES } from "@/lib/constants";
 
 const ITEMS = [
