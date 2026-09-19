@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { APP_NAME, ROUTES } from "@/lib/constants";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/legacy";
 
 export default function RegisterPage() {
   return (

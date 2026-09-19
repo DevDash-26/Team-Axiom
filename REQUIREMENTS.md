@@ -7,7 +7,7 @@
 **Target users / roles:** STUDENT, ACADEMIC, SOCIETY_REP, FINANCE, ADMIN, SUPER_ADMIN (UI groups Staff / Admin)  
 **Stack:** Next.js + TypeScript + Tailwind | FastAPI + SQLAlchemy | Supabase Postgres + Auth | FTS/LLM assistant (later)  
 **UI/UX source:** `.cursor/UniHive_UI_UX_Plan.md`  
-**Last updated:** 2026-09-19
+**Last updated:** 2026-09-19 (frontend Phase 1 UI + backend models)
 
 ---
 
@@ -25,43 +25,60 @@
 
 ## A. Functional requirements (mapped to engines + UI)
 
-| ID | Requirement | Source | Priority | Status | Notes |
-|----|-------------|--------|----------|--------|-------|
-| FR-01 | Auth + role redirect (student/staff/admin shells) | BR12 | P0 | Partial | Supabase Auth + `/api/auth/me`; UI shells in progress |
-| FR-02 | Student dashboard (AI bar, feed, quick actions) | BR1, BR2, BR33 | P0 | Partial | Feed API exists; UniHive layout in progress |
-| FR-03 | Targeted announcements (audience faculty/year/programme) | BR2, BR11 | P0 | Partial | Post engine + create announcement |
-| FR-04 | Events + interest | BR3, BR4 | P0 | Partial | Post type EVENT; Interest model; UI pending |
-| FR-05 | Classroom booking request + staff review | BR8 | P0 | Partial | Resource/Booking models enriched; APIs pending |
-| FR-06 | AI assistant grounded answers + actions | BR33, BR10 | P0 | Not done | AssistantQuery model ready; service pending |
-| FR-07 | Lost & Found | BR7 | P0 | Partial | Listing model enriched; APIs/UI pending |
-| FR-08 | Staff content CRUD | BR11 | P0 | Partial | POST announcements; staff UI pending |
-| FR-09 | Admin users / staff / roles matrix | BR12 | P0 | Partial | Models + seed; admin UI pending |
-| FR-10 | Notifications | BR8 flow | P0 | Partial | `Notification` model added |
-| FR-11 | Societies + sign-up | BR5, BR6 | P1 | Partial | Society + SocietyMembership |
-| FR-12 | Calendar / jobs / campus info | BR13, BR20, … | P1 | Partial | Post types + Info engine; FAQ list/filter UI + `/api/info/faqs` done |
-| FR-13 | Requests (support, facility, feedback) | BR9, BR17, BR21 | P1 | Partial | Request model |
+| ID | Requirement | Marks | Engine | Build order | Status | Owner | Where implemented | Tests | Notes |
+|----|-------------|-------|--------|-------------|--------|-------|-------------------|-------|-------|
+| BR1 | Unified access (single home, search, feed) | 5 | Platform | 1 | Partial | | `frontend/src/app/page.tsx`, `/search` | `test_posts.py` | Home feed + search results UI. Search still uses fixtures (`GET /api/search` missing). |
+| BR2 | Targeted announcements by faculty/year/programme | 3 | E1 | 1 | Partial | | `post_service.apply_visibility` | `test_student_sees_only_targeted_posts` | API + feed. Staff targeting UI is still a simple form. |
+| BR3 | Event visibility (university + student organiser) | 3 | E1 | 2 | Partial | | `frontend/src/app/events` | | Listing/detail UI. Uses posts API when available, otherwise fixtures. |
+| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Partial | | EventCard toggle | | UI count only. No interest API yet. |
+| BR5 | Society visibility (society pages and updates) | 3 | E1 | 2 | Partial | | `frontend/src/app/societies` | | List/detail UI on fixtures. |
+| BR6 | Society sign-up / interest | 2 | E5 | 2 | Partial | | Society detail CTA | | Local toggle only. |
+| BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Not done | | | | `listings` table exists. |
+| BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Partial | | `frontend/src/app/bookings` | | Search, request modal, 409 layout, my bookings. Fixture rooms. |
+| BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Not done | | | | `requests` table exists. |
+| BR10 | FAQ access | 2 | E2 | 3 | Partial | | `GET/POST /api/info/faqs`, `/info`, `/student/services` | `test_info.py` | Category filter + search UI; seed FAQs; admin create. |
+| BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `POST /api/posts`, `/posts/new`, `/staff/content` | `test_admin_can_create_announcement` | Create + staff list. No edit/archive yet. |
+| BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `PERMISSION_ROLES`, login redirect | `test_student_cannot_create_announcement` | Login + server permission map. Not every action has a UI. |
+| BR13 | Academic calendar (exams, add/drop, milestones) | 3 | E1 | 3 | Partial | | `frontend/src/app/calendar` | | Calendar list UI. |
+| BR14 | Student onboarding info | 2 | E2 | 4 | Not done | | | | |
+| BR15 | Emergency communication | 3 | E1 | 2 | Partial | | Emergency banner on AppShell | | Seed includes an emergency post. Banner wired from feed. |
+| BR16 | Schedule changes / closures | 1 | E1 | 3 | Not done | | | | |
+| BR17 | Feedback loop | 1 | E4 | 4 | Not done | | | | |
+| BR18 | Volunteering opportunities | 1 | E1 | 4 | Not done | | | | |
+| BR19 | Alumni engagement | 1 | E1 | 4 | Not done | | | | |
+| BR20 | Job and internship visibility | 3 | E1 | 3 | Not done | | | | |
+| BR21 | Facility issue reporting | 2 | E4 | 3 | Not done | | | | |
+| BR22 | Staff directory | 2 | E2 | 4 | Not done | | | | |
+| BR23 | Financial support info | 3 | E2 | 3 | Not done | | | | |
+| BR24 | Sports and recreation (info + booking) | 2 | E2 + E3 | 4 | Not done | | | | |
+| BR25 | Dining info (menu, hours) | 1 | E2 | 4 | Not done | | | | |
+| BR26 | Printing services info | 1 | E2 | 4 | Not done | | | | |
+| BR27 | Textbook exchange | 1 | E5 | 4 | Not done | | | | |
+| BR28 | Guest lectures | 1 | E1 | 3 | Partial | | `frontend/src/app/lectures` | | Listing UI. |
+| BR29 | Wellbeing and counselling info | 3 | E2 | 3 | Not done | | | | |
+| BR30 | IT support info | 2 | E2 | 4 | Not done | | | | |
+| BR31 | Library resources and hours | 2 | E2 | 4 | Not done | | | | |
+| BR32 | Student life highlights | 1 | E1 | 4 | Not done | | | | |
+| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, AI launcher | | Chat chrome, sources, actions, fallback notice, thumbs. Demo replies only. |
 
 ## B. Non-functional
 
-| ID | Requirement | Status | Notes |
-|----|-------------|--------|-------|
-| NFR-01 | Auth (Supabase) | Partial | |
-| NFR-02 | RBAC server-side | Partial | `PERMISSION_ROLES` + deps |
-| NFR-03 | Validation | Partial | Posts/auth |
-| NFR-04 | Friendly errors | Partial | |
-| NFR-05 | Pagination / search / filter | Partial | Posts list |
-| NFR-06 | Loading / empty / error UI | In progress | UniHive shells |
-| NFR-07 | Responsive | In progress | |
-| NFR-08 | No secrets in repo | Done | `.env.example` |
-| NFR-09 | pytest one command | Partial | `make test` |
-| NFR-10 | Seed + README | Partial | |
-| NFR-11 | Server logging | Partial | |
+| ID | Requirement | Marks | How we address it | Status | Where | Notes |
+|----|-------------|-------|-------------------|--------|-------|-------|
+| NFR1 | Usability (first-time students, mixed digital literacy) | 2 | Mobile-first, simple navigation, plain language, clear labels, empty-state guidance | Partial | `frontend/src` | Phase 1 shell: Inter + UCL red tokens, student top nav, staff/admin sidebar, empty/error/skeleton on the feed. |
+| NFR2 | Performance and scalability (semester-start peaks) | 3 | Pagination, DB indexes, caching of feeds, lightweight pages, note on scaling path | Partial | `models/post.py`, list endpoint | Pagination and indexes. No feed cache. |
+| NFR3 | Reliability and availability | 1 | Health check, graceful error pages, AI fallback to search, documented deploy | Partial | `/health`, `/ready` | Hosted Supabase is a single-network dependency; demo needs a hotspot. |
+| NFR4 | Security and privacy | 2 | Managed Auth, server-side RBAC, only authorised publish, minimal personal data, audit log | Partial | `security.py`, RLS with no anon policies | No password hashes in our DB. Roles are in `users`, not JWT claims. |
+| NFR5 | Maintainability | 4 | Clear layers, constants, seed, tests, README | Partial | `backend/app` | Admin UI is only “New announcement”. |
+| NFR6 | Robustness (bad/incomplete input) | 3 | Server + client validation, sensible defaults | Partial | Pydantic + zod | 422 on empty title. |
+| NFR-08 | No secrets in repo | — | `.env.example` | Done | | |
+| NFR-09 | pytest one command | — | `make test` | Partial | | |
 
 ## C. Differentiator
 
 | ID | Idea | Status |
 |----|------|--------|
-| INN-01 | UniHive AI with sources + deep-link actions (BR33) | Not done |
+| INN-01 | UniHive AI with sources + deep-link actions (BR33) | Partial (chrome only) |
 
 ## D. Deliberately left out
 

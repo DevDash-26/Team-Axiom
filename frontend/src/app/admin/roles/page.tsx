@@ -1,7 +1,16 @@
 "use client";
 
-import { AuthGate } from "@/components/layout/AuthGate";
-import { PageHeader } from "@/components/ui/Display";
+import { AppShell } from "@/components/layout/AppShell";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { useSessionUser } from "@/hooks/use-session-user";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const MATRIX: { capability: string; student: boolean; staff: boolean; admin: boolean }[] = [
   { capability: "View campus content", student: true, staff: true, admin: true },
@@ -13,39 +22,41 @@ const MATRIX: { capability: string; student: boolean; staff: boolean; admin: boo
   { capability: "Manage users & roles", student: false, staff: false, admin: true },
 ];
 
-function RolesPage() {
+function mark(allowed: boolean): string {
+  return allowed ? "✓" : "—";
+}
+
+export default function AdminRolesPage() {
+  const { user, setUser } = useSessionUser();
+
   return (
-    <div>
+    <AppShell variant="admin" user={user} onSignedOut={() => setUser(null)}>
       <PageHeader
         title="Roles & Permissions"
         description="Read-only matrix for the hackathon. Enforcement lives on the server."
       />
-      <div className="overflow-x-auto rounded-xl border border-[var(--uh-border)] bg-white">
-        <table className="min-w-full text-left text-sm">
-          <thead className="border-b border-[var(--uh-border)] bg-[#FAFAFA] text-xs text-[var(--uh-muted)]">
-            <tr>
-              <th className="px-4 py-3">Capability</th>
-              <th className="px-4 py-3">Student</th>
-              <th className="px-4 py-3">Staff</th>
-              <th className="px-4 py-3">Admin</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Capability</TableHead>
+              <TableHead>Student</TableHead>
+              <TableHead>Staff</TableHead>
+              <TableHead>Admin</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {MATRIX.map((row) => (
-              <tr key={row.capability} className="border-b border-[var(--uh-border)]">
-                <td className="px-4 py-3">{row.capability}</td>
-                <td className="px-4 py-3">{row.student ? "✓" : "—"}</td>
-                <td className="px-4 py-3">{row.staff ? "✓" : "—"}</td>
-                <td className="px-4 py-3">{row.admin ? "✓" : "—"}</td>
-              </tr>
+              <TableRow key={row.capability}>
+                <TableCell>{row.capability}</TableCell>
+                <TableCell>{mark(row.student)}</TableCell>
+                <TableCell>{mark(row.staff)}</TableCell>
+                <TableCell>{mark(row.admin)}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
-    </div>
+    </AppShell>
   );
-}
-
-export default function AdminRolesPage() {
-  return <AuthGate mode="admin">{() => <RolesPage />}</AuthGate>;
 }

@@ -1,4 +1,6 @@
 import { POST_TYPE_LABELS } from "@/lib/constants";
+import { formatDateTime } from "@/lib/datetime";
+import { StatusBadge } from "@/components/feedback/StatusBadge";
 import type { PostRead } from "@/types";
 
 type PostCardProps = {
@@ -25,20 +27,22 @@ export function PostCard({ post }: PostCardProps) {
 
   return (
     <article
-      className={`rounded-lg border p-4 ${
-        isEmergency ? "border-red-300 bg-red-50" : "border-slate-200 bg-white"
+      className={`rounded-xl border bg-card p-4 ${
+        isEmergency ? "border-destructive/40 bg-[var(--danger-soft)]" : "border-border"
       }`}
     >
-      <div className="mb-2 flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide">
-        <span className={isEmergency ? "text-red-700" : "text-slate-500"}>{typeLabel}</span>
-        {post.pinned ? <span className="text-amber-700">Pinned</span> : null}
-        <span className="font-normal normal-case text-slate-500">{audienceLabel(post)}</span>
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <StatusBadge label={typeLabel} tone={isEmergency ? "danger" : "info"} />
+        {post.pinned ? <StatusBadge label="Pinned" tone="warning" /> : null}
+        <span className="text-xs text-muted-foreground">{audienceLabel(post)}</span>
       </div>
-      <h2 className="text-lg font-semibold text-slate-900">{post.title}</h2>
-      <p className="mt-2 whitespace-pre-wrap text-slate-700">{post.body}</p>
-      <p className="mt-3 text-sm text-slate-500">
+      <h3 className="text-lg font-semibold text-foreground">{post.title}</h3>
+      <p className="mt-2 line-clamp-4 whitespace-pre-wrap text-sm text-[#404040]">{post.body}</p>
+      <p className="mt-3 text-xs text-muted-foreground">
         {post.author.full_name}
         {post.location ? ` · ${post.location}` : ""}
+        {" · "}
+        {formatDateTime(post.created_at)}
       </p>
     </article>
   );
