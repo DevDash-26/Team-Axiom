@@ -52,3 +52,22 @@ export function firstName(fullName: string): string {
   const [first] = fullName.trim().split(/\s+/);
   return first || fullName;
 }
+
+function pad(value: number): string {
+  return String(value).padStart(2, "0");
+}
+
+/** Format a UTC ISO timestamp for a datetime-local input in the browser timezone. */
+export function toDatetimeLocalValue(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+export function fromDatetimeLocalValue(value: string): string | null {
+  if (!value.trim()) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toISOString();
+}
