@@ -1,1 +1,1 @@
-"""Monorepo root package so Render can `uvicorn app.main:app` from the repo root."""
+"""Shim package so `uvicorn app.main:app` works from the monorepo root on Render."""
