@@ -3,14 +3,33 @@
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
+import { RoleGate } from "@/components/layout/RoleGate";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { RequestStatusTracker } from "@/components/requests/RequestStatusTracker";
+import { FilterChips } from "@/components/ui-blocks/FilterChips";
 import { FormField } from "@/components/feedback/FormField";
 import { EmptyState, ErrorState } from "@/components/feedback/EmptyState";
+import { NativeSelect } from "@/components/feedback/NativeSelect";
 import { StatusBadge, toneForStatus } from "@/components/feedback/StatusBadge";
-import { FilterChips } from "@/components/ui-blocks/FilterChips";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { ApiError, fetchRequests, updateRequest } from "@/lib/api";
 import {
@@ -22,14 +41,13 @@ import {
 } from "@/lib/constants";
 import { formatDateTime } from "@/lib/datetime";
 import type { RequestRead, RequestStatusName } from "@/types";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+
+const STATUS_OPTIONS = [
+  { id: REQUEST_STATUS.OPEN, label: "Open" },
+  { id: REQUEST_STATUS.IN_PROGRESS, label: "In progress" },
+  { id: REQUEST_STATUS.RESOLVED, label: "Resolved" },
+  { id: REQUEST_STATUS.CLOSED, label: "Closed" },
+];
 
 export default function StaffRequestsPage() {
   const { user, setUser } = useSessionUser();
@@ -40,6 +58,7 @@ export default function StaffRequestsPage() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<RequestRead | null>(null);
   const [note, setNote] = useState("");
+  const [nextStatus, setNextStatus] = useState<string>(REQUEST_STATUS.IN_PROGRESS);
   const [working, setWorking] = useState(false);
 
   const load = useCallback(async () => {
@@ -62,21 +81,28 @@ export default function StaffRequestsPage() {
     void load();
   }, [load]);
 
-  async function changeStatus(row: RequestRead, next: RequestStatusName) {
-    if (next === REQUEST_STATUS.RESOLVED && !note.trim()) {
+  function openRow(row: RequestRead) {
+    setSelected(row);
+    setNote(row.response ?? "");
+    setNextStatus(row.status);
+  }
+
+  async function save() {
+    if (!selected) return;
+    if (nextStatus === REQUEST_STATUS.RESOLVED && !note.trim() && !selected.response) {
       toast.error("Add a short staff note before resolving.");
       return;
     }
     setWorking(true);
     try {
-      const updated = await updateRequest(row.id, {
-        status: next,
+      const updated = await updateRequest(selected.id, {
+        status: nextStatus as RequestStatusName,
         response: note.trim() || null,
       });
       setItems((current) => current.map((item) => (item.id === updated.id ? updated : item)));
-      setSelected(updated);
+      setSelected(null);
       setNote("");
-      toast.success(`Request marked ${next.replaceAll("_", " ").toLowerCase()}.`);
+      toast.success(`Request marked ${updated.status.replaceAll("_", " ").toLowerCase()}.`);
     } catch (cause) {
       toast.error(cause instanceof ApiError ? cause.message : "Could not update this request.");
     } finally {
@@ -94,7 +120,7 @@ export default function StaffRequestsPage() {
     <AppShell variant="staff" user={user} onSignedOut={() => setUser(null)}>
       <PageHeader
         title="Student Requests"
-        description="Academic support, facility issues, and feedback. Move a request from open to in progress, then resolve or close it."
+        description="Academic support, facility issues, and feedback. Room bookings are under Room Requests."
       />
       <div className="mb-4 flex flex-wrap gap-2">
         {(["OPEN", "IN_PROGRESS", "RESOLVED"] as const).map((item) => (
@@ -107,7 +133,7 @@ export default function StaffRequestsPage() {
       </div>
       <div className="mb-4 space-y-3">
         <FilterChips label="Request type" chips={REQUEST_TYPE_FILTERS} active={type} onChange={setType} />
-        <FilterChips label="Status" chips={REQUEST_STATUS_FILTERS} active={status} onChange={setStatus} />
+        <FilterChips label="Request status" chips={REQUEST_STATUS_FILTERS} active={status} onChange={setStatus} />
       </div>
       {loading ? (
         <Skeleton className="h-48 rounded-xl" />
@@ -116,7 +142,7 @@ export default function StaffRequestsPage() {
       ) : items.length === 0 ? (
         <EmptyState title="No requests in this view" description="Clear a filter, or wait for a student to submit one." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <div className="overflow-x-auto rounded-xl border border-border bg-card">
           <Table>
             <TableHeader>
               <TableRow>
@@ -129,7 +155,7 @@ export default function StaffRequestsPage() {
             </TableHeader>
             <TableBody>
               {items.map((row) => (
-                <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelected(row)}>
+                <TableRow key={row.id} className="cursor-pointer" onClick={() => openRow(row)}>
                   <TableCell className="font-medium">{row.requester.full_name}</TableCell>
                   <TableCell>{REQUEST_TYPE_LABELS[row.type] ?? row.type}</TableCell>
                   <TableCell>{row.title}</TableCell>
@@ -144,52 +170,53 @@ export default function StaffRequestsPage() {
         </div>
       )}
 
-      {selected ? (
-        <div className="fixed inset-y-0 right-0 z-40 w-full max-w-md overflow-y-auto border-l border-border bg-card p-5 shadow-xl">
-          <h3 className="text-lg font-semibold">{selected.title}</h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {REQUEST_TYPE_LABELS[selected.type] ?? selected.type} · {selected.requester.full_name}
-          </p>
-          <p className="mt-4 text-sm text-[#404040]">{selected.body}</p>
-          {selected.response ? (
-            <p className="mt-4 rounded-md bg-muted px-3 py-2 text-sm">Staff note: {selected.response}</p>
-          ) : null}
-          {user && canHandleRequest(user.role, selected.type) && selected.status !== REQUEST_STATUS.RESOLVED && selected.status !== REQUEST_STATUS.CLOSED ? (
-            <div className="mt-6 space-y-3">
-              <FormField id="staff-note" label="Staff note (required to resolve)">
-                <Textarea id="staff-note" value={note} onChange={(event) => setNote(event.target.value)} />
-              </FormField>
-              <div className="flex flex-wrap gap-2">
-                {selected.status === REQUEST_STATUS.OPEN ? (
-                  <Button disabled={working} onClick={() => void changeStatus(selected, "IN_PROGRESS")}>
-                    Start
-                  </Button>
-                ) : (
-                  <>
-                    <Button disabled={working} onClick={() => void changeStatus(selected, "RESOLVED")}>
-                      Resolve
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={working}
-                      onClick={() => void changeStatus(selected, "CLOSED")}
-                    >
-                      Close
-                    </Button>
-                  </>
-                )}
-                <Button variant="outline" onClick={() => setSelected(null)}>
-                  Dismiss
-                </Button>
+      <Sheet open={selected !== null} onOpenChange={(open) => !open && setSelected(null)}>
+        <SheetContent className="sm:max-w-md">
+          {selected ? (
+            <>
+              <SheetHeader>
+                <SheetTitle>{selected.title}</SheetTitle>
+                <SheetDescription>
+                  {REQUEST_TYPE_LABELS[selected.type] ?? selected.type} · {selected.requester.full_name}
+                </SheetDescription>
+              </SheetHeader>
+              <div className="space-y-3 px-4">
+                <p className="text-sm text-[#404040]">{selected.body}</p>
+                {selected.response ? (
+                  <p className="rounded-md bg-muted px-3 py-2 text-sm">Staff note: {selected.response}</p>
+                ) : null}
+                <RequestStatusTracker status={selected.status} />
               </div>
-            </div>
-          ) : (
-            <Button className="mt-6" variant="outline" onClick={() => setSelected(null)}>
-              Close
-            </Button>
-          )}
-        </div>
-      ) : null}
+              <SheetFooter>
+                <RoleGate
+                  allow={Boolean(user && canHandleRequest(user.role, selected.type))}
+                  fallback={
+                    <p className="text-sm text-muted-foreground">
+                      Your role cannot update this request type. Academic staff handle academic
+                      support; administrators handle facility and feedback.
+                    </p>
+                  }
+                >
+                  <FormField id="req-status" label="Status">
+                    <NativeSelect id="req-status" value={nextStatus} options={STATUS_OPTIONS} onChange={setNextStatus} />
+                  </FormField>
+                  <FormField id="req-note" label="Staff note (required to resolve)">
+                    <Textarea
+                      id="req-note"
+                      value={note}
+                      rows={3}
+                      onChange={(event) => setNote(event.target.value)}
+                    />
+                  </FormField>
+                  <Button type="button" disabled={working} onClick={() => void save()}>
+                    Save update
+                  </Button>
+                </RoleGate>
+              </SheetFooter>
+            </>
+          ) : null}
+        </SheetContent>
+      </Sheet>
     </AppShell>
   );
 }

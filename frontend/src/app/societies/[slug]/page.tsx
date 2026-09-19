@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { PostCard } from "@/components/PostCard";
 import { useSessionUser } from "@/hooks/use-session-user";
-import { ROUTES } from "@/lib/constants";
+import { ROUTES, isStaffWorkspace, staffSocietyInterestPath } from "@/lib/constants";
 import { FIXTURE_POSTS, SOCIETIES } from "@/lib/fixtures/campus";
 
 export default function SocietyDetailPage() {
@@ -35,9 +35,16 @@ export default function SocietyDetailPage() {
             title={society.name}
             description={`${society.faculty} · ${society.members + (joined ? 1 : 0)} interested`}
             actions={
-              <Button type="button" variant={joined ? "secondary" : "default"} onClick={() => setJoined((value) => !value)}>
-                {joined ? "Interest recorded" : "I'm interested in joining"}
-              </Button>
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" variant={joined ? "secondary" : "default"} onClick={() => setJoined((value) => !value)}>
+                  {joined ? "Interest recorded" : "I'm interested in joining"}
+                </Button>
+                {user && isStaffWorkspace(user.role) ? (
+                  <Button asChild variant="outline">
+                    <Link href={staffSocietyInterestPath(society.slug)}>View sign-ups</Link>
+                  </Button>
+                ) : null}
+              </div>
             }
           />
           <p className="mb-8 max-w-2xl text-[#404040]">{society.description}</p>

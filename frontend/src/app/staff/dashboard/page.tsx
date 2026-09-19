@@ -33,7 +33,7 @@ export default function StaffDashboardPage() {
       </div>
       <div className="mb-4 flex flex-wrap gap-2">
         <Button asChild>
-          <Link href={ROUTES.newPost}>Create Announcement</Link>
+          <Link href={ROUTES.staffContentNew}>Create Announcement</Link>
         </Button>
         <Button asChild variant="outline">
           <Link href={ROUTES.events}>Create Event</Link>
