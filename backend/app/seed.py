@@ -224,7 +224,16 @@ def _replace_seed_posts(db, admin: User) -> None:
         author_id=admin.id,
         details={SEED_MARKER: True},
     )
-    db.add_all([campus, computing, business_year1, emergency, draft, expired])
+    scheduled = Post(
+        type=PostType.ANNOUNCEMENT.value,
+        title="Scheduled: exam hall seating notice",
+        body="Seating lists go live next week. Students should not see this until the start time.",
+        status=PostStatus.PUBLISHED.value,
+        starts_at=now + timedelta(days=7),
+        author_id=admin.id,
+        details={SEED_MARKER: True},
+    )
+    db.add_all([campus, computing, business_year1, emergency, draft, expired, scheduled])
 
 
 def seed() -> None:

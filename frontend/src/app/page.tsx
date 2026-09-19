@@ -8,11 +8,11 @@ import { QuickActions } from "@/components/home/QuickActions";
 import { FeedToolbar } from "@/components/home/FeedToolbar";
 import { UpcomingPanel } from "@/components/home/UpcomingPanel";
 import { FeedList } from "@/components/FeedList";
-import { apiGet, ApiError } from "@/lib/api";
+import { ApiError, fetchPosts } from "@/lib/api";
 import { fetchMe } from "@/lib/auth";
-import { EMERGENCY_POST_TYPES, FEED_CHIPS, type FeedChipId } from "@/lib/constants";
+import { FEED_CHIPS, type FeedChipId } from "@/lib/constants";
 import { getAccessToken } from "@/lib/supabase";
-import type { PostListResponse, PostRead, UserPublic } from "@/types";
+import type { PostRead, UserPublic } from "@/types";
 
 export default function HomePage() {
   const [user, setUser] = useState<UserPublic | null>(null);
@@ -35,7 +35,7 @@ export default function HomePage() {
         }
       }
       setUser(profile);
-      const feed = await apiGet<PostListResponse>("/api/posts");
+      const feed = await fetchPosts();
       setPosts(feed.items);
     } catch (cause) {
       const message = cause instanceof ApiError ? cause.message : "Could not load the feed.";
@@ -50,10 +50,6 @@ export default function HomePage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- bootstrap fetch
     void load();
   }, [load]);
-
-  const emergencyPost = posts.find((post) =>
-    (EMERGENCY_POST_TYPES as readonly string[]).includes(post.type),
-  ) ?? null;
 
   const visiblePosts = useMemo(() => {
     const selected = FEED_CHIPS.find((item) => item.id === chip);
@@ -75,7 +71,6 @@ export default function HomePage() {
         setUser(null);
         void load();
       }}
-      emergencyPost={emergencyPost}
     >
       <WelcomeHeader user={user} />
       <AICommandBar />

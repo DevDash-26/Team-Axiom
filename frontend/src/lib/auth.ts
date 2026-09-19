@@ -20,3 +20,7 @@ export async function signOut(): Promise<void> {
 export async function fetchMe(): Promise<UserPublic> {
   return apiGet<UserPublic>("/api/auth/me");
 }
+
+export function sessionErrorMessage(cause: unknown): string {
+  return cause instanceof Error ? cause.message : "Could not sign in. Check your details.";
+}

@@ -21,7 +21,26 @@ export const STAFF_ROLES: readonly RoleName[] = [
   ROLES.FINANCE,
 ];
 
+export const FACULTIES = ["COMPUTING", "BUSINESS", "ENGINEERING"] as const;
+export type FacultyName = (typeof FACULTIES)[number];
+
+export const YEARS = [1, 2, 3, 4] as const;
+
 export const ADMIN_ROLES: readonly RoleName[] = [ROLES.ADMIN, ROLES.SUPER_ADMIN];
+
+export const EMERGENCY_ROLES: readonly RoleName[] = [ROLES.ADMIN, ROLES.SUPER_ADMIN];
+
+export const CONTENT_STATUSES = [
+  { id: "all", label: "All" },
+  { id: "DRAFT", label: "Draft" },
+  { id: "PUBLISHED", label: "Published" },
+  { id: "ARCHIVED", label: "Archived" },
+] as const;
+
+export const WAVE1_POST_TYPES = [
+  { id: "ANNOUNCEMENT", label: "Announcement" },
+  { id: "EMERGENCY", label: "Emergency" },
+] as const;
 
 export const ANNOUNCEMENT_ROLES: readonly RoleName[] = [
   ROLES.ACADEMIC,
@@ -62,6 +81,7 @@ export const FEED_CHIPS = [
   },
   { id: "events", label: "Events", types: ["EVENT", "HIGHLIGHT"] },
   { id: "societies", label: "Societies", types: ["SOCIETY_UPDATE"] },
+  { id: "alerts", label: "Alerts", types: ["EMERGENCY", "SCHEDULE_CHANGE"] },
 ] as const;
 
 export type FeedChipId = (typeof FEED_CHIPS)[number]["id"];
@@ -113,6 +133,7 @@ export const ROUTES = {
 
 export const PAGE_SIZE = 20;
 export const SEARCH_DEBOUNCE_MS = 300;
+export const SEARCH_QUERY_MIN = 2;
 export const TIME_ZONE = "Asia/Colombo";
 
 export function isStudent(role: string): boolean {
@@ -129,6 +150,18 @@ export function isAdmin(role: string): boolean {
 
 export function canCreateAnnouncement(role: string): boolean {
   return ANNOUNCEMENT_ROLES.includes(role as RoleName);
+}
+
+export function canCreateEmergency(role: string): boolean {
+  return EMERGENCY_ROLES.includes(role as RoleName);
+}
+
+export function canManageContent(role: string): boolean {
+  return canCreateAnnouncement(role) || canCreateEmergency(role);
+}
+
+export function staffContentEditPath(id: string): string {
+  return `${ROUTES.staffContent}/${id}/edit`;
 }
 
 export function dashboardPathForRole(role: string): string {
