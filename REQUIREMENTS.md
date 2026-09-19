@@ -7,7 +7,7 @@
 **Target users / roles:** STUDENT, ACADEMIC, SOCIETY_REP, FINANCE, ADMIN, SUPER_ADMIN (UI groups Staff / Admin)  
 **Stack:** Next.js + TypeScript + Tailwind | FastAPI + SQLAlchemy | Supabase Postgres + Auth | FTS/LLM assistant (later)  
 **UI/UX source:** `.cursor/UniHive_UI_UX_Plan.md`  
-**Last updated:** 2026-09-19 (frontend Phase 1 UI + backend models)
+**Last updated:** 2026-09-19 (frontend Phase 3 UI + backend models)
 
 ---
 
@@ -33,32 +33,32 @@
 | BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Partial | | EventCard toggle | | UI count only. No interest API yet. |
 | BR5 | Society visibility (society pages and updates) | 3 | E1 | 2 | Partial | | `frontend/src/app/societies` | | List/detail UI on fixtures. |
 | BR6 | Society sign-up / interest | 2 | E5 | 2 | Partial | | Society detail CTA | | Local toggle only. |
-| BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Not done | | | | `listings` table exists. |
+| BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Partial | | `frontend/src/app/lost-found` | | List, report dialog, detail, resolve confirm. Fixture listings. |
 | BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Partial | | `frontend/src/app/bookings` | | Search, request modal, 409 layout, my bookings. Fixture rooms. |
-| BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Not done | | | | `requests` table exists. |
-| BR10 | FAQ access | 2 | E2 | 3 | Not done | | | | `faqs` table exists. |
+| BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Partial | | `frontend/src/app/requests` | | List + new request form. Fixture requests. |
+| BR10 | FAQ access | 2 | E2 | 3 | Partial | | `frontend/src/app/info` | | FAQ category in Campus Information. |
 | BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `POST /api/posts`, `/posts/new`, `/staff/content` | `test_admin_can_create_announcement` | Create + staff list. No edit/archive yet. |
 | BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `PERMISSION_ROLES`, login redirect | `test_student_cannot_create_announcement` | Login + server permission map. Not every action has a UI. |
 | BR13 | Academic calendar (exams, add/drop, milestones) | 3 | E1 | 3 | Partial | | `frontend/src/app/calendar` | | Calendar list UI. |
-| BR14 | Student onboarding info | 2 | E2 | 4 | Not done | | | | |
+| BR14 | Student onboarding info | 2 | E2 | 4 | Partial | | `/info/onboarding` | | Info hub page. |
 | BR15 | Emergency communication | 3 | E1 | 2 | Partial | | Emergency banner on AppShell | | Seed includes an emergency post. Banner wired from feed. |
 | BR16 | Schedule changes / closures | 1 | E1 | 3 | Not done | | | | |
-| BR17 | Feedback loop | 1 | E4 | 4 | Not done | | | | |
-| BR18 | Volunteering opportunities | 1 | E1 | 4 | Not done | | | | |
-| BR19 | Alumni engagement | 1 | E1 | 4 | Not done | | | | |
-| BR20 | Job and internship visibility | 3 | E1 | 3 | Not done | | | | |
-| BR21 | Facility issue reporting | 2 | E4 | 3 | Not done | | | | |
-| BR22 | Staff directory | 2 | E2 | 4 | Not done | | | | |
-| BR23 | Financial support info | 3 | E2 | 3 | Not done | | | | |
-| BR24 | Sports and recreation (info + booking) | 2 | E2 + E3 | 4 | Not done | | | | |
-| BR25 | Dining info (menu, hours) | 1 | E2 | 4 | Not done | | | | |
-| BR26 | Printing services info | 1 | E2 | 4 | Not done | | | | |
-| BR27 | Textbook exchange | 1 | E5 | 4 | Not done | | | | |
+| BR17 | Feedback loop | 1 | E4 | 4 | Partial | | `/requests` type FEEDBACK | | Student form + list. Staff handling is Phase 4. |
+| BR18 | Volunteering opportunities | 1 | E1 | 4 | Partial | | `/opportunities` | | VOLUNTEERING chip + fixtures. |
+| BR19 | Alumni engagement | 1 | E1 | 4 | Partial | | `/opportunities` | | ALUMNI chip + fixtures. |
+| BR20 | Job and internship visibility | 3 | E1 | 3 | Partial | | `/opportunities` | | JOB chip; uses posts API when present. |
+| BR21 | Facility issue reporting | 2 | E4 | 3 | Partial | | `/requests/new` | | FACILITY_ISSUE form. |
+| BR22 | Staff directory | 2 | E2 | 4 | Partial | | `/info/directory` | | Official office contacts only. |
+| BR23 | Financial support info | 3 | E2 | 3 | Partial | | `/info/financial_aid` | | Info page + FAQ. |
+| BR24 | Sports and recreation (info + booking) | 2 | E2 + E3 | 4 | Partial | | `/info/sports` | | Info only. Court booking not a separate flow. |
+| BR25 | Dining info (menu, hours) | 1 | E2 | 4 | Partial | | `/info/dining` | | Hours and menu note. |
+| BR26 | Printing services info | 1 | E2 | 4 | Partial | | `/info/printing` | | Locations and credit. |
+| BR27 | Textbook exchange | 1 | E5 | 4 | Partial | | `/textbooks` | | List, offer dialog, interest toggle. |
 | BR28 | Guest lectures | 1 | E1 | 3 | Partial | | `frontend/src/app/lectures` | | Listing UI. |
-| BR29 | Wellbeing and counselling info | 3 | E2 | 3 | Not done | | | | |
-| BR30 | IT support info | 2 | E2 | 4 | Not done | | | | |
-| BR31 | Library resources and hours | 2 | E2 | 4 | Not done | | | | |
-| BR32 | Student life highlights | 1 | E1 | 4 | Not done | | | | |
+| BR29 | Wellbeing and counselling info | 3 | E2 | 3 | Partial | | `/info/wellbeing` | | Hours and how to book. |
+| BR30 | IT support info | 2 | E2 | 4 | Partial | | `/info/it` | | Helpdesk hours. |
+| BR31 | Library resources and hours | 2 | E2 | 4 | Partial | | `/info/library` | | Hours and silent floor. |
+| BR32 | Student life highlights | 1 | E1 | 4 | Partial | | `/opportunities` HIGHLIGHT | | Fixture highlight post. |
 | BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, AI launcher | | Chat chrome, sources, actions, fallback notice, thumbs. Demo replies only. |
 
 ## B. Non-functional
