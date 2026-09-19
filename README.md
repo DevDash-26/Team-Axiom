@@ -694,7 +694,7 @@ Pitch steps: [DEMO.md](DEMO.md).
 | Piece | Where |
 |-------|--------|
 | **Frontend** | Next.js on Vercel (or any Node host). Set `NEXT_PUBLIC_API_URL` and the two public Supabase keys. |
-| **API** | Render Blueprint in [`render.yaml`](render.yaml): `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, health check `/health`, Python 3.11.11. |
+| **API** | Render: Root Directory empty, `pip install -r requirements.txt`, start with `bash start.sh` (cds into `backend` then uvicorn). Health `/health`, Python 3.11.11. |
 | **Database + Auth** | Supabase. Enable the **pgvector** extension (Dashboard → Database → Extensions). |
 | **LLM** | Optional. Leave `LLM_API_KEY` blank and UniHive AI stays in search-only fallback. |
 
