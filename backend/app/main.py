@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.db import init_db
 from app.errors import register_exception_handlers
-from app.routers import auth, health, posts, search
+from app.routers import auth, health, info, listings, posts, requests, search
 
 
 @asynccontextmanager
@@ -37,6 +37,9 @@ def create_app() -> FastAPI:
     application.include_router(auth.router)
     application.include_router(posts.router)
     application.include_router(search.router)
+    application.include_router(requests.router)
+    application.include_router(listings.router)
+    application.include_router(info.router)
     return application
 
 

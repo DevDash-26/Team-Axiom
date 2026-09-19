@@ -31,6 +31,21 @@ def _strip_optional(value: str | None) -> str | None:
     return cleaned or None
 
 
+def _validate_type_fields(
+    post_type: PostType,
+    event_at: datetime | None,
+    location: str | None,
+    deadline_at: datetime | None,
+    apply_url: str | None,
+) -> None:
+    if post_type in {PostType.CALENDAR_ENTRY, PostType.GUEST_LECTURE} and event_at is None:
+        raise ValueError("Event date is required for this post type")
+    if post_type == PostType.GUEST_LECTURE and not location:
+        raise ValueError("Location is required for guest lectures")
+    if post_type == PostType.JOB and deadline_at is None and not apply_url:
+        raise ValueError("Jobs need a deadline or an apply link")
+
+
 class PostCreate(BaseModel):
     type: PostType
     title: str = Field(min_length=1, max_length=TITLE_MAX)
@@ -83,6 +98,7 @@ class PostCreate(BaseModel):
     def expiry_after_start(self) -> PostCreate:
         if self.expires_at and self.starts_at and self.expires_at <= self.starts_at:
             raise ValueError("Expiry must be after the start time")
+        _validate_type_fields(self.type, self.event_at, self.location, self.deadline_at, self.apply_url)
         return self
 
 
@@ -135,6 +151,8 @@ class PostUpdate(BaseModel):
             raise ValueError("at least one field is required")
         if self.expires_at and self.starts_at and self.expires_at <= self.starts_at:
             raise ValueError("Expiry must be after the start time")
+        if self.type is not None:
+            _validate_type_fields(self.type, self.event_at, self.location, self.deadline_at, self.apply_url)
         return self
 
 

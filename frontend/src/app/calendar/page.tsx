@@ -32,7 +32,11 @@ export default function CalendarPage() {
           {items.map((post) => (
             <li key={post.id} className="rounded-xl border border-border bg-card p-4">
               <p className="text-xs font-medium text-primary">
-                {post.deadline_at ? formatDate(post.deadline_at) : formatDate(post.created_at)}
+                {post.event_at
+                  ? formatDate(post.event_at)
+                  : post.deadline_at
+                    ? formatDate(post.deadline_at)
+                    : formatDate(post.created_at)}
               </p>
               <h2 className="mt-1 text-lg font-semibold">{post.title}</h2>
               <p className="mt-1 text-sm text-[#404040]">{post.body}</p>

@@ -13,15 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useSessionUser } from "@/hooks/use-session-user";
-import {
-  BODY_MAX,
-  REQUEST_STATUS,
-  REQUEST_TYPE,
-  REQUEST_TYPE_FILTERS,
-  ROUTES,
-  TITLE_MAX,
-} from "@/lib/constants";
-import { rememberRequest } from "@/lib/session-records";
+import { ApiError, createRequest } from "@/lib/api";
+import { BODY_MAX, REQUEST_TYPE, REQUEST_TYPE_FILTERS, ROUTES, TITLE_MAX } from "@/lib/constants";
+import type { RequestTypeName } from "@/types";
 
 const requestSchema = z.object({
   type: z.enum([REQUEST_TYPE.ACADEMIC_SUPPORT, REQUEST_TYPE.FACILITY_ISSUE, REQUEST_TYPE.FEEDBACK]),
@@ -38,9 +32,10 @@ export default function NewRequestPage() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const parsed = requestSchema.safeParse({ type, title, body });
     if (!parsed.success) {
@@ -51,18 +46,22 @@ export default function NewRequestPage() {
       setErrors(next);
       return;
     }
+    setErrors({});
+    setFormError(null);
     setSubmitting(true);
-    rememberRequest({
-      id: `REQ-${Date.now().toString().slice(-4)}`,
-      type: parsed.data.type,
-      title: parsed.data.title,
-      body: parsed.data.body,
-      status: REQUEST_STATUS.OPEN,
-      created_at: new Date().toISOString(),
-      response: null,
-    });
-    toast.success("Request submitted. You can track it under My Requests.");
-    router.push(ROUTES.requests);
+    try {
+      await createRequest({
+        type: parsed.data.type as RequestTypeName,
+        title: parsed.data.title,
+        body: parsed.data.body,
+      });
+      toast.success("Request submitted. You can track it under My Requests.");
+      router.push(ROUTES.requests);
+    } catch (cause) {
+      setFormError(cause instanceof ApiError ? cause.message : "Could not submit this request.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -72,9 +71,9 @@ export default function NewRequestPage() {
       </Button>
       <PageHeader
         title="New request"
-        description="Academic support, a facility issue, or general feedback. Staff handle these on a later screen."
+        description="Academic support, a facility issue, or general feedback. Staff update the status on their queue."
       />
-      <form className="max-w-xl space-y-4 rounded-xl border border-border bg-card p-5" onSubmit={handleSubmit}>
+      <form className="max-w-xl space-y-4 rounded-xl border border-border bg-card p-5" onSubmit={(event) => void handleSubmit(event)}>
         <FormField id="request-type" label="Type" error={errors.type}>
           <NativeSelect id="request-type" value={type} options={TYPE_OPTIONS} onChange={setType} />
         </FormField>
@@ -96,6 +95,11 @@ export default function NewRequestPage() {
             onChange={(event) => setBody(event.target.value)}
           />
         </FormField>
+        {formError ? (
+          <p className="rounded-md bg-[var(--danger-soft)] px-3 py-2 text-sm text-destructive" role="alert">
+            {formError}
+          </p>
+        ) : null}
         <div className="flex flex-wrap gap-2">
           <Button type="submit" className="h-11" disabled={submitting}>
             {submitting ? "Submitting…" : "Submit request"}
