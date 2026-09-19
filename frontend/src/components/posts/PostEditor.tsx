@@ -183,8 +183,8 @@ export function PostEditor({ user, existing }: PostEditorProps) {
           >
             <option value="">Everyone</option>
             {FACULTIES.map((item) => (
-              <option key={item} value={item}>
-                {item}
+              <option key={item.id} value={item.id}>
+                {item.label}
               </option>
             ))}
           </select>

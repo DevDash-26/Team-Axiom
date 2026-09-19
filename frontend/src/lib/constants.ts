@@ -21,8 +21,12 @@ export const STAFF_ROLES: readonly RoleName[] = [
   ROLES.FINANCE,
 ];
 
-export const FACULTIES = ["COMPUTING", "BUSINESS", "ENGINEERING"] as const;
-export type FacultyName = (typeof FACULTIES)[number];
+export const FACULTIES = [
+  { id: "COMPUTING", label: "Computing" },
+  { id: "BUSINESS", label: "Business" },
+  { id: "ENGINEERING", label: "Engineering" },
+] as const;
+export type FacultyName = (typeof FACULTIES)[number]["id"];
 
 export const YEARS = [1, 2, 3, 4] as const;
 
@@ -306,12 +310,6 @@ export const OPPORTUNITY_FILTERS = [
   { id: "VOLUNTEERING", label: "Volunteering" },
   { id: "ALUMNI", label: "Alumni" },
   { id: "HIGHLIGHT", label: "Highlights" },
-] as const;
-
-export const FACULTIES = [
-  { id: "COMPUTING", label: "Computing" },
-  { id: "BUSINESS", label: "Business" },
-  { id: "ENGINEERING", label: "Engineering" },
 ] as const;
 
 export const STUDY_YEARS = [
