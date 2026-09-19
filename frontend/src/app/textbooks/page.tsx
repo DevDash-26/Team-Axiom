@@ -23,7 +23,6 @@ export default function TextbooksPage() {
   const [interested, setInterested] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- session extras after mount
     setItems(listingsWithSession(TEXTBOOKS).filter((item) => item.type === LISTING_KIND.TEXTBOOK));
   }, []);
 

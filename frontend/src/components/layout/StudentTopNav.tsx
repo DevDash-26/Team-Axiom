@@ -87,6 +87,11 @@ export function StudentTopNav({ user, onSignedOut }: StudentTopNavProps) {
             );
           })}
         </nav>
+        <Button asChild variant="ghost" size="icon" className="ml-auto size-11 md:hidden" aria-label="Search campus">
+          <Link href={ROUTES.search}>
+            <Search className="size-4" />
+          </Link>
+        </Button>
         <form action={ROUTES.search} className="ml-auto hidden max-w-xs flex-1 md:block" role="search">
           <label htmlFor="global-search" className="sr-only">
             Search campus
@@ -97,17 +102,17 @@ export function StudentTopNav({ user, onSignedOut }: StudentTopNavProps) {
               id="global-search"
               name="q"
               placeholder="Search campus…"
-              className="h-9 pl-8"
+              className="h-11 pl-8"
             />
           </div>
         </form>
-        <Button type="button" variant="ghost" size="icon" className="ml-auto md:ml-0" aria-label="Notifications">
+        <Button type="button" variant="ghost" size="icon" className="size-11" aria-label="Notifications">
           <Bell className="size-4" />
         </Button>
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="max-w-48 justify-start">
+              <Button variant="outline" className="h-11 max-w-48 justify-start">
                 <UserRound className="size-4" />
                 <span className="truncate">{user.full_name}</span>
               </Button>

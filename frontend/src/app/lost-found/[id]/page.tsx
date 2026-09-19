@@ -24,7 +24,6 @@ export default function LostFoundDetailPage() {
 
   useEffect(() => {
     const found = listingsWithSession(LOST_FOUND_ITEMS).find((row) => row.id === params.id) ?? null;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- session extras after mount
     setItem(found);
   }, [params.id]);
 

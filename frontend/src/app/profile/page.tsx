@@ -47,7 +47,6 @@ export default function ProfilePage() {
     if (!user) {
       return;
     }
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydrate fields from session
     setProgramme(user.programme ?? "");
     setFaculty(user.faculty ?? FACULTIES[0].id);
     setYear(user.year ? String(user.year) : "1");

@@ -47,7 +47,6 @@ export default function HomePage() {
 
   useEffect(() => {
     // Session + feed are fetched after mount; setState happens after await.
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- bootstrap fetch
     void load();
   }, [load]);
 

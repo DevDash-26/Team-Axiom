@@ -29,7 +29,6 @@ export default function LostFoundPage() {
   const [reportKind, setReportKind] = useState<typeof LISTING_KIND.LOST | typeof LISTING_KIND.FOUND | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- session extras after mount
     setItems(
       listingsWithSession(LOST_FOUND_ITEMS).filter(
         (item) => item.type === LISTING_KIND.LOST || item.type === LISTING_KIND.FOUND,

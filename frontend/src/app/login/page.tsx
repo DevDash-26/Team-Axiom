@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/feedback/FormField";
-import { APP_NAME, APP_TAGLINE, DEMO_PASSWORD_HINT, dashboardPathForRole } from "@/lib/constants";
+import { APP_NAME, APP_TAGLINE, DEMO_PASSWORD_HINT, ROUTES } from "@/lib/constants";
 import { fetchMe, signIn } from "@/lib/auth";
 
 const loginSchema = z.object({
@@ -41,8 +41,8 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await signIn(parsed.data.email, parsed.data.password);
-      const profile = await fetchMe();
-      router.push(dashboardPathForRole(profile.role));
+      await fetchMe();
+      router.push(ROUTES.home);
     } catch (cause) {
       setFormError(cause instanceof Error ? cause.message : "Could not sign in. Check your details.");
     } finally {

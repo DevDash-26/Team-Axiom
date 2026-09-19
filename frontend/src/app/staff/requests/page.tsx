@@ -38,6 +38,7 @@ import {
   REQUEST_TYPE_LABELS,
 } from "@/lib/constants";
 import { formatDateTime } from "@/lib/datetime";
+import { rowActivateProps } from "@/lib/a11y";
 import { canHandleAcademicRequests, canHandleFacilityRequests } from "@/lib/permissions";
 import { STAFF_SUPPORT_QUEUE, type StaffSupportFixture } from "@/lib/fixtures/staff";
 
@@ -111,11 +112,15 @@ export default function StaffRequestsPage() {
             </TableHeader>
             <TableBody>
               {visible.map((row) => (
-                <TableRow key={row.id} className="cursor-pointer" onClick={() => {
-                  setSelected(row);
-                  setNote(row.response ?? "");
-                  setNextStatus(row.status === REQUEST_STATUS.CLOSED ? REQUEST_STATUS.RESOLVED : row.status);
-                }}>
+                <TableRow
+                  key={row.id}
+                  className="cursor-pointer"
+                  {...rowActivateProps(() => {
+                    setSelected(row);
+                    setNote(row.response ?? "");
+                    setNextStatus(row.status === REQUEST_STATUS.CLOSED ? REQUEST_STATUS.RESOLVED : row.status);
+                  })}
+                >
                   <TableCell className="font-medium">
                     <p>{row.id}</p>
                     <p className="text-xs text-muted-foreground">{row.title}</p>

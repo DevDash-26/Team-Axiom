@@ -1,6 +1,6 @@
 /** Session helpers around supabase-js. */
 
-import { getSupabase } from "@/lib/supabase";
+import { getSupabase, isAuthConfigured } from "@/lib/supabase";
 import { apiGet } from "@/lib/api";
 import type { UserPublic } from "@/types";
 
@@ -14,6 +14,9 @@ export async function signIn(email: string, password: string): Promise<void> {
 }
 
 export async function signOut(): Promise<void> {
+  if (!isAuthConfigured()) {
+    return;
+  }
   await getSupabase().auth.signOut();
 }
 

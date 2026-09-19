@@ -176,7 +176,7 @@ Status: **Designed** (this track) · **Placeholder** (route exists, sparse UI) �
 
 ### Phase 5 — Hardening
 
-404 page, error boundary, 360 / 768 / 1280 pass, keyboard and contrast, dead-code pass, lint.
+404, error/global-error, skip link, `/student/*` redirects to current routes, dead-code removal (legacy shells), 44px targets, keyboard table rows, sign-out without Supabase, lint. **Designed (this track).**
 
 ---
 
@@ -186,7 +186,7 @@ Status: **Designed** (this track) · **Placeholder** (route exists, sparse UI) �
 
 `AppShell` · `StudentTopNav` · `DashboardSidebar` · `MobileNavigation` · `TopUtilityBar` · `PageHeader` · `AppFooter` · `BrandMark` · `EmergencyBanner`
 
-Existing files **kept and restyled:** `AppHeader.tsx`, `FeedList.tsx`, `PostCard.tsx`.
+Existing files **kept and restyled:** `FeedList.tsx`, `PostCard.tsx`. Legacy `AppHeader` / AuthGate / Shells were removed in Phase 5.
 
 ### shadcn primitives (`src/components/ui/`)
 
@@ -257,7 +257,7 @@ Content table, audience selector UI, drawers, role matrix (read-only), confirm-d
 
 ### Phase 5 — Hardening
 
-States on every list/form, responsive, a11y, lint, no dead code.
+404 / error pages, skip link, `/student/*` redirects, dead-code removal, 44px targets, keyboard-activatable staff tables, lint. **Designed (this track).**
 
 ---
 
@@ -273,6 +273,8 @@ frontend/
 │   │   ├── page.tsx           student home
 │   │   ├── login/page.tsx
 │   │   ├── 403/page.tsx
+│   │   ├── not-found.tsx
+│   │   ├── error.tsx
 │   │   ├── posts/new/page.tsx
 │   │   ├── lost-found/
 │   │   ├── textbooks/
@@ -286,7 +288,6 @@ frontend/
 │   │   ├── ui/                shadcn + 21st copies
 │   │   ├── layout/
 │   │   ├── home/
-│   │   ├── AppHeader.tsx      kept
 │   │   ├── FeedList.tsx       kept
 │   │   └── PostCard.tsx       kept
 │   ├── lib/

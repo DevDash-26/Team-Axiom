@@ -7,7 +7,7 @@
 **Target users / roles:** STUDENT, ACADEMIC, SOCIETY_REP, FINANCE, ADMIN, SUPER_ADMIN (UI groups Staff / Admin)  
 **Stack:** Next.js + TypeScript + Tailwind | FastAPI + SQLAlchemy | Supabase Postgres + Auth | FTS/LLM assistant (later)  
 **UI/UX source:** `.cursor/UniHive_UI_UX_Plan.md`  
-**Last updated:** 2026-09-19 (frontend Phase 3 UI + backend models)
+**Last updated:** 2026-09-19 (frontend Phase 5 hardening)
 
 ---
 
@@ -65,9 +65,9 @@
 
 | ID | Requirement | Marks | How we address it | Status | Where | Notes |
 |----|-------------|-------|-------------------|--------|-------|-------|
-| NFR1 | Usability (first-time students, mixed digital literacy) | 2 | Mobile-first, simple navigation, plain language, clear labels, empty-state guidance | Partial | `frontend/src` | Phase 1 shell: Inter + UCL red tokens, student top nav, staff/admin sidebar, empty/error/skeleton on the feed. |
+| NFR1 | Usability (first-time students, mixed digital literacy) | 2 | Mobile-first, simple navigation, plain language, clear labels, empty-state guidance | Partial | `frontend/src` | Skip link, 44px mobile targets, 404/403/error pages, focus rings on filter chips. |
 | NFR2 | Performance and scalability (semester-start peaks) | 3 | Pagination, DB indexes, caching of feeds, lightweight pages, note on scaling path | Partial | `models/post.py`, list endpoint | Pagination and indexes. No feed cache. |
-| NFR3 | Reliability and availability | 1 | Health check, graceful error pages, AI fallback to search, documented deploy | Partial | `/health`, `/ready` | Hosted Supabase is a single-network dependency; demo needs a hotspot. |
+| NFR3 | Reliability and availability | 1 | Health check, graceful error pages, AI fallback to search, documented deploy | Partial | `/health`, `/ready`, `not-found.tsx`, `error.tsx` | Frontend error boundary + 404. Hosted Supabase is a single-network dependency; demo needs a hotspot. |
 | NFR4 | Security and privacy | 2 | Managed Auth, server-side RBAC, only authorised publish, minimal personal data, audit log | Partial | `security.py`, RLS with no anon policies | No password hashes in our DB. Roles are in `users`, not JWT claims. |
 | NFR5 | Maintainability | 4 | Clear layers, constants, seed, tests, README | Partial | `backend/app` | Admin UI is only “New announcement”. |
 | NFR6 | Robustness (bad/incomplete input) | 3 | Server + client validation, sensible defaults | Partial | Pydantic + zod | 422 on empty title. |

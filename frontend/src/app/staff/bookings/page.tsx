@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/table";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { BOOKING_STATUS_FILTERS } from "@/lib/constants";
+import { rowActivateProps } from "@/lib/a11y";
 import { canApproveBookings } from "@/lib/permissions";
 import { STAFF_BOOKINGS, type StaffBookingFixture } from "@/lib/fixtures/staff";
 
@@ -90,7 +91,7 @@ export default function StaffBookingsPage() {
             </TableHeader>
             <TableBody>
               {visible.map((row) => (
-                <TableRow key={row.id} className="cursor-pointer" onClick={() => setSelected(row)}>
+                <TableRow key={row.id} className="cursor-pointer" {...rowActivateProps(() => setSelected(row))}>
                   <TableCell className="font-medium">{row.id}</TableCell>
                   <TableCell>{row.student}</TableCell>
                   <TableCell>{row.room}</TableCell>

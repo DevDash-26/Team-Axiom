@@ -22,7 +22,6 @@ export default function RequestsPage() {
   const [items, setItems] = useState<CampusRequestFixture[]>(MY_REQUESTS);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- session extras after mount
     setItems(requestsWithSession(MY_REQUESTS));
   }, []);
 
