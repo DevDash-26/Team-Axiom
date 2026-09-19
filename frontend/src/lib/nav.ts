@@ -79,6 +79,7 @@ export const STUDENT_NAV: NavItem[] = [
       { href: ROUTES.bookings, label: "Classroom Booking" },
       { href: ROUTES.myBookings, label: "My Bookings" },
       { href: ROUTES.lostFound, label: "Lost & Found" },
+      { href: ROUTES.textbooks, label: "Textbook Exchange" },
       { href: ROUTES.requests, label: "Academic Support" },
       { href: ROUTES.info, label: "Campus Information" },
     ],

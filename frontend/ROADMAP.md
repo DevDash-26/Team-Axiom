@@ -153,14 +153,14 @@ Status: **Designed** (this track) · **Placeholder** (route exists, sparse UI) �
 
 ### Phase 3 — Remaining student
 
-| Screen | Route | BR |
-|---|---|---|
-| Lost & Found | `/lost-found` | BR7 |
-| Textbook exchange | `/textbooks` | BR27 |
-| Support / issues / feedback | `/requests/new`, `/requests` | BR9, BR17, BR21 |
-| Info hub + category pages | `/info`, `/info/[category]` | BR10, BR14, BR22–26, BR29–31 |
-| Jobs / volunteering / alumni / highlights | `/opportunities` (+ post type) | BR18–20, BR32 |
-| Profile | `/profile` | BR1, BR2 |
+| Screen | Route | BR | UI notes |
+|---|---|---|---|
+| Lost & Found | `/lost-found`, `/lost-found/[id]` | BR7 | Report dialog, search, filters, resolve confirm. No public phone numbers. |
+| Textbook exchange | `/textbooks` | BR27 | List / offer dialog, interest toggle. |
+| Support / issues / feedback | `/requests`, `/requests/new` | BR9, BR17, BR21 | Status tracker, type filters, zod form. |
+| Info hub + category pages | `/info`, `/info/[category]` | BR10, BR14, BR22–26, BR29–31 | Category cards, FAQ accordion, directory. |
+| Jobs / volunteering / alumni / highlights | `/opportunities` | BR18–20, BR32 | Post-type chips; API posts or fixtures. |
+| Profile | `/profile` | BR1, BR2 | Faculty / year / programme fields (local save). |
 
 ### Phase 4 — Staff / admin (full)
 
@@ -248,7 +248,7 @@ Events, updates, calendar, societies, booking UI (availability grid, request mod
 
 ### Phase 3 — Remaining student screens
 
-Listings, requests, info hub, opportunities, profile layout (faculty / year / programme fields).
+Listings, requests, info hub, opportunities, profile layout (faculty / year / programme fields). **Designed (this track).**
 
 ### Phase 4 — Staff / admin depth
 
@@ -273,6 +273,12 @@ frontend/
 │   │   ├── login/page.tsx
 │   │   ├── 403/page.tsx
 │   │   ├── posts/new/page.tsx
+│   │   ├── lost-found/
+│   │   ├── textbooks/
+│   │   ├── requests/
+│   │   ├── info/
+│   │   ├── opportunities/
+│   │   ├── profile/
 │   │   ├── staff/dashboard/
 │   │   └── admin/dashboard/
 │   ├── components/
@@ -350,3 +356,4 @@ Do not add another library without updating DISCLOSURES.md.
 |---|---|---|
 | 2026-09-19 | 1 | Tokens, shadcn + Lucide + Magic UI, student/staff/admin shells, restyled home/login, 403, visual dashboards, nav placeholders |
 | 2026-09-19 | 2 | Renamed to UniHive. Events, updates, calendar, societies, booking chrome, search results, AI chat + launcher |
+| 2026-09-19 | 3 | Lost & found, textbooks, requests, info hub, opportunities, profile layouts (fixtures) |

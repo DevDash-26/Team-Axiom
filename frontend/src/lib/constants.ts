@@ -82,7 +82,9 @@ export const ROUTES = {
   myBookings: "/bookings/mine",
   lectures: "/lectures",
   lostFound: "/lost-found",
+  textbooks: "/textbooks",
   requests: "/requests",
+  newRequest: "/requests/new",
   info: "/info",
   calendar: "/calendar",
   assistant: "/assistant",
@@ -145,6 +147,14 @@ export function societyPath(slug: string): string {
   return `${ROUTES.societies}/${slug}`;
 }
 
+export function listingPath(id: string): string {
+  return `${ROUTES.lostFound}/${id}`;
+}
+
+export function infoPath(category: string): string {
+  return `${ROUTES.info}/${category.toLowerCase()}`;
+}
+
 export const EVENT_FILTERS = [
   { id: "all", label: "All" },
   { id: "academic", label: "Academic" },
@@ -171,6 +181,115 @@ export const UPDATES_FILTERS = [
   { id: "academic", label: "Academic" },
   { id: "emergency", label: "Emergency" },
 ] as const;
+
+export const LISTING_KIND = {
+  LOST: "LOST",
+  FOUND: "FOUND",
+  TEXTBOOK: "TEXTBOOK",
+} as const;
+
+export const LISTING_STATUS = {
+  ACTIVE: "ACTIVE",
+  RESOLVED: "RESOLVED",
+  REMOVED: "REMOVED",
+} as const;
+
+export const LISTING_KIND_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "LOST", label: "Lost" },
+  { id: "FOUND", label: "Found" },
+] as const;
+
+export const LISTING_STATUS_FILTERS = [
+  { id: "all", label: "All statuses" },
+  { id: "ACTIVE", label: "Active" },
+  { id: "RESOLVED", label: "Resolved" },
+] as const;
+
+export const LISTING_CATEGORIES = [
+  { id: "Electronics", label: "Electronics" },
+  { id: "ID card", label: "ID card" },
+  { id: "Clothing", label: "Clothing" },
+  { id: "Keys", label: "Keys" },
+  { id: "Other", label: "Other" },
+] as const;
+
+export const LISTING_HANDOVER_HINT =
+  "Describe a campus handover point. Do not publish a personal phone number or private email.";
+
+export const REQUEST_TYPE = {
+  ACADEMIC_SUPPORT: "ACADEMIC_SUPPORT",
+  FACILITY_ISSUE: "FACILITY_ISSUE",
+  FEEDBACK: "FEEDBACK",
+} as const;
+
+export const REQUEST_STATUS = {
+  OPEN: "OPEN",
+  IN_PROGRESS: "IN_PROGRESS",
+  RESOLVED: "RESOLVED",
+  CLOSED: "CLOSED",
+} as const;
+
+export const REQUEST_TYPE_LABELS: Record<string, string> = {
+  ACADEMIC_SUPPORT: "Academic support",
+  FACILITY_ISSUE: "Facility issue",
+  FEEDBACK: "Feedback",
+};
+
+export const REQUEST_TYPE_FILTERS = [
+  { id: "all", label: "All types" },
+  { id: "ACADEMIC_SUPPORT", label: "Academic support" },
+  { id: "FACILITY_ISSUE", label: "Facility issue" },
+  { id: "FEEDBACK", label: "Feedback" },
+] as const;
+
+export const REQUEST_STATUS_FILTERS = [
+  { id: "all", label: "All statuses" },
+  { id: "OPEN", label: "Open" },
+  { id: "IN_PROGRESS", label: "In progress" },
+  { id: "RESOLVED", label: "Resolved" },
+] as const;
+
+export const INFO_CATEGORIES = [
+  { id: "FAQ", label: "FAQ", description: "Short answers to common campus questions." },
+  { id: "ONBOARDING", label: "Getting started", description: "ID cards, Wi-Fi, and first-week steps." },
+  { id: "DIRECTORY", label: "Staff directory", description: "Official office emails and hours." },
+  { id: "FINANCIAL_AID", label: "Financial support", description: "Scholarships, instalments, and who to ask." },
+  { id: "DINING", label: "Dining", description: "Cafeteria hours and this week’s menu notes." },
+  { id: "PRINTING", label: "Printing", description: "Where to print, copy, and top up credit." },
+  { id: "WELLBEING", label: "Wellbeing", description: "Counselling hours and how to book a session." },
+  { id: "IT", label: "IT support", description: "Accounts, Wi-Fi, and lab access." },
+  { id: "LIBRARY", label: "Library", description: "Opening hours, loans, and quiet floors." },
+  { id: "SPORTS", label: "Sports & recreation", description: "Courts, gym hours, and how to enquire." },
+] as const;
+
+export type InfoCategoryId = (typeof INFO_CATEGORIES)[number]["id"];
+
+export const OPPORTUNITY_TYPES = ["JOB", "VOLUNTEERING", "ALUMNI", "HIGHLIGHT"] as const;
+
+export const OPPORTUNITY_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "JOB", label: "Jobs" },
+  { id: "VOLUNTEERING", label: "Volunteering" },
+  { id: "ALUMNI", label: "Alumni" },
+  { id: "HIGHLIGHT", label: "Highlights" },
+] as const;
+
+export const FACULTIES = [
+  { id: "COMPUTING", label: "Computing" },
+  { id: "BUSINESS", label: "Business" },
+  { id: "ENGINEERING", label: "Engineering" },
+] as const;
+
+export const STUDY_YEARS = [
+  { id: "1", label: "Year 1" },
+  { id: "2", label: "Year 2" },
+  { id: "3", label: "Year 3" },
+  { id: "4", label: "Year 4" },
+] as const;
+
+export const TITLE_MAX = 200;
+export const BODY_MAX = 10_000;
 
 export const AI_SUGGESTED_PROMPTS = [
   "What events are happening this week?",
