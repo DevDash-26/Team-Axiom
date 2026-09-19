@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ApiError, createPost, updatePost } from "@/lib/api";
 import {
-  FACULTIES,
+  FACULTY_CODES,
   ROUTES,
   WAVE1_POST_TYPES,
   YEARS,
@@ -182,7 +182,7 @@ export function PostEditor({ user, existing }: PostEditorProps) {
             onChange={(event) => setFaculty(event.target.value)}
           >
             <option value="">Everyone</option>
-            {FACULTIES.map((item) => (
+            {FACULTY_CODES.map((item) => (
               <option key={item} value={item}>
                 {item}
               </option>

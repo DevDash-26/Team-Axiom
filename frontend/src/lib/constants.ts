@@ -21,8 +21,8 @@ export const STAFF_ROLES: readonly RoleName[] = [
   ROLES.FINANCE,
 ];
 
-export const FACULTIES = ["COMPUTING", "BUSINESS", "ENGINEERING"] as const;
-export type FacultyName = (typeof FACULTIES)[number];
+export const FACULTY_CODES = ["COMPUTING", "BUSINESS", "ENGINEERING"] as const;
+export type FacultyName = (typeof FACULTY_CODES)[number];
 
 export const YEARS = [1, 2, 3, 4] as const;
 
