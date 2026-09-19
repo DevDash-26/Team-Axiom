@@ -153,29 +153,30 @@ Status: **Designed** (this track) · **Placeholder** (route exists, sparse UI) �
 
 ### Phase 3 — Remaining student
 
-| Screen | Route | BR |
-|---|---|---|
-| Lost & Found | `/lost-found` | BR7 |
-| Textbook exchange | `/textbooks` | BR27 |
-| Support / issues / feedback | `/requests/new`, `/requests` | BR9, BR17, BR21 |
-| Info hub + category pages | `/info`, `/info/[category]` | BR10, BR14, BR22–26, BR29–31 |
-| Jobs / volunteering / alumni / highlights | `/opportunities` (+ post type) | BR18–20, BR32 |
-| Profile | `/profile` | BR1, BR2 |
+| Screen | Route | BR | UI notes |
+|---|---|---|---|
+| Lost & Found | `/lost-found`, `/lost-found/[id]` | BR7 | Report dialog, search, filters, resolve confirm. No public phone numbers. |
+| Textbook exchange | `/textbooks` | BR27 | List / offer dialog, interest toggle. |
+| Support / issues / feedback | `/requests`, `/requests/new` | BR9, BR17, BR21 | Status tracker, type filters, zod form. |
+| Info hub + category pages | `/info`, `/info/[category]` | BR10, BR14, BR22–26, BR29–31 | Category cards, FAQ accordion, directory. |
+| Jobs / volunteering / alumni / highlights | `/opportunities` | BR18–20, BR32 | Post-type chips; API posts or fixtures. |
+| Profile | `/profile` | BR1, BR2 | Faculty / year / programme fields (local save). |
 
 ### Phase 4 — Staff / admin (full)
 
-| Screen | Route | BR |
-|---|---|---|
-| My content table + type forms | `/staff/content`, `/staff/content/new` | BR11, BR2 |
-| Booking approvals | `/staff/bookings` | BR8 |
-| Request queue | `/staff/requests` | BR9, BR17, BR21 |
-| Event interest / society sign-up lists | `/staff/events/[id]/interest` | BR4, BR6 |
-| Assistant insights | `/staff/assistant` | BR33 |
-| Users / staff / roles matrix | `/admin/users`, `/admin/roles` | BR12 |
+| Screen | Route | BR | UI notes |
+|---|---|---|---|
+| My content table + type forms | `/staff/content`, `/staff/content/new`, `/staff/content/[id]/edit` | BR11, BR2 | **Already in pulled code** (`PostEditor`, archive/publish). Left as-is. |
+| Booking approvals | `/staff/bookings` | BR8 | Drawer. Approve hidden unless ADMIN / SUPER_ADMIN. |
+| Request queue | `/staff/requests` | BR9, BR17, BR21 | Academic vs facility actions by role. |
+| Event / society interest lists | `/staff/events/[id]/interest`, `/staff/societies/[slug]/interest` | BR4, BR6 | Names + programme only. |
+| Assistant insights | `/staff/assistant` | BR33 | ADMIN / SUPER_ADMIN. |
+| Staff lost & found | `/staff/lost-found` | BR7 | Moderate only for ADMIN. |
+| Users / staff / roles matrix | `/admin/users`, `/admin/staff`, `/admin/roles` | BR12 | Six-role read-only matrix. Mutate = SUPER_ADMIN visibility. |
 
 ### Phase 5 — Hardening
 
-404 page, error boundary, 360 / 768 / 1280 pass, keyboard and contrast, dead-code pass, lint.
+404, error/global-error, skip link, `/student/*` redirects to current routes, dead-code removal (legacy shells), 44px targets, keyboard table rows, sign-out without Supabase, lint. **Designed (this track).**
 
 ---
 
@@ -185,7 +186,7 @@ Status: **Designed** (this track) · **Placeholder** (route exists, sparse UI) �
 
 `AppShell` · `StudentTopNav` · `DashboardSidebar` · `MobileNavigation` · `TopUtilityBar` · `PageHeader` · `AppFooter` · `BrandMark` · `EmergencyBanner`
 
-Existing files **kept and restyled:** `AppHeader.tsx`, `FeedList.tsx`, `PostCard.tsx`.
+Existing files **kept and restyled:** `FeedList.tsx`, `PostCard.tsx`. Legacy `AppHeader` / AuthGate / Shells were removed in Phase 5.
 
 ### shadcn primitives (`src/components/ui/`)
 
@@ -248,15 +249,15 @@ Events, updates, calendar, societies, booking UI (availability grid, request mod
 
 ### Phase 3 — Remaining student screens
 
-Listings, requests, info hub, opportunities, profile layout (faculty / year / programme fields).
+Listings, requests, info hub, opportunities, profile layout (faculty / year / programme fields). **Designed (this track).**
 
 ### Phase 4 — Staff / admin depth
 
-Content table, audience selector UI, drawers, role matrix (read-only), confirm-delete modal. Hide actions the role cannot use.
+Content table, audience selector UI, drawers, role matrix (read-only), confirm-delete modal. Hide actions the role cannot use. **Designed (this track).** Existing post editor from the pull was kept.
 
 ### Phase 5 — Hardening
 
-States on every list/form, responsive, a11y, lint, no dead code.
+404 / error pages, skip link, `/student/*` redirects, dead-code removal, 44px targets, keyboard-activatable staff tables, lint. **Designed (this track).**
 
 ---
 
@@ -272,14 +273,21 @@ frontend/
 │   │   ├── page.tsx           student home
 │   │   ├── login/page.tsx
 │   │   ├── 403/page.tsx
+│   │   ├── not-found.tsx
+│   │   ├── error.tsx
 │   │   ├── posts/new/page.tsx
+│   │   ├── lost-found/
+│   │   ├── textbooks/
+│   │   ├── requests/
+│   │   ├── info/
+│   │   ├── opportunities/
+│   │   ├── profile/
 │   │   ├── staff/dashboard/
 │   │   └── admin/dashboard/
 │   ├── components/
 │   │   ├── ui/                shadcn + 21st copies
 │   │   ├── layout/
 │   │   ├── home/
-│   │   ├── AppHeader.tsx      kept
 │   │   ├── FeedList.tsx       kept
 │   │   └── PostCard.tsx       kept
 │   ├── lib/
@@ -350,3 +358,5 @@ Do not add another library without updating DISCLOSURES.md.
 |---|---|---|
 | 2026-09-19 | 1 | Tokens, shadcn + Lucide + Magic UI, student/staff/admin shells, restyled home/login, 403, visual dashboards, nav placeholders |
 | 2026-09-19 | 2 | Renamed to UniHive. Events, updates, calendar, societies, booking chrome, search results, AI chat + launcher |
+| 2026-09-19 | 3 | Lost & found, textbooks, requests, info hub, opportunities, profile layouts (fixtures) |
+| 2026-09-19 | 4 | Staff bookings/requests/L&F/insights/interest lists; admin users/staff/6-role matrix. Pulled PostEditor left in place. |

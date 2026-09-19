@@ -78,6 +78,7 @@ class ResourceKind(str, Enum):
 class InterestTarget(str, Enum):
     EVENT = "EVENT"
     SOCIETY = "SOCIETY"
+    LISTING = "LISTING"
 
 
 class MembershipStatus(str, Enum):
@@ -194,6 +195,13 @@ SOCIETY_OWN_TYPES: frozenset[PostType] = frozenset(
     {PostType.EVENT, PostType.SOCIETY_UPDATE, PostType.HIGHLIGHT}
 )
 
+LOST_FOUND_TYPES: frozenset[ListingType] = frozenset({ListingType.LOST, ListingType.FOUND})
+
+REQUEST_TRANSITIONS: dict[RequestStatus, frozenset[RequestStatus]] = {
+    RequestStatus.OPEN: frozenset({RequestStatus.IN_PROGRESS}),
+    RequestStatus.IN_PROGRESS: frozenset({RequestStatus.RESOLVED, RequestStatus.CLOSED}),
+}
+
 PAGE_SIZE_DEFAULT = 20
 PAGE_SIZE_MAX = 50
 TITLE_MAX = 200
@@ -204,5 +212,24 @@ YEAR_MIN = 1
 YEAR_MAX = 4
 JWT_ALG_HS256 = "HS256"
 AUDIT_PUBLISH = "post.publish"
+AUDIT_EDIT = "post.edit"
+AUDIT_ARCHIVE = "post.archive"
 SEED_MARKER = "seed"
 DEMO_PASSWORD = "CampusHub!2026"
+
+# Assistant (BR33)
+ASSISTANT_TOP_K = 5
+ASSISTANT_MAX_HISTORY_TURNS = 6
+ASSISTANT_MAX_QUESTION_CHARS = 1000
+ASSISTANT_TIMEOUT_SECONDS = 20
+ASSISTANT_MAX_RETRIES = 1
+ASSISTANT_SESSION_ID_MAX = 64
+ASSISTANT_MAX_CONTEXT_CHARS = 4000
+ASSISTANT_SNIPPET_MAX = 240
+ASSISTANT_INSIGHTS_LIMIT = 20
+KNOWLEDGE_CHUNK_SIZE = 700
+KNOWLEDGE_CHUNK_OVERLAP = 100
+EMBEDDING_DIMENSIONS = 1536
+QUERY_MIN_LEN = 2
+SEARCH_SNIPPET_MAX = 180
+PROGRAMME_MAX = 120

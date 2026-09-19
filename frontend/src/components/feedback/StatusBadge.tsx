@@ -26,13 +26,16 @@ export function StatusBadge({ label, tone = "neutral" }: StatusBadgeProps) {
 
 export function toneForStatus(status: string): StatusTone {
   const value = status.toUpperCase();
-  if (value === "APPROVED" || value === "RESOLVED" || value === "PUBLISHED") {
+  if (value === "APPROVED" || value === "RESOLVED" || value === "PUBLISHED" || value === "FOUND") {
     return "success";
   }
-  if (value === "PENDING" || value === "OPEN" || value === "DRAFT") {
+  if (value === "PENDING" || value === "OPEN" || value === "DRAFT" || value === "ACTIVE" || value === "LOST") {
     return "warning";
   }
-  if (value === "REJECTED" || value === "EMERGENCY" || value === "CANCELLED") {
+  if (value === "IN_PROGRESS") {
+    return "info";
+  }
+  if (value === "REJECTED" || value === "EMERGENCY" || value === "CANCELLED" || value === "REMOVED") {
     return "danger";
   }
   return "neutral";

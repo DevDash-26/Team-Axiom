@@ -19,7 +19,7 @@ export function FilterChips({ label, chips, active, onChange }: FilterChipsProps
           role="tab"
           aria-selected={active === chip.id}
           className={cn(
-            "rounded-full border px-3 py-1.5 text-sm font-medium",
+            "min-h-9 rounded-full border px-3 py-1.5 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-ring",
             active === chip.id
               ? "border-primary bg-secondary text-primary"
               : "border-border bg-card text-[#404040] hover:bg-muted",

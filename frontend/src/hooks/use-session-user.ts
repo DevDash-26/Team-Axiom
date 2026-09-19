@@ -22,7 +22,6 @@ export function useSessionUser() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- session bootstrap
     void refresh();
   }, [refresh]);
 

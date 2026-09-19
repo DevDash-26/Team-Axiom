@@ -9,6 +9,7 @@ Hour 0+ ships auth, the engine schema (including notifications), and UniHive rol
 - **Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, zod, supabase-js (Auth only)
 - **Backend:** Python, FastAPI, SQLAlchemy 2, Pydantic v2
 - **Data and auth:** Supabase Postgres + Supabase Auth. FastAPI is the only data path (no PostgREST for campus tables)
+- **UniHive AI RAG:** Markdown files under `backend/knowledge/` → text chunks → Supabase **pgvector** (Postgres vector extension). No Qdrant cluster.
 - **Tests:** pytest
 
 This is a documented deviation from the written SQLite + custom-JWT stack: we use hosted Postgres and managed auth so a small admin office does not run a database. The demo needs a network path to Supabase (hotspot is the backup).
@@ -40,6 +41,8 @@ make dev
 | `SUPABASE_JWT_SECRET` | backend | HS256 verify (optional if the project uses JWKS only) |
 | `SUPABASE_SERVICE_ROLE_KEY` | backend / seed only | Create demo Auth users. Never put this in Next.js |
 | `CORS_ORIGINS` | backend | Default `http://localhost:3000` |
+| `LLM_API_KEY` / `LLM_BASE_URL` / `LLM_MODEL` | backend | Optional chat completions for grounded answers |
+| `EMBEDDING_MODEL` | backend | Optional embeddings for markdown chunk RAG (default `text-embedding-3-small`) |
 | `NEXT_PUBLIC_API_URL` | frontend | FastAPI base URL |
 | `NEXT_PUBLIC_SUPABASE_URL` | frontend | Auth client |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` or `ANON_KEY` | frontend | Auth client only |
@@ -63,9 +66,16 @@ Sign in as Nimali, then Kasun, to show faculty targeting. Students cannot publis
 ## Project structure
 
 ```
-backend/app/     FastAPI factory, models, services, routers
+backend/app/     FastAPI factory, models, services, routers, assistant
+backend/knowledge/  Campus markdown files chunked into pgvector
 backend/tests/   pytest (targeting, 403, 422, invalid JWT)
 frontend/src/   Next.js app, components, lib/api.ts, lib/auth.ts
+```
+
+Re-index knowledge after editing markdown (also runs during `make seed` when the LLM key is set):
+
+```bash
+cd backend && .venv/Scripts/python -m app.assistant.index_knowledge
 ```
 
 ## Documentation

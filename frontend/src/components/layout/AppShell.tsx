@@ -1,32 +1,49 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { AILauncher } from "@/components/layout/AILauncher";
 import { StudentTopNav } from "@/components/layout/StudentTopNav";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileNavigation } from "@/components/layout/MobileNavigation";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { EmergencyBanner } from "@/components/layout/EmergencyBanner";
+import { fetchEmergencyBanner } from "@/lib/api";
 import { cn } from "@/lib/utils";
-import type { PostRead } from "@/types";
-import type { UserPublic } from "@/types";
+import type { PostRead, UserPublic } from "@/types";
 
 type AppShellProps = {
   variant: "student" | "staff" | "admin";
   user: UserPublic | null;
   onSignedOut: () => void;
-  emergencyPost?: PostRead | null;
   children: React.ReactNode;
 };
 
-export function AppShell({
-  variant,
-  user,
-  onSignedOut,
-  emergencyPost = null,
-  children,
-}: AppShellProps) {
+export function AppShell({ variant, user, onSignedOut, children }: AppShellProps) {
   const isWorkspace = variant === "staff" || variant === "admin";
+  const [emergencyPost, setEmergencyPost] = useState<PostRead | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    void fetchEmergencyBanner()
+      .then((post) => {
+        if (!cancelled) setEmergencyPost(post);
+      })
+      .catch(() => {
+        if (!cancelled) setEmergencyPost(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className={cn("min-h-full", isWorkspace && "lg:flex")}>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:ring-2 focus:ring-ring"
+      >
+        Skip to content
+      </a>
       {isWorkspace ? (
         <DashboardSidebar user={user} variant={variant} onSignedOut={onSignedOut} />
       ) : null}
@@ -35,6 +52,7 @@ export function AppShell({
         <MobileNavigation variant={variant} />
         <EmergencyBanner post={emergencyPost} />
         <main
+          id="main-content"
           className={cn(
             "flex-1 px-4 py-6 md:px-6 md:py-8",
             variant === "student" ? "mx-auto w-full max-w-6xl pb-24 lg:pb-8" : "w-full",

@@ -1,0 +1,40 @@
+# Render Blueprint — UniHive API
+# Dashboard alternative if not using Blueprint:
+#   Branch: main or dev
+#   Root Directory: backend
+#   Build: pip install -r requirements.txt
+#   Start: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+#   Env: PYTHON_VERSION=3.11.11
+services:
+  - type: web
+    name: unihive-api
+    runtime: python
+    plan: free
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_JWT_SECRET
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: gpt-4o-mini
+      - key: LLM_BASE_URL
+        value: https://api.openai.com/v1
+      - key: EMBEDDING_MODEL
+        value: text-embedding-3-small
