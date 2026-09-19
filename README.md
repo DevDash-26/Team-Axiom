@@ -9,9 +9,11 @@
 
 **Everything campus. One place.** — Team Axiom, DevDash’26.
 
+> **Project report:** [`Report-Team Axiom.pdf`](./Report-Team%20Axiom.pdf) — in the **repository root** (same folder as this README). Design, architecture, ER, testing evidence, and what we left out.
+
 Universal College Lanka students currently get information from WhatsApp groups, notice boards, lecturers, and word of mouth. UniHive is **one official channel**: targeted announcements, events, societies, bookings, lost & found, campus services, and **UniHive AI** (English / Sinhala / Singlish) that cites sources and deep-links to the right action.
 
-We did not build 33 separate apps. We built **five engines** (posts, info, bookings, requests, listings) plus users, notifications, audit, and the assistant. Design, ER, tests, and what we cut are in [REPORT.md](REPORT.md). Requirement status is in [REQUIREMENTS.md](REQUIREMENTS.md).
+We did not build 33 separate apps. We built **five engines** (posts, info, bookings, requests, listings) plus users, notifications, audit, and the assistant. Requirement status is in [REQUIREMENTS.md](REQUIREMENTS.md).
 
 ---
 
@@ -105,7 +107,8 @@ Team-Axiom/
 ├── Makefile                # install, seed, dev, test
 ├── start.sh                # Render entry: cd backend && uvicorn
 ├── .env.example
-├── README.md  REQUIREMENTS.md  DISCLOSURES.md  DEMO.md  REPORT.md
+├── README.md  REQUIREMENTS.md  DISCLOSURES.md  DEMO.md
+├── Report-Team Axiom.pdf   # project report (repo root)
 ```
 
 ---
@@ -144,7 +147,7 @@ cd backend && .venv/bin/python -m app.assistant.index_knowledge
 make test
 ```
 
-Needs `DATABASE_URL`. Auth is overridden except for the invalid-JWT case. The LLM and Auth Admin APIs are not called. Inventory and evidence: [REPORT.md](REPORT.md) §6.
+Needs `DATABASE_URL`. Auth is overridden except for the invalid-JWT case. The LLM and Auth Admin APIs are not called. Inventory and evidence: [Report-Team Axiom.pdf](./Report-Team%20Axiom.pdf) §6.
 
 ---
 
@@ -164,7 +167,7 @@ Then set `CORS_ORIGINS` to the Vercel origin and redeploy the API.
 
 | File | Purpose |
 |------|---------|
-| [REPORT.md](REPORT.md) | Design, architecture, ER, testing evidence, limitations |
+| [Report-Team Axiom.pdf](./Report-Team%20Axiom.pdf) | Project report (repo root): design, architecture, ER, testing, limitations |
 | [REQUIREMENTS.md](REQUIREMENTS.md) | BR status, where implemented, what we cut and why |
 | [DISCLOSURES.md](DISCLOSURES.md) | Libraries, APIs, AI use |
 | [DEMO.md](DEMO.md) | 8-minute pitch script |
