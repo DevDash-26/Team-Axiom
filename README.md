@@ -1,4 +1,4 @@
-# UCL Campus Hub (Team Axiom)
+# UniHive (Team Axiom)
 
 One trusted channel for Universal College Lanka students: announcements, events, societies, bookings, and campus services. Hour 0 ships auth, the full schema, and a targeted home feed.
 

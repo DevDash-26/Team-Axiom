@@ -1,3 +1,4 @@
+import { AILauncher } from "@/components/layout/AILauncher";
 import { StudentTopNav } from "@/components/layout/StudentTopNav";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileNavigation } from "@/components/layout/MobileNavigation";
@@ -42,6 +43,7 @@ export function AppShell({
           {children}
         </main>
         <AppFooter />
+        {variant === "student" ? <AILauncher /> : null}
       </div>
     </div>
   );

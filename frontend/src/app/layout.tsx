@@ -11,7 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: APP_NAME,
-  description: "One trusted channel for UCL campus announcements and services.",
+  description: "UniHive — one trusted channel for UCL campus announcements and services.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

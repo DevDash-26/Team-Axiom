@@ -12,7 +12,14 @@ type BrandMarkProps = {
 export function BrandMark({ href = ROUTES.home, compact = false, className }: BrandMarkProps) {
   return (
     <Link href={href} className={cn("flex items-center gap-3", className)}>
-      <Image src="/ucl-logo.png" alt="Universal College Lanka" width={40} height={40} className="size-10" />
+      <Image
+        src="/ucl-logo.png"
+        alt="Universal College Lanka"
+        width={40}
+        height={40}
+        className="size-10 rounded-sm object-contain"
+        priority
+      />
       {compact ? (
         <span className="sr-only">{APP_NAME}</span>
       ) : (

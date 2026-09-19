@@ -27,19 +27,19 @@ Done = works end to end, validated, tested. Partial = state what is missing. Not
 
 | ID | Requirement | Marks | Engine | Build order | Status | Owner | Where implemented | Tests | Notes |
 |----|-------------|-------|--------|-------------|--------|-------|-------------------|-------|-------|
-| BR1 | Unified access (single home, search, feed) | 5 | Platform | 1 | Partial | | `frontend/src/app/page.tsx`, `GET /api/posts` | `test_posts.py` | Home feed works. Global search not built. |
+| BR1 | Unified access (single home, search, feed) | 5 | Platform | 1 | Partial | | `frontend/src/app/page.tsx`, `/search` | `test_posts.py` | Home feed + search results UI. Search still uses fixtures (`GET /api/search` missing). |
 | BR2 | Targeted announcements by faculty/year/programme | 3 | E1 | 1 | Partial | | `post_service.apply_visibility` | `test_student_sees_only_targeted_posts` | API + feed. Staff targeting UI is still a simple form. |
-| BR3 | Event visibility (university + student organiser) | 3 | E1 | 2 | Not done | | | | Schema ready (`EVENT` type). No events UI. |
-| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Not done | | | | `interests` table exists. |
-| BR5 | Society visibility (society pages and updates) | 3 | E1 | 2 | Not done | | | | `societies` seeded. No pages. |
-| BR6 | Society sign-up / interest | 2 | E5 | 2 | Not done | | | | `society_memberships` table exists. |
+| BR3 | Event visibility (university + student organiser) | 3 | E1 | 2 | Partial | | `frontend/src/app/events` | | Listing/detail UI. Uses posts API when available, otherwise fixtures. |
+| BR4 | Event interest (register interest, organiser sees count) | 1 | E5 | 2 | Partial | | EventCard toggle | | UI count only. No interest API yet. |
+| BR5 | Society visibility (society pages and updates) | 3 | E1 | 2 | Partial | | `frontend/src/app/societies` | | List/detail UI on fixtures. |
+| BR6 | Society sign-up / interest | 2 | E5 | 2 | Partial | | Society detail CTA | | Local toggle only. |
 | BR7 | Lost & found (report, search, resolve) | 3 | E5 | 3 | Not done | | | | `listings` table exists. |
-| BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Not done | | | | `resources` / `bookings` tables exist. |
+| BR8 | Classroom booking (availability, request, no admin call) | 5 | E3 | 2 | Partial | | `frontend/src/app/bookings` | | Search, request modal, 409 layout, my bookings. Fixture rooms. |
 | BR9 | Academic support requests (study group, tutoring, mentoring) | 3 | E4 | 3 | Not done | | | | `requests` table exists. |
 | BR10 | FAQ access | 2 | E2 | 3 | Not done | | | | `faqs` table exists. |
 | BR11 | Content maintenance by authorised contributors | 4 | Platform | 1 | Partial | | `POST /api/posts`, `/posts/new` | `test_admin_can_create_announcement` | Create announcement only. No edit/archive/my-content list. |
 | BR12 | Access levels (student view; academic, society, finance, admin manage) | 6 | Platform | 1 | Partial | | `security.py`, `PERMISSION_ROLES` | `test_student_cannot_create_announcement` | Login + server permission map. Not every action has a UI. |
-| BR13 | Academic calendar (exams, add/drop, milestones) | 3 | E1 | 3 | Not done | | | | |
+| BR13 | Academic calendar (exams, add/drop, milestones) | 3 | E1 | 3 | Partial | | `frontend/src/app/calendar` | | Calendar list UI. |
 | BR14 | Student onboarding info | 2 | E2 | 4 | Not done | | | | |
 | BR15 | Emergency communication | 3 | E1 | 2 | Not done | | | | Seed includes an emergency post. No site-wide banner yet. |
 | BR16 | Schedule changes / closures | 1 | E1 | 3 | Not done | | | | |
@@ -54,12 +54,12 @@ Done = works end to end, validated, tested. Partial = state what is missing. Not
 | BR25 | Dining info (menu, hours) | 1 | E2 | 4 | Not done | | | | |
 | BR26 | Printing services info | 1 | E2 | 4 | Not done | | | | |
 | BR27 | Textbook exchange | 1 | E5 | 4 | Not done | | | | |
-| BR28 | Guest lectures | 1 | E1 | 3 | Not done | | | | |
+| BR28 | Guest lectures | 1 | E1 | 3 | Partial | | `frontend/src/app/lectures` | | Listing UI. |
 | BR29 | Wellbeing and counselling info | 3 | E2 | 3 | Not done | | | | |
 | BR30 | IT support info | 2 | E2 | 4 | Not done | | | | |
 | BR31 | Library resources and hours | 2 | E2 | 4 | Not done | | | | |
 | BR32 | Student life highlights | 1 | E1 | 4 | Not done | | | | |
-| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Not done | | | | `assistant_queries` table exists. No pipeline yet. |
+| BR33 | AI assistant (natural language, guides through solution) | 9 | Platform | 2 | Partial | | `/assistant`, AI launcher | | Chat chrome, sources, actions, fallback notice, thumbs. Demo replies only. |
 
 ## B. Non-functional requirements
 

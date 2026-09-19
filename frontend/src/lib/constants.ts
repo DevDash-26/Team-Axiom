@@ -1,6 +1,6 @@
 /** Labels, roles, and routes. Keep role names in sync with backend/app/constants.py. */
 
-export const APP_NAME = "UCL Campus Hub";
+export const APP_NAME = "UniHive";
 export const APP_TAGLINE = "Everything campus. One place.";
 
 export const ROLES = {
@@ -68,6 +68,8 @@ export const ROUTES = {
   societies: "/societies",
   opportunities: "/opportunities",
   bookings: "/bookings",
+  myBookings: "/bookings/mine",
+  lectures: "/lectures",
   lostFound: "/lost-found",
   requests: "/requests",
   info: "/info",
@@ -86,6 +88,41 @@ export const ROUTES = {
 export const PAGE_SIZE = 20;
 export const SEARCH_DEBOUNCE_MS = 300;
 export const TIME_ZONE = "Asia/Colombo";
+
+export function eventPath(id: string): string {
+  return `${ROUTES.events}/${id}`;
+}
+
+export function societyPath(slug: string): string {
+  return `${ROUTES.societies}/${slug}`;
+}
+
+export const EVENT_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "academic", label: "Academic" },
+  { id: "society", label: "Society" },
+  { id: "workshop", label: "Workshop" },
+  { id: "guest", label: "Guest Lecture" },
+] as const;
+
+export type EventFilterId = (typeof EVENT_FILTERS)[number]["id"];
+
+export const SEARCH_TYPE_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "ANNOUNCEMENT", label: "Announcements" },
+  { id: "EVENT", label: "Events" },
+  { id: "SOCIETY", label: "Societies" },
+  { id: "ROOM", label: "Rooms" },
+  { id: "FAQ", label: "FAQ" },
+] as const;
+
+export const UPDATES_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "university", label: "University" },
+  { id: "programme", label: "Programme" },
+  { id: "academic", label: "Academic" },
+  { id: "emergency", label: "Emergency" },
+] as const;
 
 export const AI_SUGGESTED_PROMPTS = [
   "What events are happening this week?",

@@ -25,16 +25,16 @@ export function AICommandBar() {
     <section className="mb-6">
       <form onSubmit={handleSubmit} className="relative overflow-hidden rounded-xl border border-border bg-card p-4 md:p-5">
         <ShineBorder shineColor={["#E31B23", "#FFF1F2", "#171717"]} duration={12} borderWidth={1} />
-        <label htmlFor="ask-campus-hub" className="flex items-center gap-2 text-sm font-semibold">
+        <label htmlFor="ask-unihive" className="flex items-center gap-2 text-sm font-semibold">
           <Sparkles className="size-4 text-primary" />
-          Ask Campus Hub
+          Ask UniHive
         </label>
         <p className="mt-1 text-sm text-muted-foreground">
           Ask about classrooms, events, deadlines, or campus services…
         </p>
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <input
-            id="ask-campus-hub"
+            id="ask-unihive"
             value={question}
             onChange={(event) => setQuestion(event.target.value)}
             placeholder="I need somewhere to study with my group this afternoon."

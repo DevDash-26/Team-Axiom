@@ -1,7 +1,7 @@
-# UCL Campus Hub — Frontend Roadmap
+# UniHive — Frontend Roadmap
 
 > **Track:** user interface only.  
-> **Product name:** UCL Campus Hub (not UniHive).  
+> **Product name:** UniHive.  
 > **Visual source of truth:** `.cursor/UniHive_UI_UX_Plan.md`  
 > **Rules:** `.cursor/rules/frontend.mdc`, `project-context.mdc`, `devdash.mdc`  
 > **Skills applied:** `dashboard-designer`, `frontend-designer`, `color-palette`  
@@ -104,7 +104,7 @@ After login the current app still lands on `/`. Staff/admin reach their workspac
 
 ### 3.2 Student navigation (desktop)
 
-Logo + UCL Campus Hub · Home · Discover (Events, Societies, Opportunities, Campus Updates) · Services (Classroom Booking, Lost & Found, Academic Support, Campus Information) · Calendar · AI Assistant · search · notifications · profile menu (My Profile, My Activity, Settings, Sign out).
+Logo + UniHive · Home · Discover (Events, Societies, Opportunities, Campus Updates) · Services (Classroom Booking, Lost & Found, Academic Support, Campus Information) · Calendar · AI Assistant · search · notifications · profile menu (My Profile, My Activity, Settings, Sign out).
 
 Mobile bottom nav: Home · Discover · AI · Services · Profile.
 
@@ -207,7 +207,7 @@ Use sparingly on the student AI bar and staff/admin headline stats. Do not sprin
 
 1. Top nav  
 2. Time-aware greeting + programme/year chip  
-3. Ask Campus Hub command bar + suggested prompts  
+3. Ask UniHive command bar + suggested prompts  
 4. Emergency / schedule-change banner (if present)  
 5. Quick actions: Find a Room · Explore Events · Lost & Found · Campus Services  
 6. For You feed — chips All / Academic / Events / Societies  
@@ -349,3 +349,4 @@ Do not add another library without updating DISCLOSURES.md.
 | Date | Phase | What landed |
 |---|---|---|
 | 2026-09-19 | 1 | Tokens, shadcn + Lucide + Magic UI, student/staff/admin shells, restyled home/login, 403, visual dashboards, nav placeholders |
+| 2026-09-19 | 2 | Renamed to UniHive. Events, updates, calendar, societies, booking chrome, search results, AI chat + launcher |

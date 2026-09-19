@@ -1,10 +1,11 @@
-import { PlaceholderScreen } from "@/components/layout/PlaceholderScreen";
+import { Suspense } from "react";
+import { SearchResults } from "@/app/search/search-results";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SearchPage() {
   return (
-    <PlaceholderScreen
-      title="Search"
-      description="Results with type filters and pagination. The search box is live in the header."
-    />
+    <Suspense fallback={<Skeleton className="m-8 h-64 rounded-xl" />}>
+      <SearchResults />
+    </Suspense>
   );
 }

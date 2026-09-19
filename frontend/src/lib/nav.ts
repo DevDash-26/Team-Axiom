@@ -65,6 +65,7 @@ export const STUDENT_NAV: NavItem[] = [
     icon: Sparkles,
     children: [
       { href: ROUTES.events, label: "Events" },
+      { href: ROUTES.lectures, label: "Guest lectures" },
       { href: ROUTES.societies, label: "Societies" },
       { href: ROUTES.opportunities, label: "Opportunities" },
       { href: ROUTES.updates, label: "Campus Updates" },
@@ -76,6 +77,7 @@ export const STUDENT_NAV: NavItem[] = [
     icon: LifeBuoy,
     children: [
       { href: ROUTES.bookings, label: "Classroom Booking" },
+      { href: ROUTES.myBookings, label: "My Bookings" },
       { href: ROUTES.lostFound, label: "Lost & Found" },
       { href: ROUTES.requests, label: "Academic Support" },
       { href: ROUTES.info, label: "Campus Information" },
