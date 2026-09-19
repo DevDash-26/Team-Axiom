@@ -1,0 +1,86 @@
+---
+description: Backend standards for the FastAPI service (structure, validation, security, testing)
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+# Backend Rules (FastAPI + SQLAlchemy)
+
+## Layering
+
+- `routers/` are thin: parse input via Pydantic schemas, call a service, return a schema.
+- `services/` hold business rules (targeting, conflicts, status transitions). They take a DB
+  session and plain arguments, and are unit-testable without HTTP.
+- `models/` hold ORM models only. `schemas/` hold request and response models only.
+- Never return ORM objects directly; always use response schemas (no password hashes, no
+  internal fields).
+- Constants (roles, statuses, limits, page sizes, time windows) live in `constants.py`.
+
+## Validation and errors
+
+- Every request body has a Pydantic schema with explicit constraints: max lengths, allowed
+  enums, date ranges (`end > start`), and sensible defaults. Trim strings.
+- Reject bad input with 422 and readable messages; never let a missing optional field crash
+  a handler (robustness is a graded non-functional requirement).
+- One consistent error shape: `{"error": {"code": "...", "message": "..."}}`. Use correct
+  status codes (400, 401, 403, 404, 409 for conflicts, 422).
+- Register global exception handlers. Log unexpected errors server-side, return a generic
+  message to the client, never a stack trace.
+
+## Auth and permissions
+
+- Password hashing with argon2 or bcrypt. No plaintext or reversible storage.
+- Token-based auth (short-lived signed token). Secret key from environment.
+- All mutating endpoints require a permission check using the central permission mapping
+  in `project-context.mdc`. Ownership checks (own society, own faculty, own post) are in the
+  service layer, not the UI.
+- Deny by default: a new endpoint without an explicit permission is a bug.
+- Write an `AuditLog` row for sensitive actions (publish emergency, role changes, booking
+  approval, content deletion).
+- Rate-limit login and the assistant endpoint (simple in-memory limiter is fine).
+- Privacy: return only the personal data a caller needs. Do not expose student emails or
+  profiles to other students.
+
+## Data and performance
+
+- Indexes on foreign keys and on columns used in filters (`type`, `status`, `starts_at`,
+  `expires_at`, audience fields, resource + time range).
+- All list endpoints are paginated (`page`, `page_size`, capped by a constant) and support
+  the relevant filters and search.
+- Audience targeting rule: a post with a null audience field applies to everyone for that
+  field; a student sees a post if every non-null audience field matches their profile.
+- Content lifecycle: `DRAFT`, `PUBLISHED`, `ARCHIVED`; hide expired posts by default, but keep
+  them for staff. Pinned and emergency posts sort first.
+- Store timestamps in UTC; the UI renders in Asia/Colombo.
+
+## Booking rules
+
+- Overlap test: `new.start < existing.end AND new.end > existing.start`, against bookings that
+  are `PENDING` or `APPROVED` for the same resource. Return 409 on conflict.
+- Do the conflict check and insert in one transaction.
+- Enforce bounds: minimum/maximum duration, opening hours, no bookings in the past,
+  maximum advance window (all constants).
+- Status flow: `PENDING -> APPROVED | REJECTED | CANCELLED`. Validate transitions in the service.
+
+## Requests and listings
+
+- `Request.status`: `OPEN -> IN_PROGRESS -> RESOLVED | CLOSED`. Only handlers with the right
+  role may change status or respond.
+- `Listing.status`: `ACTIVE -> RESOLVED | REMOVED` (e.g. item returned, book taken).
+  Contact between users happens through the platform; do not publish phone numbers by default.
+
+## Testing (pytest)
+
+- Use an in-memory or temporary SQLite database per test session with the seed fixtures.
+- Minimum coverage: permission denials (403) per role, audience targeting, booking conflict,
+  status transitions, validation failures, assistant scope and fallback paths.
+- Tests must run with one command (`make test` or `pytest`) and pass before every push.
+
+## Config, logging, docs
+
+- Settings via `pydantic-settings` from environment; `.env.example` lists every variable
+  without real secrets.
+- Use the `logging` module (no `print`). Never log passwords, tokens, or full personal data.
+- Public functions and modules get short docstrings explaining the why.
+- Expose `/health` (liveness) and `/ready` (DB reachable, assistant configured or fallback mode).
+- Keep FastAPI's auto docs (`/docs`) enabled; they double as API documentation in the report.

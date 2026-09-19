@@ -10,11 +10,11 @@ Every suggestion you make must respect the competition rules, the judging criter
 engineering standards below. When a request conflicts with these rules, say so and propose a
 compliant alternative instead of silently complying.
 
-## 0. Project context (FILL IN after the problem statement arrives)
+## 0. Project context
 
-- Problem statement (paste short summary): TODO
-- Target users / roles: TODO
-- Stack: TODO (frontend / backend / DB / test tools)
+- The problem, roles, data model, permission matrix, stack and structure are defined in
+  `project-context.mdc`. Stack-specific rules are in `backend.mdc`, `frontend.mdc` and
+  `assistant.mdc`. Follow them together with this file.
 - Requirement checklist lives in `REQUIREMENTS.md` (single source of truth; keep it updated)
 - Before building any feature, confirm it maps to a requirement in `REQUIREMENTS.md`.
   If it does not, do not build it unless it is an explicit, small differentiator.
@@ -157,11 +157,3 @@ The app must run from a **fresh clone** following only the README. Verify this b
   generate non-trivial logic, add a one-paragraph explanation to the report notes or module header.
 - Pitch is 8 minutes (yellow card at 6:00, red at 8:00), then about 5 minutes of Q&A. Suggest
   demo flows that fit comfortably in about 3-4 minutes.
-
-
-- Problem: UCL needs one trusted digital channel for students to access campus information and services (33 business requirements + 6 NFRs, see REQUIREMENTS.md).
-- Roles: Student, Academic, Society rep, Finance, Admin, Super admin.
-- Architecture: 5 engines (Post, Info/FAQ, Booking, Request, Listing/sign-up) + platform (auth, RBAC, search, AI assistant).
-- Stack: Next.js + TypeScript + Prisma + SQLite + Tailwind.
-- AI assistant: retrieval over our own content, cite sources, fall back to search if the LLM is unavailable. Key in .env only.
-- Constraints: privacy-respecting, appropriate for academia, maintainable by a small admin office, invented demo data only.

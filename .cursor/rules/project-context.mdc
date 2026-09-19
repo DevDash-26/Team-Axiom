@@ -1,0 +1,122 @@
+---
+description: Problem statement summary, roles, data model, permission matrix, stack and repo structure for the UCL campus information platform
+alwaysApply: true
+---
+
+# Project Context: UCL Campus Hub
+
+## Problem
+
+Universal College Lanka students get campus information from scattered channels (WhatsApp groups,
+notice boards, lecturers, word of mouth). We are building **one trusted channel** for
+announcements, events, societies, lost and found, room booking, academic support, FAQs, and
+campus services, plus an **AI assistant** that answers questions in natural language.
+
+Objectives: informed and engaged students, visibility of events/societies/services, less time
+searching and fewer staff enquiries, and a foundation the university can maintain afterwards.
+
+Constraints: suitable for a university audience, respectful of student privacy, maintainable by a
+small admin office with no dedicated tech team, realistic to sustain. No integration with existing
+university systems is assumed. All demo data is invented.
+
+## Stack (keep it small)
+
+- **Backend:** Python 3.11, FastAPI, SQLAlchemy 2.0, Pydantic v2, SQLite (file DB), pytest
+- **Frontend:** Next.js (App Router), TypeScript (strict), Tailwind CSS, zod for form validation
+- **AI assistant:** plain Python service functions plus one LLM API client behind an interface
+- **Search / retrieval:** SQLite FTS5 (full-text search), no external vector database
+- **No** extra orchestration frameworks, message brokers, hosted databases, or tracing services.
+  Do not add new infrastructure. If something seems to need it, propose the simplest alternative.
+- Two processes only: backend on `:8000`, frontend on `:3000`. One command to start each
+  (or a single `make dev` / `docker compose up`). Seed with one command.
+
+## Repository structure
+
+```
+/
+├── backend/
+│   ├── app/
+│   │   ├── main.py            # app factory, routers, CORS, error handlers
+│   │   ├── config.py          # settings from env (pydantic-settings)
+│   │   ├── constants.py       # roles, enums, limits (no magic numbers elsewhere)
+│   │   ├── db.py              # engine, session, FTS setup
+│   │   ├── models/            # SQLAlchemy models
+│   │   ├── schemas/           # Pydantic request/response models
+│   │   ├── routers/           # thin HTTP layer
+│   │   ├── services/          # business logic (posts, bookings, requests, listings, ...)
+│   │   ├── assistant/         # AI assistant (see assistant.mdc)
+│   │   ├── security.py        # hashing, tokens, permission dependencies
+│   │   └── seed.py            # invented demo data and demo accounts
+│   └── tests/
+├── frontend/
+│   └── src/ (app/, components/, lib/api.ts, lib/auth.ts, types/)
+├── .cursor/rules/
+├── README.md  REQUIREMENTS.md  DISCLOSURES.md  DEMO.md  REPORT.md
+├── .env.example  .gitignore  Makefile
+```
+
+## Roles
+
+`STUDENT`, `ACADEMIC`, `SOCIETY_REP`, `FINANCE`, `ADMIN`, `SUPER_ADMIN`
+(defined once in `constants.py` as an enum; never hard-code role strings elsewhere).
+
+Students have a profile: `faculty`, `year`, `programme`. Staff may be linked to a faculty;
+society reps are linked to one society.
+
+## Engines (design principle: few generic engines, many requirements)
+
+| Engine | Model(s) | Requirements |
+|---|---|---|
+| Post engine | `Post` with `type`, audience (`faculty`, `year`, `programme`, null = everyone), `starts_at`, `expires_at`, `pinned`, `status` | Announcements, events, guest lectures, emergency, schedule changes, academic calendar, jobs, volunteering, alumni, highlights, society updates |
+| Info engine | `InfoPage(category)`, `Faq`, `StaffContact` | FAQ, onboarding, directory, financial aid, dining, printing, wellbeing, IT, library, sports info |
+| Booking engine | `Resource(kind)`, `Booking(status)` | Classroom and sports facility booking |
+| Request engine | `Request(type, status)` | Academic support, facility issues, feedback |
+| Listing engine | `Listing(type, status)`, `Interest(target_type, target_id)`, `SocietyMembership` | Lost & found, textbook exchange, event interest, society sign-up |
+
+Also: `User`, `Society`, `AssistantQuery` (assistant log), `AuditLog`.
+
+## Post types
+
+`ANNOUNCEMENT`, `EVENT`, `GUEST_LECTURE`, `EMERGENCY`, `SCHEDULE_CHANGE`, `CALENDAR_ENTRY`,
+`JOB`, `VOLUNTEERING`, `ALUMNI`, `HIGHLIGHT`, `SOCIETY_UPDATE`.
+Type-specific data (location, deadline, apply link, event date) goes in dedicated nullable
+columns or a validated `details` JSON field. Validate per type.
+
+## Permission matrix (enforce on the SERVER for every mutating endpoint)
+
+| Action | Roles allowed |
+|---|---|
+| View published content | Everyone (audience filter applied for students) |
+| Publish `ANNOUNCEMENT`, `CALENDAR_ENTRY`, `GUEST_LECTURE` | ACADEMIC (own faculty), ADMIN, SUPER_ADMIN |
+| Publish `EVENT` | ACADEMIC, SOCIETY_REP (own society only), ADMIN |
+| Publish `SOCIETY_UPDATE`, `HIGHLIGHT` | SOCIETY_REP (own society only), ADMIN |
+| Publish `EMERGENCY`, `SCHEDULE_CHANGE` | ADMIN, SUPER_ADMIN only |
+| Publish `JOB`, `VOLUNTEERING`, `ALUMNI` | ADMIN, SUPER_ADMIN |
+| Manage financial aid info | FINANCE, ADMIN |
+| Manage other info pages, FAQ, staff directory | ADMIN, SUPER_ADMIN |
+| Edit or delete a post | Author, or ADMIN/SUPER_ADMIN |
+| Create booking request | STUDENT and staff |
+| Approve / reject bookings | ADMIN, SUPER_ADMIN |
+| Create requests (support, issue, feedback) | Any logged-in user |
+| Handle academic support requests | ACADEMIC, ADMIN |
+| Handle facility issues and feedback | ADMIN, SUPER_ADMIN |
+| Lost & found and textbook listings | Create: any logged-in user; moderate: ADMIN |
+| Manage users and roles | SUPER_ADMIN |
+| View assistant insights (unanswered questions) | ADMIN, SUPER_ADMIN |
+
+Implement this as data (a mapping in `security.py` or `constants.py`) plus one reusable
+dependency, e.g. `require_permission(action)`. Do not scatter `if role == ...` checks.
+
+## Demo accounts (create in `seed.py`, document in README and DEMO.md)
+
+One per role, plus at least two students in different faculties/years so audience targeting is
+visible in the demo. Invented names only; no real personal data.
+
+## Build order
+
+1. Schema, auth, RBAC, seed, first end-to-end slice (post create/list with targeting)
+2. Home feed, global search, staff dashboard, emergency banner
+3. Events + interest, societies + sign-up, booking, AI assistant
+4. Lost & found, requests (support, issues, feedback), calendar, jobs
+5. Info pages via the info engine, textbook exchange, remaining low-mark items
+6. Hardening: validation, error states, tests, README, report, demo rehearsal

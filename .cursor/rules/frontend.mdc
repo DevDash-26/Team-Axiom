@@ -1,0 +1,53 @@
+---
+description: Frontend standards for the Next.js app (usability, states, structure)
+globs: frontend/**/*.{ts,tsx,css}
+alwaysApply: false
+---
+
+# Frontend Rules (Next.js + TypeScript + Tailwind)
+
+## Structure
+
+- `app/`: routes and layouts only. `components/`: reusable UI. `lib/api.ts`: the single API
+  client wrapper (base URL from env, attaches the token, normalises errors).
+  `lib/auth.ts`: session/token handling. `types/`: shared types mirroring backend schemas.
+- No `fetch` calls scattered through components; go through `lib/api.ts`.
+- Components stay presentational where possible; put data fetching in page-level code or small
+  hooks. No business rules in the UI (the server is the authority).
+- TypeScript strict mode. No `any`; define types for API responses.
+- Constants (labels, page sizes, route paths, role names) live in one place, not inline.
+
+## Usability (graded: users have mixed digital literacy)
+
+- Mobile-first, fully responsive; test at phone width first.
+- Plain language, clear button labels ("Book this room", "I'm interested"), no jargon.
+- A persistent home feed with tabs or chips for the main categories, a global search box, and
+  the assistant reachable from every page (floating button or nav item).
+- Emergency and schedule-change posts appear in a prominent banner at the top on every page.
+- Every list has: loading skeleton, empty state with guidance, error state with retry.
+- Every form has: inline validation (zod), disabled submit while sending, success and
+  failure feedback, and preserves the user's input on error.
+- Accessibility basics: labels on inputs, keyboard focusable controls, sufficient contrast,
+  meaningful alt text, semantic headings.
+
+## Role-aware UI
+
+- Show or hide navigation and actions by role for convenience, but never rely on it for
+  security. The backend enforces permissions.
+- Staff dashboard: "my content", create/edit/archive, pending booking approvals, open
+  requests, assistant insights (unanswered questions).
+- Students: profile (faculty, year, programme) drives the personalised feed; make it easy to edit.
+
+## Assistant UI
+
+- Chat panel with message history, a typing indicator, and source chips that link to the
+  cited content.
+- Render suggested actions as buttons (e.g. "Open room booking").
+- Show a clear message when the assistant is in fallback mode (search results only).
+- Include thumbs up/down feedback on answers.
+
+## Quality
+
+- Format and lint before committing. No unused code or stray `console.log`.
+- Keep dependencies minimal and log each new one in `DISCLOSURES.md`.
+- Seed data must make every screen look populated for the demo.
