@@ -1,5 +1,6 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+/* Copied from tw-animate-css — Tailwind v4 cannot resolve the package "style" export. */
+@import "../styles/tw-animate.css";
 
 @custom-variant dark (&:is(.dark *));
 

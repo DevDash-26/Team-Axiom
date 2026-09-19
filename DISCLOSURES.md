@@ -31,7 +31,7 @@
 | sonner | 2.0.8 | Toast notifications | frontend | https://sonner.emilkowal.ski |
 | cmdk | 1.1.1 | Command palette primitive | frontend | https://cmdk.paco.me |
 | next-themes | 0.4.6 | Theme hook used by the toast host | frontend | https://github.com/pacocoursey/next-themes |
-| tw-animate-css | 1.4.0 | Enter/leave animations for dialogs | frontend | https://github.com/Wombosvideo/tw-animate-css |
+| tw-animate-css | 1.4.0 | Enter/leave animations for dialogs (CSS copied to `frontend/src/styles/tw-animate.css` because Tailwind v4 cannot resolve the package `style` export) | frontend | https://github.com/Wombosvideo/tw-animate-css |
 | Magic UI (via 21st.dev / shadcn registry) | copied `shine-border`, `number-ticker` | AI bar border and dashboard count animation | frontend | https://magicui.design · https://21st.dev |
 | motion | 13.4.0 | Number ticker animation | frontend | https://motion.dev |
 
