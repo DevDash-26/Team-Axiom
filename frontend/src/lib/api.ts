@@ -58,3 +58,34 @@ export function apiGet<T>(path: string): Promise<T> {
 export function apiPost<T>(path: string, body: unknown): Promise<T> {
   return request<T>(path, { method: "POST", body: JSON.stringify(body) });
 }
+
+export type FaqItem = {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+  created_at: string;
+};
+
+export type FaqListResponse = {
+  items: FaqItem[];
+  page: number;
+  page_size: number;
+  total: number;
+  categories: string[];
+};
+
+export function listFaqs(params?: {
+  category?: string;
+  q?: string;
+  page?: number;
+  page_size?: number;
+}): Promise<FaqListResponse> {
+  const search = new URLSearchParams();
+  if (params?.category) search.set("category", params.category);
+  if (params?.q) search.set("q", params.q);
+  if (params?.page) search.set("page", String(params.page));
+  if (params?.page_size) search.set("page_size", String(params.page_size));
+  const query = search.toString();
+  return apiGet<FaqListResponse>(`/api/info/faqs${query ? `?${query}` : ""}`);
+}

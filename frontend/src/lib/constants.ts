@@ -44,6 +44,17 @@ export const POST_TYPE_LABELS: Record<string, string> = {
   SOCIETY_UPDATE: "Society update",
 };
 
+export const FAQ_CATEGORY_LABELS: Record<string, string> = {
+  IT: "IT",
+  LIBRARY: "Library",
+  WELLBEING: "Wellbeing",
+  DINING: "Dining",
+  PRINTING: "Printing",
+  FINANCIAL_AID: "Financial aid",
+  SPORTS: "Sports",
+  ONBOARDING: "Onboarding",
+};
+
 export const ROUTES = {
   home: "/",
   login: "/login",

@@ -38,7 +38,7 @@
 | FR-09 | Admin users / staff / roles matrix | BR12 | P0 | Partial | Models + seed; admin UI pending |
 | FR-10 | Notifications | BR8 flow | P0 | Partial | `Notification` model added |
 | FR-11 | Societies + sign-up | BR5, BR6 | P1 | Partial | Society + SocietyMembership |
-| FR-12 | Calendar / jobs / campus info | BR13, BR20, … | P1 | Partial | Post types + Info engine |
+| FR-12 | Calendar / jobs / campus info | BR13, BR20, … | P1 | Partial | Post types + Info engine; FAQ list/filter UI + `/api/info/faqs` done |
 | FR-13 | Requests (support, facility, feedback) | BR9, BR17, BR21 | P1 | Partial | Request model |
 
 ## B. Non-functional

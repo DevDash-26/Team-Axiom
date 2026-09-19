@@ -10,8 +10,9 @@ from sqlalchemy import select
 from supabase import create_client
 
 from app.config import get_settings
-from app.constants import DEMO_PASSWORD, SEED_MARKER, Faculty, PostStatus, PostType, Role
+from app.constants import DEMO_PASSWORD, SEED_MARKER, Faculty, InfoCategory, PostStatus, PostType, Role
 from app import db as database
+from app.models.info import Faq
 from app.models.post import Post
 from app.models.society import Society
 from app.models.user import User
@@ -227,6 +228,64 @@ def _replace_seed_posts(db, admin: User) -> None:
     db.add_all([campus, computing, business_year1, emergency, draft, expired])
 
 
+SEED_FAQS: tuple[dict[str, str], ...] = (
+    {
+        "question": "How do I reset my UCL Wi‑Fi password?",
+        "answer": "Visit the IT helpdesk on Level 2 or use the self-service portal linked from Campus Services. Bring your student ID.",
+        "category": InfoCategory.IT.value,
+    },
+    {
+        "question": "What are the library opening hours during term?",
+        "answer": "Monday to Friday 08:00–20:00, Saturday 09:00–14:00. Sunday closed except exam weeks.",
+        "category": InfoCategory.LIBRARY.value,
+    },
+    {
+        "question": "Where can I get wellbeing support?",
+        "answer": "Book a confidential session with Student Wellbeing via the services desk, or email wellbeing@ucl.lk. Walk-ins are available weekdays 10:00–15:00.",
+        "category": InfoCategory.WELLBEING.value,
+    },
+    {
+        "question": "Which canteen accepts student meal cards?",
+        "answer": "The main cafeteria and Block B café accept meal cards. The rooftop kiosk is cash or card only.",
+        "category": InfoCategory.DINING.value,
+    },
+    {
+        "question": "How much does campus printing cost?",
+        "answer": "Black-and-white A4 is Rs. 8 per page; colour A4 is Rs. 40. Top up your print balance at the library desk.",
+        "category": InfoCategory.PRINTING.value,
+    },
+    {
+        "question": "How do I apply for financial aid?",
+        "answer": "Submit the finance aid form with income documents before the published deadline. Finance Office reviews applications within ten working days.",
+        "category": InfoCategory.FINANCIAL_AID.value,
+    },
+    {
+        "question": "How do I book the indoor courts?",
+        "answer": "Use UniHive room booking, choose a sports facility resource, and wait for admin approval. Same-day bookings close at 12:00.",
+        "category": InfoCategory.SPORTS.value,
+    },
+    {
+        "question": "What should new students complete in week one?",
+        "answer": "Activate your campus account, update your UniHive profile (faculty, year, programme), and join at least one society interest list.",
+        "category": InfoCategory.ONBOARDING.value,
+    },
+)
+
+
+def _replace_seed_faqs(db) -> None:
+    seed_questions = {item["question"] for item in SEED_FAQS}
+    existing = db.scalars(select(Faq).where(Faq.question.in_(seed_questions))).all()
+    for faq in existing:
+        db.delete(faq)
+    db.flush()
+    db.add_all(
+        [
+            Faq(question=item["question"], answer=item["answer"], category=item["category"])
+            for item in SEED_FAQS
+        ]
+    )
+
+
 def seed() -> None:
     logging.basicConfig(level=logging.INFO)
     get_settings.cache_clear()
@@ -250,6 +309,7 @@ def seed() -> None:
             users_by_email[spec["email"]] = _upsert_user(db, spec, auth_id, society_id)
         admin = users_by_email["admin@ucl.lk"]
         _replace_seed_posts(db, admin)
+        _replace_seed_faqs(db)
         db.commit()
         logger.info("Seed complete. Demo password is documented in README.md.")
     except Exception:
