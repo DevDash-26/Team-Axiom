@@ -1,0 +1,159 @@
+---
+description: DevDash'26 hackathon rules, judging priorities, and engineering standards for this repo
+alwaysApply: true
+---
+
+# DevDash'26 – Project Rules for Cursor
+
+This repo is a hackathon submission built within a strict 6-hour window and judged by a panel.
+Every suggestion you make must respect the competition rules, the judging criteria, and the
+engineering standards below. When a request conflicts with these rules, say so and propose a
+compliant alternative instead of silently complying.
+
+## 0. Project context (FILL IN after the problem statement arrives)
+
+- Problem statement (paste short summary): TODO
+- Target users / roles: TODO
+- Stack: TODO (frontend / backend / DB / test tools)
+- Requirement checklist lives in `REQUIREMENTS.md` (single source of truth; keep it updated)
+- Before building any feature, confirm it maps to a requirement in `REQUIREMENTS.md`.
+  If it does not, do not build it unless it is an explicit, small differentiator.
+
+## 1. Competition rules (non-negotiable)
+
+1. **Everything is built inside the hackathon window.** Never import, copy, or suggest code from
+   a previous personal or team project. No pre-built code, boilerplate repos, or private templates.
+   Official scaffolding commands (e.g. `create-next-app`, `npm init`, `django-admin startproject`)
+   and public libraries are fine.
+2. **Stay on-topic.** The solution must address the given problem statement. Off-topic features
+   risk disqualification. Do not add unrelated features.
+3. **Disclose all third-party dependencies.** Whenever you add a library, framework, API, dataset,
+   font, or asset, append it to `DISCLOSURES.md` (name, version, purpose, link). The report must
+   list them. Never add a dependency without logging it.
+4. **AI is an aid, not the author.** Keep generated changes small and reviewable. Explain what
+   the code does and why in plain language so the team can defend it in Q&A. Prefer simple,
+   readable solutions over clever ones. Never produce large blocks the team cannot explain.
+5. **No plagiarism.** Do not copy code from other repos, tutorials, or answers verbatim. Writing
+   from general knowledge is fine. If a snippet is adapted from a public source, note the source in
+   a comment and in `DISCLOSURES.md`.
+6. **Submission is via the team GitHub repo only.** The repo locks at 3:30 PM sharp; the latest
+   commit at or before then is the final solution. Anything not committed and pushed does not exist.
+7. **Commit history is evidence and is scored.** Commit and push every 30-60 minutes. When asked
+   to help with git, suggest small, meaningful commits with clear messages (see section 6).
+   Each teammate should commit their own work under their own identity.
+8. **No secrets in the repo.** Use `.env` (git-ignored) and a committed `.env.example`.
+9. **No photos or videos** of the event; nothing in the repo should embed such content.
+
+## 2. Judging priorities (optimise for these)
+
+Phase 1 (60%) is a code review of the repo at the 3:30 PM commit:
+- **Requirement coverage & depth: 45 marks (biggest item).** Working features with real
+  complexity and strong non-functional quality beat many shallow features. Finish and harden
+  the core before adding anything new. A half-working feature scores worse than a smaller,
+  complete one.
+- **Code quality & best practices: 9 marks.** Clean, consistent, commented code; no magic
+  numbers; no clutter.
+- **Report quality: 6 marks.** Design, architecture, testing, with evidence.
+
+Phase 2 (40%) is the pitch, live demo, and Q&A:
+- Prioritisation and explaining what was left out and why (12), live demo that works (8),
+  solution defence (8), innovation (4), delivery within 8 minutes (8).
+
+Implications for how you help:
+- Prefer depth and correctness over breadth.
+- Keep the app demo-able at all times: `main` must always run. Never leave the app broken
+  between commits.
+- Maintain seed data so the demo is never empty.
+
+## 3. Non-functional checklist (apply to every feature by default)
+
+For each feature you write, include these unless there is a stated reason not to:
+- **Validation** on both client and server (types, ranges, required fields, formats).
+- **Error handling**: no unhandled promise rejections or bare exceptions; return consistent error
+  shapes with correct HTTP status codes; show friendly messages in the UI.
+- **Auth & authorisation**: protect routes; check roles/ownership server-side, never only in the UI.
+- **Security basics**: parameterised queries / ORM only, hashed passwords (bcrypt/argon2), no
+  secrets in code, sanitised output, CORS configured deliberately, rate limiting where sensible.
+- **Pagination, search, and filtering** on list endpoints and list views.
+- **UX states**: loading, empty, error, and success states; responsive layout; accessible labels.
+- **Idempotence & edge cases**: duplicates, conflicts (e.g. double booking), empty input, boundary
+  values, concurrent updates where relevant.
+- **Logging**: meaningful server logs for errors; no sensitive data in logs.
+- **Tests**: at least one meaningful test per core feature (happy path plus key failure case).
+  Tests must actually run with a single command and pass.
+
+## 4. Code quality standards
+
+- Clear layering: routes/controllers -> services (business logic) -> data access/models.
+  No business logic in UI components or route handlers beyond wiring.
+- Descriptive names for variables, functions, files. No single-letter names except loop indices.
+- **No magic numbers or strings.** Put them in named constants or config (`constants.*`).
+- Small functions with a single responsibility. Avoid deep nesting; use early returns.
+- Comment the *why* for non-obvious logic; add a short header comment to each module explaining
+  its purpose. Do not add noisy comments that restate the code.
+- No dead code, commented-out blocks, stray `console.log`/`print` debugging, or unused imports
+  in committed code.
+- Consistent formatting via the project linter/formatter. Run lint and format before committing.
+- Type everything where the language supports it (TypeScript strict / Python type hints).
+- Reuse over duplication: extract shared helpers and components.
+- Keep dependencies minimal; prefer built-in or already-installed solutions.
+
+## 5. Repository hygiene and required files
+
+The repo must always contain:
+- `README.md`: overview, tech stack, features, setup and run instructions (single command to
+  start), environment variables, seed/demo credentials, how to run tests, project structure.
+- `REQUIREMENTS.md`: numbered requirements from the problem statement with status
+  (Done / Partial / Not done), where implemented, and reasoning for anything left out.
+- `DISCLOSURES.md`: all libraries, frameworks, APIs, datasets, and AI tools used.
+- `REPORT.md` (or the final report file): design, architecture, ER/data model, testing
+  evidence, limitations, and what was deliberately left out and why. Update it as features land.
+- `.env.example`, `.gitignore` (node_modules, .env, build output, IDE files, OS files).
+- A seed script that loads realistic demo data, and documented demo accounts per role.
+
+The app must run from a **fresh clone** following only the README. Verify this before the final push.
+
+## 6. Git workflow
+
+- Short-lived feature branches merged into `main` frequently; `main` always runs.
+- Commit messages: imperative, specific (`Add booking conflict validation`), optionally with a
+  prefix (`feat:`, `fix:`, `test:`, `docs:`, `refactor:`).
+- One logical change per commit. No giant "final commit" dumps, no committing generated junk.
+- Never commit secrets, `node_modules`, build artifacts, or large binaries.
+- Remind the team to push at least every 30-60 minutes, and to do a final verified push
+  well before 3:30 PM (target 3:00 PM for feature freeze, 3:15 PM final push).
+
+## 7. How to work with me (Cursor behaviour)
+
+- Before large changes, state a short plan and list the files you will touch. Wait for approval
+  on anything that changes the data model, API contract, or folder structure.
+- Work in small vertical slices (one feature end to end), not the whole app at once.
+- After each change, tell me: what changed, how to test it manually, and which requirement in
+  `REQUIREMENTS.md` it advances.
+- Update `REQUIREMENTS.md`, `DISCLOSURES.md`, and report notes whenever a relevant change is made,
+  and remind me if I forget.
+- Flag assumptions, risks, and edge cases you noticed but did not handle.
+- Do not refactor unrelated code while implementing a feature.
+- If a request is ambiguous or seems off-topic for the problem statement, ask before proceeding.
+- Do not claim something works unless it was run or tested. Say plainly what is untested.
+- Prefer boring, mainstream, well-documented approaches over experimental ones.
+
+## 8. Time-boxing guidance (6-hour build)
+
+- First 45 minutes: requirements checklist, data model, API contract, repo skeleton.
+- Core features first, in priority order: must-have, then should-have, then nice-to-have.
+- One differentiator feature only after the core is stable and tested.
+- Feature freeze ~45 minutes before the deadline. After freeze: bug fixes, tests, README,
+  report, seed data, fresh-clone verification only.
+- If time is short, cut scope rather than quality, and record the cut and reason in
+  `REQUIREMENTS.md` (this feeds the "what we left out and why" part of the pitch).
+
+## 9. Presentation and demo support
+
+- Keep a `DEMO.md` with the exact demo script: steps, demo accounts, expected results.
+- The demo must work offline or on a hotspot: avoid dependencies on flaky external services,
+  or provide a graceful fallback with local data.
+- Every teammate must understand every part of the codebase well enough to answer Q&A. When you
+  generate non-trivial logic, add a one-paragraph explanation to the report notes or module header.
+- Pitch is 8 minutes (yellow card at 6:00, red at 8:00), then about 5 minutes of Q&A. Suggest
+  demo flows that fit comfortably in about 3-4 minutes.
