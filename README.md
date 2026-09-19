@@ -9,6 +9,8 @@
 
 **Everything campus. One place.** — Team Axiom, DevDash’26.
 
+**Live app:** [https://team-axiom-tawny.vercel.app](https://team-axiom-tawny.vercel.app)
+
 > **Project report:** [`Report-Team Axiom.pdf`](./Report-Team%20Axiom.pdf) — in the **repository root** (same folder as this README). Design, architecture, ER, testing evidence, and what we left out.
 
 Universal College Lanka students currently get information from WhatsApp groups, notice boards, lecturers, and word of mouth. UniHive is **one official channel**: targeted announcements, events, societies, bookings, lost & found, campus services, and **UniHive AI** (English / Sinhala / Singlish) that cites sources and deep-links to the right action.
@@ -155,7 +157,7 @@ Needs `DATABASE_URL`. Auth is overridden except for the invalid-JWT case. The LL
 
 | Piece | Where |
 |-------|--------|
-| **Frontend** | Vercel (or any Node host). Root Directory `frontend`. `NEXT_PUBLIC_API_URL` + public Supabase keys. |
+| **Frontend** | [https://team-axiom-tawny.vercel.app](https://team-axiom-tawny.vercel.app) — Vercel. Root Directory `frontend`. `NEXT_PUBLIC_API_URL` + public Supabase keys. |
 | **API** | Render from **repo root** (Root Directory empty). Build: `pip install -r requirements.txt`. Start: **`bash start.sh`**. If Settings still show `uvicorn app.main:app`, add env **`PYTHONPATH=backend`** (root `app/` shim also loads `backend/app`). Python 3.11.11. Health: `/health`. |
 | **Database + Auth** | Supabase. Enable pgvector. |
 
