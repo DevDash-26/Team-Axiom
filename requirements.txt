@@ -1,0 +1,2 @@
+# Install from backend when Root Directory is not set on Render/Vercel-like hosts.
+-r backend/requirements.txt
