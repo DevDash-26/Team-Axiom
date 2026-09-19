@@ -1,10 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import { AppHeader } from "@/components/AppHeader";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AppShell } from "@/components/layout/AppShell";
+import { WelcomeHeader } from "@/components/home/WelcomeHeader";
+import { AICommandBar } from "@/components/home/AICommandBar";
+import { QuickActions } from "@/components/home/QuickActions";
+import { FeedToolbar } from "@/components/home/FeedToolbar";
+import { UpcomingPanel } from "@/components/home/UpcomingPanel";
 import { FeedList } from "@/components/FeedList";
 import { apiGet, ApiError } from "@/lib/api";
 import { fetchMe } from "@/lib/auth";
+import { EMERGENCY_POST_TYPES, FEED_CHIPS, type FeedChipId } from "@/lib/constants";
 import { getAccessToken } from "@/lib/supabase";
 import type { PostListResponse, PostRead, UserPublic } from "@/types";
 
@@ -13,12 +19,13 @@ export default function HomePage() {
   const [posts, setPosts] = useState<PostRead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [chip, setChip] = useState<FeedChipId>("all");
 
   const load = useCallback(async () => {
-    setLoading(true);
     setError(null);
     try {
       const token = await getAccessToken();
+      setLoading(true);
       let profile: UserPublic | null = null;
       if (token) {
         try {
@@ -39,27 +46,47 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    // Session + feed are fetched after mount; setState happens after await.
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- bootstrap fetch
     void load();
   }, [load]);
 
+  const emergencyPost = posts.find((post) =>
+    (EMERGENCY_POST_TYPES as readonly string[]).includes(post.type),
+  ) ?? null;
+
+  const visiblePosts = useMemo(() => {
+    const selected = FEED_CHIPS.find((item) => item.id === chip);
+    if (!selected || selected.types === null) {
+      return posts;
+    }
+    const allowed = selected.types as readonly string[];
+    return posts.filter((post) => allowed.includes(post.type));
+  }, [chip, posts]);
+
+  const upcomingEvents = posts.filter((post) => post.type === "EVENT").slice(0, 3);
+  const academicDates = posts.filter((post) => post.type === "CALENDAR_ENTRY").slice(0, 3);
+
   return (
-    <div className="min-h-full">
-      <AppHeader
-        user={user}
-        onSignedOut={() => {
-          setUser(null);
-          void load();
-        }}
-      />
-      <main className="mx-auto max-w-3xl px-4 py-6">
-        <h1 className="mb-1 text-2xl font-semibold">Campus feed</h1>
-        <p className="mb-6 text-sm text-slate-600">
-          {user
-            ? `Showing posts for ${user.faculty ?? "all faculties"}${user.year ? `, year ${user.year}` : ""}.`
-            : "You are viewing campus-wide posts. Sign in to see items for your faculty and year."}
-        </p>
-        <FeedList posts={posts} loading={loading} error={error} onRetry={() => void load()} />
-      </main>
-    </div>
+    <AppShell
+      variant="student"
+      user={user}
+      onSignedOut={() => {
+        setUser(null);
+        void load();
+      }}
+      emergencyPost={emergencyPost}
+    >
+      <WelcomeHeader user={user} />
+      <AICommandBar />
+      <QuickActions />
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <section>
+          <FeedToolbar active={chip} onChange={setChip} />
+          <FeedList posts={visiblePosts} loading={loading} error={error} onRetry={() => void load()} />
+        </section>
+        <UpcomingPanel events={upcomingEvents} dates={academicDates} />
+      </div>
+    </AppShell>
   );
 }

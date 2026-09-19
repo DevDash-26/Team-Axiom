@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { AppHeader } from "@/components/AppHeader";
+import { toast } from "sonner";
+import { AppShell } from "@/components/layout/AppShell";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { FormField } from "@/components/feedback/FormField";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ANNOUNCEMENT_ROLES, ROUTES, type RoleName } from "@/lib/constants";
 import { apiPost, ApiError } from "@/lib/api";
 import { fetchMe } from "@/lib/auth";
@@ -34,7 +40,7 @@ export default function NewPostPage() {
       try {
         const profile = await fetchMe();
         if (!ANNOUNCEMENT_ROLES.includes(profile.role as RoleName)) {
-          router.replace(ROUTES.home);
+          router.replace(ROUTES.forbidden);
           return;
         }
         setUser(profile);
@@ -68,6 +74,7 @@ export default function NewPostPage() {
     };
     try {
       await apiPost<PostRead>("/api/posts", payload);
+      toast.success("Announcement published successfully.");
       router.push(ROUTES.home);
     } catch (cause) {
       setFormError(cause instanceof ApiError ? cause.message : "Could not publish the announcement.");
@@ -77,51 +84,37 @@ export default function NewPostPage() {
   }
 
   return (
-    <div className="min-h-full">
-      <AppHeader user={user} onSignedOut={() => router.push(ROUTES.home)} />
-      <main className="mx-auto max-w-xl px-4 py-8">
-        <h1 className="text-2xl font-semibold">New announcement</h1>
-        <p className="mt-2 text-sm text-slate-600">The server checks your role before this is published.</p>
-        <form onSubmit={(event) => void handleSubmit(event)} className="mt-6 space-y-4">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium">
-              Title
-            </label>
-            <input
-              id="title"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-            />
-            {fieldErrors.title ? <p className="mt-1 text-sm text-red-700">{fieldErrors.title}</p> : null}
-          </div>
-          <div>
-            <label htmlFor="body" className="block text-sm font-medium">
-              Message
-            </label>
-            <textarea
-              id="body"
-              value={body}
-              onChange={(event) => setBody(event.target.value)}
-              rows={6}
-              className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2"
-            />
-            {fieldErrors.body ? <p className="mt-1 text-sm text-red-700">{fieldErrors.body}</p> : null}
-          </div>
-          {formError ? (
-            <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
-              {formError}
-            </p>
-          ) : null}
-          <button
-            type="submit"
-            disabled={submitting || !user}
-            className="rounded-md bg-slate-900 px-4 py-2 font-medium text-white disabled:opacity-60"
-          >
-            {submitting ? "Publishing…" : "Publish announcement"}
-          </button>
-        </form>
-      </main>
-    </div>
+    <AppShell variant="staff" user={user} onSignedOut={() => router.push(ROUTES.home)}>
+      <PageHeader
+        title="New announcement"
+        description="The server checks your role before this is published. Audience targeting is added in Phase 4."
+      />
+      <form onSubmit={(event) => void handleSubmit(event)} className="max-w-xl space-y-4 rounded-xl border border-border bg-card p-6">
+        <FormField id="title" label="Title" error={fieldErrors.title}>
+          <Input
+            id="title"
+            value={title}
+            className="h-11"
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </FormField>
+        <FormField id="body" label="Message" error={fieldErrors.body}>
+          <Textarea
+            id="body"
+            value={body}
+            rows={8}
+            onChange={(event) => setBody(event.target.value)}
+          />
+        </FormField>
+        {formError ? (
+          <p className="rounded-md bg-[var(--danger-soft)] px-3 py-2 text-sm text-destructive" role="alert">
+            {formError}
+          </p>
+        ) : null}
+        <Button type="submit" className="h-11" disabled={submitting || !user}>
+          {submitting ? "Publishing…" : "Publish announcement"}
+        </Button>
+      </form>
+    </AppShell>
   );
 }

@@ -21,6 +21,19 @@
 | Tailwind CSS | 4 | Styling | frontend | https://tailwindcss.com |
 | zod | 4.6.5 | Login and form validation | frontend | https://zod.dev |
 | @supabase/supabase-js | 2.116.0 | Browser Auth (`signInWithPassword`) | frontend | https://supabase.com/docs |
+| lucide-react | 1.47.0 | Outline icons | frontend | https://lucide.dev |
+| shadcn/ui | copied source (CLI 4.21.0) | UI primitives (button, dialog, table, …) | frontend | https://ui.shadcn.com |
+| radix-ui | 1.6.7 | Accessible primitive behaviours used by shadcn | frontend | https://www.radix-ui.com |
+| class-variance-authority | 0.7.1 | Component variants | frontend | https://cva.style |
+| clsx | 2.1.1 | Conditional class names | frontend | https://github.com/lukeed/clsx |
+| tailwind-merge | 3.7.0 | Merge Tailwind classes | frontend | https://github.com/dcastil/tailwind-merge |
+| cn | 0.3.0 | shadcn `cn()` helper | frontend | https://www.npmjs.com/package/cn |
+| sonner | 2.0.8 | Toast notifications | frontend | https://sonner.emilkowal.ski |
+| cmdk | 1.1.1 | Command palette primitive | frontend | https://cmdk.paco.me |
+| next-themes | 0.4.6 | Theme hook used by the toast host | frontend | https://github.com/pacocoursey/next-themes |
+| tw-animate-css | 1.4.0 | Enter/leave animations for dialogs | frontend | https://github.com/Wombosvideo/tw-animate-css |
+| Magic UI (via 21st.dev / shadcn registry) | copied `shine-border`, `number-ticker` | AI bar border and dashboard count animation | frontend | https://magicui.design · https://21st.dev |
+| motion | 13.4.0 | Number ticker animation | frontend | https://motion.dev |
 
 Exact frontend patch versions are in `frontend/package-lock.json` after `npm install`.
 
@@ -37,7 +50,8 @@ Campus data is **not** read through the Supabase Data API / PostgREST. FastAPI +
 
 | Asset | Source | Licence | Where used |
 |-------|--------|---------|------------|
-| Geist font | Next.js / Vercel | SIL OFL | `frontend/src/app/layout.tsx` |
+| Inter font | Google Fonts via `next/font` | SIL OFL | `frontend/src/app/layout.tsx` |
+| UCL logo | Team asset (`.cursor/UCL.png`) | Institutional mark for the demo UI | `frontend/public/ucl-logo.png` |
 
 No real student data. Seed names are invented.
 
