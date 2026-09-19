@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from sqlalchemy import Select, case, func, or_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, selectinload
 
 from app.constants import (
@@ -20,15 +21,18 @@ from app.constants import (
     SEARCH_SNIPPET_MAX,
     SEED_MARKER,
     SOCIETY_OWN_TYPES,
+    InterestTarget,
+    Permission,
     PostStatus,
     PostType,
     Role,
 )
 from app.errors import AppError
+from app.models.listing import Interest
 from app.models.platform import AuditLog
 from app.models.post import Post
 from app.models.user import User
-from app.schemas.post import PostCreate, PostUpdate, SearchHit
+from app.schemas.post import InterestListResponse, InterestPersonRead, PostCreate, PostUpdate, SearchHit
 from app.security import user_has_permission
 
 
@@ -297,6 +301,10 @@ def _href(post: Post) -> str:
         return "/calendar"
     if post.type == PostType.JOB.value:
         return "/opportunities"
+    if post.type in {PostType.VOLUNTEERING.value, PostType.ALUMNI.value, PostType.HIGHLIGHT.value}:
+        return "/opportunities"
+    if post.type == PostType.SOCIETY_UPDATE.value:
+        return "/societies"
     if post.type in {PostType.SCHEDULE_CHANGE.value, PostType.EMERGENCY.value}:
         return "/updates"
     return "/"
@@ -337,3 +345,52 @@ def search_posts(
         for row in rows
     ]
     return hits, total, needle
+
+
+def _event_like(post: Post) -> bool:
+    return post.type in {PostType.EVENT.value, PostType.GUEST_LECTURE.value}
+
+
+def add_event_interest(db: Session, user: User, post_id: UUID) -> InterestListResponse:
+    post = get_visible_post(db, post_id, user)
+    if not _event_like(post):
+        raise AppError(422, "VALIDATION_ERROR", "Interest is only for events")
+    row = Interest(user_id=user.id, target_type=InterestTarget.EVENT.value, target_id=post.id)
+    db.add(row)
+    try:
+        db.commit()
+    except IntegrityError as exc:
+        db.rollback()
+        raise AppError(409, "CONFLICT", "You already marked interest") from exc
+    return list_event_interest(db, user, post_id)
+
+
+def list_event_interest(db: Session, user: User | None, post_id: UUID) -> InterestListResponse:
+    post = get_visible_post(db, post_id, user)
+    if not _event_like(post):
+        raise AppError(422, "VALIDATION_ERROR", "Interest is only for events")
+    rows = list(
+        db.execute(
+            select(Interest, User)
+            .join(User, User.id == Interest.user_id)
+            .where(Interest.target_type == InterestTarget.EVENT.value, Interest.target_id == post.id)
+            .order_by(Interest.created_at.desc())
+        ).all()
+    )
+    viewer = user is not None and any(interest.user_id == user.id for interest, _member in rows)
+    staff = user is not None and (
+        can_manage_post(user, post) or user_has_permission(user.role, Permission.BOOKINGS_APPROVE)
+    )
+    items = [
+        InterestPersonRead(
+            id=interest.id,
+            created_at=interest.created_at,
+            full_name=member.full_name,
+            programme=member.programme,
+        )
+        for interest, member in rows
+    ]
+    if not staff:
+        items = []
+    return InterestListResponse(items=items, total=len(rows), viewer_interested=viewer)
+

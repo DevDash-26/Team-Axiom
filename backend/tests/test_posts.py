@@ -275,6 +275,27 @@ def test_academic_can_create_calendar_and_guest_lecture(academic_client: TestCli
     assert lecture.json()["location"] == "Hall A"
 
 
+def test_student_can_mark_event_interest(academic_client: TestClient, computing_student, client: TestClient) -> None:
+    created = academic_client.post(
+        "/api/posts",
+        json={
+            "type": "EVENT",
+            "title": "Club night",
+            "body": "Games and snacks in the atrium.",
+            "event_at": "2026-09-24T17:00:00Z",
+            "location": "Atrium",
+        },
+    )
+    assert created.status_code == 201
+    from tests.conftest import bind_user
+
+    bind_user(computing_student)
+    interest = client.post(f"/api/posts/{created.json()['id']}/interest")
+    assert interest.status_code == 201
+    assert interest.json()["total"] == 1
+    assert interest.json()["viewer_interested"] is True
+
+
 def test_student_cannot_create_calendar(computing_client: TestClient) -> None:
     response = computing_client.post(
         "/api/posts",
@@ -379,11 +400,12 @@ def test_search_respects_audience_and_hides_drafts(
     business_student: User,
     client: TestClient,
 ) -> None:
+    token = "zxlabniner"
     _add_post(
         db_session,
         admin_user,
-        title="Computing lab booking",
-        body="Lab B opens Monday.",
+        title=f"Computing {token} booking",
+        body=f"{token} opens Monday.",
         faculty=Faculty.COMPUTING.value,
     )
     _add_post(
@@ -397,19 +419,19 @@ def test_search_respects_audience_and_hides_drafts(
     _add_post(
         db_session,
         admin_user,
-        title="Computing secret draft",
-        body="Lab B draft only.",
+        title=f"Computing secret {token} draft",
+        body=f"{token} draft only.",
         status=PostStatus.DRAFT.value,
     )
 
     bind_user(computing_student)
-    computing = client.get("/api/search", params={"q": "lab"})
+    computing = client.get("/api/search", params={"q": token, "type": "ANNOUNCEMENT"})
     assert computing.status_code == 200
     computing_titles = {item["title"] for item in computing.json()["items"]}
-    assert "Computing lab booking" in computing_titles
-    assert "Computing secret draft" not in computing_titles
+    assert f"Computing {token} booking" in computing_titles
+    assert f"Computing secret {token} draft" not in computing_titles
     assert "Business induction" not in computing_titles
 
     bind_user(business_student)
-    business = client.get("/api/search", params={"q": "lab"})
+    business = client.get("/api/search", params={"q": token, "type": "ANNOUNCEMENT"})
     assert business.json()["items"] == []

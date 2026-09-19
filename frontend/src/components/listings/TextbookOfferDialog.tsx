@@ -16,8 +16,9 @@ import { FormField } from "@/components/feedback/FormField";
 import { NativeSelect } from "@/components/feedback/NativeSelect";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { BODY_MAX, FACULTIES, LISTING_KIND, LISTING_STATUS, TITLE_MAX } from "@/lib/constants";
-import type { ListingFixture } from "@/lib/fixtures/services";
+import { ApiError, createListing } from "@/lib/api";
+import { BODY_MAX, FACULTIES, LISTING_HANDOVER_HINT, LISTING_KIND, TITLE_MAX } from "@/lib/constants";
+import type { ListingRead } from "@/types";
 
 const offerSchema = z.object({
   title: z.string().trim().min(3, "Enter the book title").max(TITLE_MAX),
@@ -29,7 +30,7 @@ const offerSchema = z.object({
 type TextbookOfferDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onCreated: (item: ListingFixture) => void;
+  onCreated: (item: ListingRead) => void;
 };
 
 export function TextbookOfferDialog({ open, onOpenChange, onCreated }: TextbookOfferDialogProps) {
@@ -38,6 +39,7 @@ export function TextbookOfferDialog({ open, onOpenChange, onCreated }: TextbookO
   const [category, setCategory] = useState<string>(FACULTIES[0].id);
   const [location, setLocation] = useState("Block A atrium");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
 
   function resetForm() {
     setTitle("");
@@ -47,7 +49,7 @@ export function TextbookOfferDialog({ open, onOpenChange, onCreated }: TextbookO
     setErrors({});
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const parsed = offerSchema.safeParse({ title, body, category, location });
     if (!parsed.success) {
@@ -58,20 +60,24 @@ export function TextbookOfferDialog({ open, onOpenChange, onCreated }: TextbookO
       setErrors(next);
       return;
     }
-    onCreated({
-      id: `tb-${Date.now()}`,
-      type: LISTING_KIND.TEXTBOOK,
-      title: parsed.data.title,
-      body: parsed.data.body,
-      category: parsed.data.category,
-      location: parsed.data.location,
-      occurred_at: new Date().toISOString(),
-      status: LISTING_STATUS.ACTIVE,
-      handover: "Arrange pickup on campus through UniHive. Do not add a personal phone number.",
-    });
-    onOpenChange(false);
-    resetForm();
-    toast.success("Textbook listed. Other students can mark interest.");
+    setSubmitting(true);
+    try {
+      const item = await createListing({
+        type: LISTING_KIND.TEXTBOOK,
+        title: parsed.data.title,
+        body: parsed.data.body,
+        category: parsed.data.category,
+        location: parsed.data.location,
+      });
+      onCreated(item);
+      onOpenChange(false);
+      resetForm();
+      toast.success("Textbook listed. Other students can mark interest.");
+    } catch (cause) {
+      toast.error(cause instanceof ApiError ? cause.message : "Could not list this book.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -87,9 +93,9 @@ export function TextbookOfferDialog({ open, onOpenChange, onCreated }: TextbookO
       <DialogContent>
         <DialogHeader>
           <DialogTitle>List a textbook</DialogTitle>
-          <DialogDescription>Swap or sell on campus. Keep personal contacts off the listing.</DialogDescription>
+          <DialogDescription>{LISTING_HANDOVER_HINT}</DialogDescription>
         </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={(event) => void handleSubmit(event)}>
           <FormField id="book-title" label="Book title" error={errors.title}>
             <Input id="book-title" value={title} className="h-11" onChange={(event) => setTitle(event.target.value)} />
           </FormField>
@@ -111,8 +117,8 @@ export function TextbookOfferDialog({ open, onOpenChange, onCreated }: TextbookO
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" className="h-11">
-              List book
+            <Button type="submit" className="h-11" disabled={submitting}>
+              {submitting ? "Listing…" : "List book"}
             </Button>
           </DialogFooter>
         </form>

@@ -42,10 +42,14 @@ def _create_schema() -> None:
 def db_session() -> Generator[Session, None, None]:
     if not get_settings().database_url:
         pytest.skip("DATABASE_URL is not set")
+    connection = None
     try:
         connection = get_engine().connect()
         connection.execute(text("SELECT 1"))
+        connection.rollback()
     except Exception as exc:  # noqa: BLE001 — skip cleanly when pooler/auth is down
+        if connection is not None:
+            connection.close()
         pytest.skip(f"Database unavailable for tests: {exc}")
 
     transaction = connection.begin()

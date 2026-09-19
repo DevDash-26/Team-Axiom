@@ -32,6 +32,29 @@ make dev
 
 `make seed` is idempotent. `make test` runs pytest and needs `DATABASE_URL`.
 
+## Deploy (Render API + Vercel frontend)
+
+### Render (FastAPI)
+
+In the service **Settings**, set exactly:
+
+| Setting | Value |
+|---------|--------|
+| Branch | `main` |
+| Root Directory | *(leave empty)* |
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `bash start.sh` |
+| `PYTHON_VERSION` env | `3.11.11` |
+
+`start.sh` always `cd`s into `backend` before starting uvicorn, so `ModuleNotFoundError: No module named 'app'` cannot happen from a wrong working directory.
+
+Then add the same env vars as `.env` (`DATABASE_URL`, `CORS_ORIGINS`, Supabase, LLM, …). After you have a Vercel URL, set `CORS_ORIGINS` to that origin and redeploy.
+
+### Vercel (Next.js)
+
+- Root Directory: `frontend`
+- Env: `NEXT_PUBLIC_API_URL` = your Render URL (no trailing slash), plus Supabase public keys
+
 ## Environment variables
 
 | Variable | Where | Purpose |

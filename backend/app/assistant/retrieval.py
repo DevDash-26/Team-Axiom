@@ -120,7 +120,7 @@ def _sql_keyword_hits(
     if faq_filter is not None:
         for faq in db.scalars(select(Faq).where(faq_filter).limit(fetch_limit)).all():
             score = _score_text(f"{faq.question} {faq.answer} {faq.category}", tokens)
-            if score <= 0:
+            if score < 2:
                 continue
             ranked.append(
                 SourceHit(
@@ -137,7 +137,7 @@ def _sql_keyword_hits(
     if page_filter is not None:
         for page in db.scalars(select(InfoPage).where(page_filter).limit(fetch_limit)).all():
             score = _score_text(f"{page.title} {page.body} {page.category}", tokens)
-            if score <= 0:
+            if score < 2:
                 continue
             ranked.append(
                 SourceHit(
@@ -154,13 +154,14 @@ def _sql_keyword_hits(
         StaffContact.name,
         StaffContact.role_title,
         StaffContact.department,
+        StaffContact.office_hours,
         tokens=tokens,
     )
     if staff_filter is not None:
         for contact in db.scalars(select(StaffContact).where(staff_filter).limit(fetch_limit)).all():
             blob = f"{contact.name} {contact.role_title} {contact.department} {contact.office_hours or ''}"
             score = _score_text(blob, tokens)
-            if score <= 0:
+            if score < 2:
                 continue
             hours = f" Hours: {contact.office_hours}." if contact.office_hours else ""
             ranked.append(
@@ -170,7 +171,7 @@ def _sql_keyword_hits(
                     title=f"{contact.name} — {contact.role_title}",
                     snippet=_snippet(f"{contact.department}. Email: {contact.email}.{hours}"),
                     url="/info/directory",
-                    score=float(score + 1),
+                    score=float(score + 4),
                 )
             )
 
@@ -182,7 +183,7 @@ def _sql_keyword_hits(
         )
         for post in db.scalars(post_query.limit(fetch_limit)).all():
             score = _score_text(f"{post.title} {post.body}", tokens)
-            if score <= 0:
+            if score < 2:
                 continue
             url = f"/events/{post.id}" if post.type == "EVENT" else "/updates"
             ranked.append(
@@ -204,9 +205,12 @@ def retrieve(db: Session, user: User | None, question: str, *, top_k: int = ASSI
     """Prefer markdown chunk vectors, then fill with live SQL campus rows."""
     hits: list[SourceHit] = []
     seen: set[tuple[str, str]] = set()
-
+    tokens = _tokens(question)
     search_text = retrieval_query(question)
+
     for chunk in knowledge_store.search_chunks(db, search_text or question, top_k=top_k):
+        if tokens and _score_text(f"{chunk.title} {chunk.snippet}", tokens) < 2:
+            continue
         key = (chunk.type, chunk.id)
         if key in seen:
             continue
@@ -222,16 +226,25 @@ def retrieve(db: Session, user: User | None, question: str, *, top_k: int = ASSI
             )
         )
 
-    tokens = _tokens(question)
-    if tokens and len(hits) < top_k:
-        for hit in _sql_keyword_hits(db, user, tokens, top_k=top_k):
-            key = (hit.type, hit.id)
-            if key in seen:
-                continue
-            seen.add(key)
-            hits.append(hit)
-            if len(hits) >= top_k:
-                break
+    sql_hits = _sql_keyword_hits(db, user, tokens, top_k=top_k) if tokens else []
+    staff_hits = [hit for hit in sql_hits if hit.type == "STAFF"]
+    other_sql = [hit for hit in sql_hits if hit.type != "STAFF"]
+    sql_fill = staff_hits + other_sql
+    # Keep a slot for live FAQ/staff rows so seed/test contacts are not crowded out by chunks.
+    chunk_cap = max(1, top_k - (1 if sql_fill else 0))
+    selected = hits[:chunk_cap]
+    selected_keys = {(hit.type, hit.id) for hit in selected}
+    for hit in sql_fill:
+        key = (hit.type, hit.id)
+        if key in selected_keys:
+            continue
+        selected.append(hit)
+        selected_keys.add(key)
+        if len(selected) >= top_k:
+            break
 
-    hits.sort(key=lambda item: (-item.score, item.title.lower()))
-    return hits[:top_k]
+    selected.sort(key=lambda item: (-item.score, item.title.lower()))
+    top = selected[:top_k]
+    if staff_hits and not any(hit.type == "STAFF" for hit in top):
+        top = top[: max(0, top_k - 1)] + [staff_hits[0]]
+    return top

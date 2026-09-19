@@ -14,43 +14,64 @@ import {
 import { FormField } from "@/components/feedback/FormField";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import type { RoomFixture } from "@/lib/fixtures/campus";
+import { ApiError, createBooking } from "@/lib/api";
+import type { ResourceRead } from "@/types";
 
 type BookingRequestDialogProps = {
-  room: RoomFixture | null;
+  room: ResourceRead | null;
+  startsAt: string;
+  endsAt: string;
   slotLabel: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConflict: (room: RoomFixture) => void;
+  onConflict: () => void;
+  onCreated: () => void;
 };
 
 export function BookingRequestDialog({
   room,
+  startsAt,
+  endsAt,
   slotLabel,
   open,
   onOpenChange,
   onConflict,
+  onCreated,
 }: BookingRequestDialogProps) {
   const [purpose, setPurpose] = useState("Group study");
   const [groupSize, setGroupSize] = useState("6");
   const [notes, setNotes] = useState("");
+  const [busy, setBusy] = useState(false);
 
   if (!room) {
     return null;
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!room) {
-      return;
-    }
-    if (room.conflict) {
+    if (!room) return;
+    setBusy(true);
+    try {
+      await createBooking({
+        resource_id: room.id,
+        starts_at: startsAt,
+        ends_at: endsAt,
+        purpose: notes.trim() ? `${purpose.trim()} — ${notes.trim()}` : purpose.trim(),
+        group_size: Number(groupSize) || 1,
+      });
       onOpenChange(false);
-      onConflict(room);
-      return;
+      onCreated();
+      toast.success("Request submitted. Staff will review it.");
+    } catch (cause) {
+      if (cause instanceof ApiError && cause.status === 409) {
+        onOpenChange(false);
+        onConflict();
+      } else {
+        toast.error(cause instanceof ApiError ? cause.message : "Could not submit this request.");
+      }
+    } finally {
+      setBusy(false);
     }
-    onOpenChange(false);
-    toast.success("Request submitted. You’ll be notified when staff reviews your request.");
   }
 
   return (
@@ -58,11 +79,9 @@ export function BookingRequestDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Request {room.name}</DialogTitle>
-          <DialogDescription>
-            {slotLabel}. This is the booking form layout. Approval still happens on the server later.
-          </DialogDescription>
+          <DialogDescription>{slotLabel}. Staff approve classroom and sports bookings.</DialogDescription>
         </DialogHeader>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={(event) => void handleSubmit(event)}>
           <FormField id="purpose" label="Purpose">
             <Input id="purpose" value={purpose} className="h-11" onChange={(event) => setPurpose(event.target.value)} />
           </FormField>
@@ -84,8 +103,8 @@ export function BookingRequestDialog({
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" className="h-11">
-              Submit Request
+            <Button type="submit" className="h-11" disabled={busy}>
+              {busy ? "Submitting…" : "Submit Request"}
             </Button>
           </DialogFooter>
         </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EventCard } from "@/components/events/EventCard";
@@ -11,16 +12,8 @@ import { Input } from "@/components/ui/input";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { usePublishedPosts } from "@/hooks/use-published-posts";
 import { EVENT_FILTERS } from "@/lib/constants";
-import { EVENT_CATEGORY, FIXTURE_POSTS } from "@/lib/fixtures/campus";
+import { ApiError, addEventInterest } from "@/lib/api";
 import type { PostRead } from "@/types";
-
-function eventPool(events: PostRead[], lectures: PostRead[]): PostRead[] {
-  const merged = [...events, ...lectures];
-  if (merged.length > 0) {
-    return merged;
-  }
-  return FIXTURE_POSTS.filter((post) => post.type === "EVENT" || post.type === "GUEST_LECTURE");
-}
 
 export default function EventsPage() {
   const { user, setUser } = useSessionUser();
@@ -29,24 +22,21 @@ export default function EventsPage() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState("all");
   const [interested, setInterested] = useState<Record<string, boolean>>({});
+  const [counts, setCounts] = useState<Record<string, number>>({});
 
   const loading = events.loading || lectures.loading;
-  const items = useMemo(() => eventPool(events.posts, lectures.posts), [events.posts, lectures.posts]);
+  const items = useMemo(() => [...events.posts, ...lectures.posts], [events.posts, lectures.posts]);
 
   const visible = useMemo(() => {
-    return items.filter((post) => {
+    return items.filter((post: PostRead) => {
       const haystack = `${post.title} ${post.body}`.toLowerCase();
       if (query && !haystack.includes(query.toLowerCase())) {
         return false;
       }
-      if (filter === "guest") {
-        return post.type === "GUEST_LECTURE";
-      }
-      if (filter === "society") {
-        return Boolean(post.society_id) || EVENT_CATEGORY[post.id] === "Society";
-      }
+      if (filter === "guest") return post.type === "GUEST_LECTURE";
+      if (filter === "society") return Boolean(post.society_id);
       if (filter === "academic" || filter === "workshop") {
-        return post.type === "GUEST_LECTURE" || EVENT_CATEGORY[post.id] === "University";
+        return post.type === "GUEST_LECTURE" || !post.society_id;
       }
       return true;
     });
@@ -85,9 +75,22 @@ export default function EventsPage() {
               <EventCard
                 post={post}
                 interested={Boolean(interested[post.id])}
-                onToggleInterest={() =>
-                  setInterested((current) => ({ ...current, [post.id]: !current[post.id] }))
-                }
+                interestCount={counts[post.id] ?? 0}
+                onToggleInterest={() => {
+                  void addEventInterest(post.id)
+                    .then((result) => {
+                      setInterested((current) => ({ ...current, [post.id]: true }));
+                      setCounts((current) => ({ ...current, [post.id]: result.total }));
+                      toast.success("Interest recorded.");
+                    })
+                    .catch((cause) => {
+                      if (cause instanceof ApiError && cause.status === 409) {
+                        setInterested((current) => ({ ...current, [post.id]: true }));
+                        return;
+                      }
+                      toast.error(cause instanceof ApiError ? cause.message : "Could not record interest.");
+                    });
+                }}
               />
             </li>
           ))}

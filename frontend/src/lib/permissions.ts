@@ -14,8 +14,8 @@ export type UiPermission = {
 export const UI_PERMISSIONS: readonly UiPermission[] = [
   { id: "posts.view_published", label: "View published content", roles: ALL_ROLES },
   { id: "posts.create_announcement", label: "Publish announcements", roles: [ROLES.ACADEMIC, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
-  { id: "posts.create_event", label: "Publish events", roles: [ROLES.ACADEMIC, ROLES.SOCIETY_REP, ROLES.ADMIN] },
-  { id: "posts.create_society_update", label: "Publish society updates", roles: [ROLES.SOCIETY_REP, ROLES.ADMIN] },
+  { id: "posts.create_event", label: "Publish events", roles: [ROLES.ACADEMIC, ROLES.SOCIETY_REP, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
+  { id: "posts.create_society_update", label: "Publish society updates", roles: [ROLES.SOCIETY_REP, ROLES.ADMIN, ROLES.SUPER_ADMIN] },
   { id: "posts.create_emergency", label: "Publish emergencies", roles: ADMINS },
   { id: "info.manage_finance", label: "Manage financial aid info", roles: [ROLES.FINANCE, ROLES.ADMIN] },
   { id: "info.manage", label: "Manage campus information", roles: ADMINS },

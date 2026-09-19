@@ -1,19 +1,13 @@
-# Render Blueprint — UniHive API
-# Dashboard alternative if not using Blueprint:
-#   Branch: main or dev
-#   Root Directory: backend
-#   Build: pip install -r requirements.txt
-#   Start: uvicorn app.main:app --host 0.0.0.0 --port $PORT
-#   Env: PYTHON_VERSION=3.11.11
+# Render Blueprint — UniHive API (monorepo-safe)
 services:
   - type: web
     name: unihive-api
     runtime: python
     plan: free
     branch: main
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Leave root at repo root; start.sh cds into backend.
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: bash start.sh
     healthCheckPath: /health
     envVars:
       - key: PYTHON_VERSION

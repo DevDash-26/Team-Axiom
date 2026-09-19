@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { EventCard } from "@/components/events/EventCard";
@@ -8,15 +7,10 @@ import { EmptyState } from "@/components/feedback/EmptyState";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { usePublishedPosts } from "@/hooks/use-published-posts";
-import { FIXTURE_POSTS } from "@/lib/fixtures/campus";
 
 export default function LecturesPage() {
   const { user, setUser } = useSessionUser();
-  const { posts, loading } = usePublishedPosts("GUEST_LECTURE");
-  const items = useMemo(
-    () => (posts.length > 0 ? posts : FIXTURE_POSTS.filter((post) => post.type === "GUEST_LECTURE")),
-    [posts],
-  );
+  const { posts: items, loading } = usePublishedPosts("GUEST_LECTURE");
 
   return (
     <AppShell variant="student" user={user} onSignedOut={() => setUser(null)}>

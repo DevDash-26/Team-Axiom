@@ -1,2 +1,2 @@
-# Install from backend when Root Directory is not set on Render/Vercel-like hosts.
+# Install backend deps when building from the monorepo root (Render).
 -r backend/requirements.txt

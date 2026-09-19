@@ -17,7 +17,19 @@ const postSchema = z
   .object({
     title: z.string().trim().min(1, "Title is required").max(200),
     body: z.string().trim().min(1, "Write a short message").max(10000),
-    type: z.enum(["ANNOUNCEMENT", "CALENDAR_ENTRY", "GUEST_LECTURE", "EMERGENCY", "SCHEDULE_CHANGE", "JOB"]),
+    type: z.enum([
+      "ANNOUNCEMENT",
+      "CALENDAR_ENTRY",
+      "GUEST_LECTURE",
+      "EVENT",
+      "SOCIETY_UPDATE",
+      "HIGHLIGHT",
+      "EMERGENCY",
+      "SCHEDULE_CHANGE",
+      "JOB",
+      "VOLUNTEERING",
+      "ALUMNI",
+    ]),
     faculty: z.string(),
     year: z.string(),
     programme: z.string().trim().max(120),
@@ -39,10 +51,10 @@ const postSchema = z
         message: "Expiry must be after the start time",
       });
     }
-    if ((value.type === "CALENDAR_ENTRY" || value.type === "GUEST_LECTURE") && !value.event_at) {
+    if ((value.type === "CALENDAR_ENTRY" || value.type === "GUEST_LECTURE" || value.type === "EVENT") && !value.event_at) {
       ctx.addIssue({ code: "custom", path: ["event_at"], message: "Event date is required" });
     }
-    if (value.type === "GUEST_LECTURE" && !value.location) {
+    if ((value.type === "GUEST_LECTURE" || value.type === "EVENT") && !value.location) {
       ctx.addIssue({ code: "custom", path: ["location"], message: "Location is required" });
     }
     if (value.type === "JOB" && !value.deadline_at && !value.apply_url) {
@@ -93,9 +105,9 @@ export function PostEditor({ user, existing }: PostEditorProps) {
   const [formError, setFormError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState<PostStatusName | null>(null);
 
-  const needsEventAt = type === "CALENDAR_ENTRY" || type === "GUEST_LECTURE";
-  const needsLocation = type === "GUEST_LECTURE";
-  const needsJobFields = type === "JOB";
+  const needsEventAt = type === "CALENDAR_ENTRY" || type === "GUEST_LECTURE" || type === "EVENT" || type === "ALUMNI";
+  const needsLocation = type === "GUEST_LECTURE" || type === "EVENT";
+  const needsJobFields = type === "JOB" || type === "VOLUNTEERING";
 
   async function save(status: PostStatusName) {
     const parsed = postSchema.safeParse({

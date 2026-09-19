@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import uuid
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime, time, timedelta
 
 from sqlalchemy import delete, select
 from supabase import create_client
@@ -22,9 +22,11 @@ from app.constants import (
     PostType,
     RequestStatus,
     RequestType,
+    ResourceKind,
     Role,
 )
 from app import db as database
+from app.models.booking import Booking, Resource
 from app.models.info import Faq, InfoPage, StaffContact
 from app.models.listing import Interest, Listing
 from app.models.post import Post
@@ -179,7 +181,7 @@ def _upsert_user(db, spec: dict, auth_id: uuid.UUID, society_id: uuid.UUID | Non
     return user
 
 
-def _replace_seed_posts(db, admin: User) -> None:
+def _replace_seed_posts(db, admin: User, society: Society | None) -> None:
     existing = db.scalars(select(Post).where(Post.details.contains({SEED_MARKER: True}))).all()
     for post in existing:
         db.delete(post)
@@ -286,6 +288,64 @@ def _replace_seed_posts(db, admin: User) -> None:
         author_id=admin.id,
         details={SEED_MARKER: True},
     )
+    campus_event = Post(
+        type=PostType.EVENT.value,
+        title="Welcome week campus fair",
+        body="Societies and services stalls in the atrium. Open to every student.",
+        status=PostStatus.PUBLISHED.value,
+        location="Main atrium",
+        event_at=now + timedelta(days=3),
+        author_id=admin.id,
+        details={SEED_MARKER: True},
+    )
+    society_event = Post(
+        type=PostType.EVENT.value,
+        title="Axiom club hack night",
+        body="Bring a laptop. Computing club members and guests welcome.",
+        status=PostStatus.PUBLISHED.value,
+        location="Lab B",
+        event_at=now + timedelta(days=4, hours=2),
+        society_id=society.id if society else None,
+        author_id=admin.id,
+        details={SEED_MARKER: True},
+    )
+    society_update = Post(
+        type=PostType.SOCIETY_UPDATE.value,
+        title="Computing club AGM next Thursday",
+        body="Vote for next year’s committee. All members welcome in Lab B at 17:00.",
+        status=PostStatus.PUBLISHED.value,
+        society_id=society.id if society else None,
+        author_id=admin.id,
+        details={SEED_MARKER: True},
+    )
+    volunteering = Post(
+        type=PostType.VOLUNTEERING.value,
+        title="Orientation week volunteers",
+        body="Help new students find lecture halls. Two-hour shifts, campus lunch provided.",
+        status=PostStatus.PUBLISHED.value,
+        deadline_at=now + timedelta(days=10),
+        author_id=admin.id,
+        details={SEED_MARKER: True},
+    )
+    alumni = Post(
+        type=PostType.ALUMNI.value,
+        title="Alumni coffee morning",
+        body="Recent graduates from Computing and Business share internship tips in Hall A.",
+        status=PostStatus.PUBLISHED.value,
+        event_at=now + timedelta(days=12),
+        location="Hall A",
+        author_id=admin.id,
+        details={SEED_MARKER: True},
+    )
+    highlight = Post(
+        type=PostType.HIGHLIGHT.value,
+        title="Computing club wins regional hackathon",
+        body="Three UCL students placed first with a campus lost-and-found prototype.",
+        status=PostStatus.PUBLISHED.value,
+        society_id=society.id if society else None,
+        author_id=admin.id,
+        details={SEED_MARKER: True},
+    )
     db.add_all(
         [
             campus,
@@ -299,6 +359,12 @@ def _replace_seed_posts(db, admin: User) -> None:
             guest_lecture,
             job,
             schedule_change,
+            campus_event,
+            society_event,
+            society_update,
+            volunteering,
+            alumni,
+            highlight,
         ]
     )
 
@@ -345,7 +411,11 @@ def _replace_seed_requests(db, student: User, academic: User, admin: User) -> No
 
 def _replace_seed_listings(db, student: User, admin: User) -> None:
     db.execute(delete(Interest).where(Interest.target_type == InterestTarget.LISTING.value))
-    db.execute(delete(Listing).where(Listing.type.in_([ListingType.LOST.value, ListingType.FOUND.value])))
+    db.execute(
+        delete(Listing).where(
+            Listing.type.in_([ListingType.LOST.value, ListingType.FOUND.value, ListingType.TEXTBOOK.value])
+        )
+    )
     db.flush()
     bottle = Listing(
         type=ListingType.LOST.value,
@@ -393,7 +463,16 @@ def _replace_seed_listings(db, student: User, admin: User) -> None:
         status=ListingStatus.ACTIVE.value,
         owner_id=admin.id,
     )
-    db.add_all([bottle, student_id, umbrella, keys])
+    textbook = Listing(
+        type=ListingType.TEXTBOOK.value,
+        title="Introduction to Algorithms (3rd ed.)",
+        body="Good condition. Campus pickup only. Swap for a Year 2 computing text or a fair cash offer.",
+        category="COMPUTING",
+        location="Block A atrium",
+        status=ListingStatus.ACTIVE.value,
+        owner_id=student.id,
+    )
+    db.add_all([bottle, student_id, umbrella, keys, textbook])
 
 
 def _replace_seed_info(db, admin: User) -> None:
@@ -450,7 +529,7 @@ def _replace_seed_info(db, admin: User) -> None:
         (
             InfoCategory.SPORTS,
             "Sports and recreation",
-            "Indoor court and gym hours are posted at the sports desk. For the court, enquire with Sports on weekdays 10:00–15:00.",
+            "Indoor court and gym hours are posted at the sports desk. Book the indoor court in UniHive (Book a Room → Sports) and wait for admin approval.",
         ),
     )
     db.add_all(
@@ -530,6 +609,112 @@ def _replace_seed_info(db, admin: User) -> None:
     )
 
 
+SEED_FAQS: tuple[dict[str, str], ...] = (
+    {
+        "question": "How do I reset my UCL Wi‑Fi password?",
+        "answer": "Visit the IT helpdesk on Level 2 or use the self-service portal linked from Campus Services. Bring your student ID.",
+        "category": InfoCategory.IT.value,
+    },
+    {
+        "question": "What are the library opening hours during term?",
+        "answer": "Monday to Friday 08:00–20:00, Saturday 09:00–14:00. Sunday closed except exam weeks.",
+        "category": InfoCategory.LIBRARY.value,
+    },
+    {
+        "question": "Where can I get wellbeing support?",
+        "answer": "Book a confidential session with Student Wellbeing via the services desk, or email wellbeing@ucl.lk. Walk-ins are available weekdays 10:00–15:00.",
+        "category": InfoCategory.WELLBEING.value,
+    },
+    {
+        "question": "Which canteen accepts student meal cards?",
+        "answer": "The main cafeteria and Block B café accept meal cards. The rooftop kiosk is cash or card only.",
+        "category": InfoCategory.DINING.value,
+    },
+    {
+        "question": "How much does campus printing cost?",
+        "answer": "Black-and-white A4 is Rs. 8 per page; colour A4 is Rs. 40. Top up your print balance at the library desk.",
+        "category": InfoCategory.PRINTING.value,
+    },
+    {
+        "question": "How do I apply for financial aid?",
+        "answer": "Submit the finance aid form with income documents before the published deadline. Finance Office reviews applications within ten working days.",
+        "category": InfoCategory.FINANCIAL_AID.value,
+    },
+    {
+        "question": "How do I book the indoor courts?",
+        "answer": "Use UniHive room booking, choose a sports facility resource, and wait for admin approval. Same-day bookings close at 12:00.",
+        "category": InfoCategory.SPORTS.value,
+    },
+    {
+        "question": "What should new students complete in week one?",
+        "answer": "Activate your campus account, update your UniHive profile (faculty, year, programme), and join at least one society interest list.",
+        "category": InfoCategory.ONBOARDING.value,
+    },
+)
+
+
+def _replace_seed_faqs(db) -> None:
+    seed_questions = {item["question"] for item in SEED_FAQS}
+    existing = db.scalars(select(Faq).where(Faq.question.in_(seed_questions))).all()
+    for faq in existing:
+        db.delete(faq)
+    db.flush()
+    db.add_all(
+        [
+            Faq(question=item["question"], answer=item["answer"], category=item["category"])
+            for item in SEED_FAQS
+        ]
+    )
+
+
+def _replace_seed_resources(db) -> None:
+    db.execute(delete(Booking))
+    db.execute(delete(Resource))
+    db.flush()
+    hours_open = time(8, 0)
+    hours_close = time(20, 0)
+    db.add_all(
+        [
+            Resource(
+                name="Room 302",
+                kind=ResourceKind.CLASSROOM.value,
+                location="Block C",
+                floor="Level 3",
+                capacity=24,
+                open_hour=hours_open,
+                close_hour=hours_close,
+            ),
+            Resource(
+                name="Lab B",
+                kind=ResourceKind.CLASSROOM.value,
+                location="Computing block",
+                floor="Level 2",
+                capacity=40,
+                open_hour=hours_open,
+                close_hour=hours_close,
+            ),
+            Resource(
+                name="Hall A",
+                kind=ResourceKind.CLASSROOM.value,
+                location="Main building",
+                floor="Ground",
+                capacity=80,
+                open_hour=hours_open,
+                close_hour=hours_close,
+            ),
+            Resource(
+                name="Indoor court",
+                kind=ResourceKind.SPORTS.value,
+                location="Sports hall",
+                floor="Ground",
+                capacity=20,
+                open_hour=hours_open,
+                close_hour=hours_close,
+            ),
+        ]
+    )
+
+
 def seed() -> None:
     logging.basicConfig(level=logging.INFO)
     get_settings.cache_clear()
@@ -554,10 +739,13 @@ def seed() -> None:
         admin = users_by_email["admin@ucl.lk"]
         student = users_by_email["nimali.perera@student.ucl.lk"]
         academic = users_by_email["dr.jayasuriya@ucl.lk"]
-        _replace_seed_posts(db, admin)
+        club = societies["axiom-computing-club"]
+        _replace_seed_posts(db, admin, club)
         _replace_seed_requests(db, student, academic, admin)
         _replace_seed_listings(db, student, admin)
         _replace_seed_info(db, admin)
+        _replace_seed_faqs(db)
+        _replace_seed_resources(db)
         try:
             from app.assistant.knowledge_store import index_markdown_knowledge
 

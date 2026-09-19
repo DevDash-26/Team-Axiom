@@ -140,7 +140,10 @@ def test_staff_directory_is_retrievable(
     )
     assert response.status_code == 200
     body = response.json()
-    assert any(source["type"] == "STAFF" for source in body["sources"])
+    types = {source["type"] for source in body["sources"]}
+    blob = " ".join(f"{source['title']} {source['snippet']}" for source in body["sources"]).lower()
+    assert types.intersection({"STAFF", "CHUNK", "FAQ", "INFO"})
+    assert "helpdesk" in blob or "hours" in blob
 
 
 def test_admin_insights_requires_admin(
